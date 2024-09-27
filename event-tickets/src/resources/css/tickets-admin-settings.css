@@ -1584,6 +1584,10 @@ body.tickets_page_tec-tickets-settings .event-tickets div.tribe-dialog, body.tic
 			padding-top: var(--tec-spacer-3);
 		}
 
+.tec-settings-form__emails-tab--active .tec-settings-form__footer, .tec-settings-form__wallet-tab--active .tec-settings-form__footer {
+		display: inline-block;
+	}
+
 .tec-tickets__admin-settings-back-link-wrapper {
 	padding: var(--tec-spacer-4) 0;
 }
