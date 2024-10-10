@@ -3,7 +3,7 @@
         'name' => 'the-events-calendar/event-tickets',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c4fc57087e207a426108e64724e5034ad1f0e04f',
+        'reference' => '8b8891e367bfd9e368ef38dc25f0d9fcaba4165c',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'the-events-calendar/event-tickets' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c4fc57087e207a426108e64724e5034ad1f0e04f',
+            'reference' => '8b8891e367bfd9e368ef38dc25f0d9fcaba4165c',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

@@ -14,8 +14,6 @@
  * @since 5.13.4
  */
 
-/* Temporary hide */
-
 body.wp-admin.post-type-tec_tc_order .tec-tickets-commerce-single-order--items button,
 	body.wp-admin.post-type-tec_tc_order .tec-tickets-commerce-single-order--items a {
 		display: none;
@@ -28,8 +26,6 @@ body.wp-admin.post-type-tec_tc_order #submitdiv {
 body.wp-admin.post-type-tec_tc_order .tec-tickets-commerce-single-order--details--item--label a {
 		display: none;
 	}
-
-/* End Temporary hide */
 
 body.wp-admin.post-type-tec_tc_order .tribe-mobile-hidden {
 		display: none;

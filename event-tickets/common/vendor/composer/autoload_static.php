@@ -4,53 +4,18 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbe6d00322c83caee63872c2b0f55033d
+class ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473
 {
     public static $prefixLengthsPsr4 = array (
-        'l' => 
-        array (
-            'lucatume\\DI52\\' => 14,
-        ),
         'T' => 
         array (
             'Tribe\\' => 6,
             'TEC\\Event_Automator\\' => 20,
             'TEC\\Common\\' => 11,
         ),
-        'S' => 
-        array (
-            'StellarWP\\Telemetry\\Views_Dir\\' => 30,
-            'StellarWP\\Telemetry\\Assets_Dir\\' => 31,
-            'StellarWP\\Telemetry\\' => 20,
-            'StellarWP\\Schema\\' => 17,
-            'StellarWP\\Models\\' => 17,
-            'StellarWP\\Installer\\Assets_JS\\' => 30,
-            'StellarWP\\Installer\\Admin_Views\\' => 32,
-            'StellarWP\\Installer\\' => 20,
-            'StellarWP\\DB\\' => 13,
-            'StellarWP\\ContainerContract\\' => 28,
-            'StellarWP\\Assets\\' => 17,
-        ),
-        'P' => 
-        array (
-            'Psr\\Log\\' => 8,
-            'Psr\\Container\\' => 14,
-        ),
-        'M' => 
-        array (
-            'Monolog\\' => 8,
-        ),
-        'F' => 
-        array (
-            'Firebase\\JWT\\' => 13,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'lucatume\\DI52\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/lucatume/di52/src',
-        ),
         'Tribe\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Tribe',
@@ -62,66 +27,6 @@ class ComposerStaticInitbe6d00322c83caee63872c2b0f55033d
         'TEC\\Common\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/Common',
-        ),
-        'StellarWP\\Telemetry\\Views_Dir\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/telemetry/src/views',
-        ),
-        'StellarWP\\Telemetry\\Assets_Dir\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/telemetry/src/resources',
-        ),
-        'StellarWP\\Telemetry\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/telemetry/src/Telemetry',
-        ),
-        'StellarWP\\Schema\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/schema/src/Schema',
-        ),
-        'StellarWP\\Models\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/models/src/Models',
-        ),
-        'StellarWP\\Installer\\Assets_JS\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/installer/src/assets/js',
-        ),
-        'StellarWP\\Installer\\Admin_Views\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/installer/src/admin-views',
-        ),
-        'StellarWP\\Installer\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/installer/src/Installer',
-        ),
-        'StellarWP\\DB\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/db/src/DB',
-        ),
-        'StellarWP\\ContainerContract\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/container-contract/src',
-        ),
-        'StellarWP\\Assets\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/stellarwp/assets/src/Assets',
-        ),
-        'Psr\\Log\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'Monolog\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'Firebase\\JWT\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
     );
 
@@ -369,9 +274,9 @@ class ComposerStaticInitbe6d00322c83caee63872c2b0f55033d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbe6d00322c83caee63872c2b0f55033d::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbe6d00322c83caee63872c2b0f55033d::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitbe6d00322c83caee63872c2b0f55033d::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473::$classMap;
 
         }, null, ClassLoader::class);
     }
