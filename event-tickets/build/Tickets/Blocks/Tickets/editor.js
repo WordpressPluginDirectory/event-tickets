@@ -9970,14 +9970,8 @@ const Availability = _ref => {
   const Total = wp.element.createElement(modules_elements["NumericLabel"], {
     className: external_tribe_modules_classnames_default()('tribe-editor__tickets__availability-label', 'tribe-editor__tickets__availability-label--total'),
     count: total,
-    singular: '%d ' +
-    // eslint-disable-next-line no-undef
-    sprintf( /* Translators: %s - ticket singular label, lowercase */
-    Object(external_wp_i18n_["__"])('total %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singularLowercase),
-    plural: '%d ' +
-    // eslint-disable-next-line no-undef
-    sprintf( /* Translators: %s - ticket plural label, lowercase */
-    Object(external_wp_i18n_["__"])('total %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.pluralLowercase)
+    singular: '%d ' + Object(external_wp_i18n_["__"])('total capacity', 'event-tickets'),
+    plural: '%d ' + Object(external_wp_i18n_["__"])('total capacity', 'event-tickets')
   });
   return wp.element.createElement("div", {
     className: "tribe-editor__tickets__availability"

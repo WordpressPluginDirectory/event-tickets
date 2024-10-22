@@ -32,8 +32,13 @@ class ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'TEC\\Common\\Admin\\Conditional_Content\\Black_Friday' => __DIR__ . '/../..' . '/src/Common/Admin/Conditional_Content/Black_Friday.php',
+        'TEC\\Common\\Admin\\Conditional_Content\\Controller' => __DIR__ . '/../..' . '/src/Common/Admin/Conditional_Content/Controller.php',
+        'TEC\\Common\\Admin\\Conditional_Content\\Datetime_Conditional_Abstract' => __DIR__ . '/../..' . '/src/Common/Admin/Conditional_Content/Datetime_Conditional_Abstract.php',
+        'TEC\\Common\\Admin\\Conditional_Content\\Dismissible_Trait' => __DIR__ . '/../..' . '/src/Common/Admin/Conditional_Content/Dismissible_Trait.php',
         'TEC\\Common\\Admin\\Entities\\Base_Entity' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Base_Entity.php',
         'TEC\\Common\\Admin\\Entities\\Br' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Br.php',
+        'TEC\\Common\\Admin\\Entities\\Button' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Button.php',
         'TEC\\Common\\Admin\\Entities\\Container' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Container.php',
         'TEC\\Common\\Admin\\Entities\\Div' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Div.php',
         'TEC\\Common\\Admin\\Entities\\Element' => __DIR__ . '/../..' . '/src/Common/Admin/Entities/Element.php',
@@ -53,6 +58,7 @@ class ComposerStaticInit3ae5bc47eb9353a360f97b3691e81473
         'TEC\\Common\\Admin\\Section' => __DIR__ . '/../..' . '/src/Common/Admin/Section.php',
         'TEC\\Common\\Admin\\Settings_Section' => __DIR__ . '/../..' . '/src/Common/Admin/Settings_Section.php',
         'TEC\\Common\\Admin\\Settings_Sidebar' => __DIR__ . '/../..' . '/src/Common/Admin/Settings_Sidebar.php',
+        'TEC\\Common\\Admin\\Settings_Sidebar_Section' => __DIR__ . '/../..' . '/src/Common/Admin/Settings_Sidebar_Section.php',
         'TEC\\Common\\Configuration\\Configuration' => __DIR__ . '/../..' . '/src/Common/Configuration/Configuration.php',
         'TEC\\Common\\Configuration\\Configuration_Loader' => __DIR__ . '/../..' . '/src/Common/Configuration/Configuration_Loader.php',
         'TEC\\Common\\Configuration\\Configuration_Provider_Interface' => __DIR__ . '/../..' . '/src/Common/Configuration/Configuration_Provider_Interface.php',
