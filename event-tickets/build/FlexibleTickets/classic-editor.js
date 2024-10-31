@@ -81,331 +81,12 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "Wo0u");
+/******/ 	return __webpack_require__(__webpack_require__.s = "vtAt");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "Wo0u":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./src/Tickets/Blocks/app/flexible-tickets/series-relationship.js
-var series_relationship = __webpack_require__("YRH8");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/classic-editor/utils.js
-/**
- * Run a callback when the DOM is ready.
- *
- * @param {Function} domReadyCallback The callback function to be called when the DOM is ready.
- */
-const onReady = domReadyCallback => {
-  if (document.readyState !== 'loading') {
-    domReadyCallback();
-  } else {
-    document.addEventListener('DOMContentLoaded', domReadyCallback);
-  }
-};
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/classic-editor/post-update-control.js
-
-
-
-/**
- * Subscribe to Series relationship and ticket provider changes to lock/unlock the post publish button and
- * show/hide the notice.
- */
-function init() {
-  // Localized data is required to run this script.
-  if (window.TECFtEditorData === undefined || window.TECFtEditorData.seriesRelationship === undefined || window.TECFtEditorData.classic === undefined) {
-    return;
-  }
-  const {
-    ticketPanelEditSelector,
-    ticketPanelEditDefaultProviderAttribute,
-    ticketsMetaboxSelector
-  } = window.TECFtEditorData.classic;
-  const ticketsMetabox = jQuery(ticketsMetaboxSelector);
-
-  /**
-   * Get the event ticket provider from the ticket panel attribute.
-   *
-   * @return {string} The event ticket provider.
-   */
-  function getEventProviderFromPanel() {
-    return document.getElementById(ticketPanelEditSelector.substring(1)).getAttribute(ticketPanelEditDefaultProviderAttribute);
-  }
-
-  /**
-   * Get the event title from the post title input.
-   *
-   * @return {string} The event title.
-   */
-  function getEventTitle() {
-    return document.getElementById('title').value;
-  }
-
-  /**
-   * Lock the post publish  and "Save Draft" buttons.
-   */
-  function lockPostPublish() {
-    Array.from(document.querySelectorAll('#publish,#save-post')).forEach(el => el.disabled = true);
-  }
-
-  /**
-   * Unlock the post publish and "Save Draft" buttons.
-   */
-  function unlockPostPublish() {
-    Array.from(document.querySelectorAll('#publish,#save-post')).forEach(el => el.disabled = false);
-  }
-
-  /**
-   * Toggle the publish lock based on the event and series providers.
-   *
-   * @param {string|null} eventProvider  The current event ticket provider.
-   * @param {string|null} seriesProvider The current series ticket provider.
-   * @param {string}      seriesTitle    Thte title of the currently selected series.
-   */
-  function togglePublishLock(eventProvider, seriesProvider, seriesTitle) {
-    if (eventProvider === seriesProvider || eventProvider === null || seriesProvider === null) {
-      unlockPostPublish();
-      Object(series_relationship["h" /* removeDiscordantProviderNotice */])();
-      return;
-    }
-    lockPostPublish();
-    Object(series_relationship["i" /* showDiscordantProviderNotice */])(getEventTitle(), seriesTitle);
-  }
-
-  /**
-   * Toggle the publish lock when the event ticket provider is changed in the ticket panel.
-   */
-  function onTicketProviderChange() {
-    const seriesProvider = Object(series_relationship["d" /* getSeriesProviderFromSelection */])();
-    const eventProvider = getEventProviderFromPanel();
-    const seriesTitle = Object(series_relationship["f" /* getSeriesTitleFromSelection */])();
-    togglePublishLock(eventProvider, seriesProvider, seriesTitle);
-  }
-
-  /**
-   * Toggle the publish lock when the series is changed in the metabox dropdown.
-   *
-   * @param {Event} event The 'change' event dispatched by Select2.
-   */
-  function onSeriesChange(event) {
-    const seriesProvider = Object(series_relationship["c" /* getSeriesProviderFromEvent */])(event);
-    const eventProvider = getEventProviderFromPanel();
-    const seriesTitle = Object(series_relationship["e" /* getSeriesTitleFromEvent */])(event);
-    togglePublishLock(eventProvider, seriesProvider, seriesTitle);
-  }
-
-  /**
-   * Subscribe to the event dispatched after any ticket panel is swapped.
-   *
-   * @param {Function} onChange The callback function to be called when the ticket panel is swapped.
-   */
-  function subscribeToTicketProviderChange(onChange) {
-    ticketsMetabox.on('after_panel_swap.tickets', onChange);
-  }
-  Object(series_relationship["j" /* subscribeToSeriesChange */])(onSeriesChange);
-  subscribeToTicketProviderChange(onTicketProviderChange);
-}
-onReady(init);
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/classic-editor/tickets-on-recurring-control.js
-var _window, _window$TECFtEditorDa, _window$TECFtEditorDa2, _window2, _window2$TECFtEditorD, _window2$TECFtEditorD2;
-
-
-// The selectors that will be used to interact with the DOM.
-const recurrenceRowSelector = '.recurrence-row';
-const newRecurrenceRowSelector = '.recurrence-row.tribe-datetime-block:not(.tribe-recurrence-exclusion-row)';
-const existingRecurrenceRowSelector = '.recurrence-row.tribe-recurrence-description,' + ' .recurrence-row.tribe-recurrence-exclusion-row';
-const recurrenceNotSupportedRowSelector = '.recurrence-row.tec-events-pro-recurrence-not-supported';
-const recurrenceControls = '.recurrence-container';
-const recurrenceRule = '.recurrence-container .tribe-event-recurrence-rule';
-const ticketTablesSelector = '.tribe-tickets-editor-table-tickets-body';
-const rsvpTicketsSelector = ticketTablesSelector + ' [data-ticket-type="rsvp"]';
-const defaultTicketsSelector = ticketTablesSelector + ' [data-ticket-type="default"]';
-const ticketsMetaboxId = 'tribetickets';
-const ticketWarningSelector = '.tec_ticket-panel__recurring-unsupported-warning';
-const ticketControlsSelector = '#ticket_form_toggle, #rsvp_form_toggle, #settings_form_toggle, .tec_ticket-panel__helper_text__wrap';
-const ticketEditPanelActiveSelector = '#tribe_panel_edit[aria-hidden="false"]';
-
-// Init the control state from the localized data.
-let state = {
-  hasRecurrenceRules: ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : (_window$TECFtEditorDa2 = _window$TECFtEditorDa.event) === null || _window$TECFtEditorDa2 === void 0 ? void 0 : _window$TECFtEditorDa2.isRecurring) || false,
-  hasOwnTickets: ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$TECFtEditorD = _window2.TECFtEditorData) === null || _window2$TECFtEditorD === void 0 ? void 0 : (_window2$TECFtEditorD2 = _window2$TECFtEditorD.event) === null || _window2$TECFtEditorD2 === void 0 ? void 0 : _window2$TECFtEditorD2.hasOwnTickets) || false
-};
-
-// Clone and keep track of the previous state.
-let prevState = Object.assign({}, state);
-
-/**
- * Update the state and call the callback if the state has changed.
- *
- * @since 5.8.0
- *
- * @param {Object} newState The updates to the state.
- */
-function updateState(newState) {
-  prevState = Object.assign({}, state);
-  state = Object.assign({}, state, newState);
-  if (prevState.hasRecurrenceRules === state.hasRecurrenceRules && prevState.hasOwnTickets === state.hasOwnTickets) {
-    // No changes, do nothing.
-    return;
-  }
-  handleControls(state);
-}
-
-/**
- * Hide the recurrence controls.
- *
- * The method will take care of hiding the recurrence controls and showing the recurrence not supported message.
- *
- * @since 5.8.0
- */
-function hideRecurrenceControls() {
-  document.querySelectorAll(recurrenceRowSelector).forEach(el => {
-    el.style.display = 'none';
-  });
-  document.querySelectorAll(recurrenceNotSupportedRowSelector).forEach(el => {
-    el.style.display = 'contents';
-    el.style.visibility = 'visible';
-  });
-}
-
-/**
- * Show the recurrence controls.
- *
- * The method will take care of showing the recurrence controls and hiding the recurrence not supported message.
- * If the Events has not recurrence rules, the method will show just the button to add recurrence rules.
- *
- * @since 5.8.0
- */
-function showRecurrenceControls() {
-  if (state.hasRecurrenceRules) {
-    document.querySelectorAll(recurrenceRowSelector).forEach(el => {
-      el.style.display = '';
-    });
-  } else {
-    document.querySelectorAll(existingRecurrenceRowSelector).forEach(el => {
-      el.style.display = 'none';
-    });
-    document.querySelectorAll(newRecurrenceRowSelector).forEach(el => {
-      el.style.display = '';
-    });
-  }
-  document.querySelectorAll(recurrenceNotSupportedRowSelector).forEach(el => {
-    el.style.display = 'none';
-  });
-}
-
-/**
- * Show the ticket controls.
- *
- * The method will take care of showing the ticket controls and hiding the ticket warning.
- *
- * @since 5.8.0
- */
-function showTicketControls() {
-  document.querySelectorAll(ticketWarningSelector).forEach(el => {
-    el.style.display = 'none';
-  });
-  document.querySelectorAll(ticketControlsSelector).forEach(el => {
-    el.style.display = '';
-  });
-}
-
-/**
- * Hide the ticket controls.
- *
- * The method will take care of hiding the ticket controls and showing the ticket warning.
- *
- * @since 5.8.0
- */
-function hideTicketControls() {
-  document.querySelectorAll(ticketWarningSelector).forEach(el => {
-    el.style.display = '';
-  });
-  document.querySelectorAll(ticketControlsSelector).forEach(el => {
-    el.style.display = 'none';
-  });
-}
-
-/**
- * Handle the controls visibility based on the state.
- *
- * @since 5.8.0
- *
- * @param {Object} newState The new state to hide/show controls based on.
- */
-function handleControls(newState) {
-  if (!newState.hasRecurrenceRules && !newState.hasOwnTickets) {
-    // The potential state where both recurrence rules and tickets are still possible.
-    showRecurrenceControls();
-    showTicketControls();
-    return;
-  }
-  if (newState.hasOwnTickets && newState.hasRecurrenceRules) {
-    // This newState should not exist; we'll be conservative and hide everything.
-    hideRecurrenceControls();
-    hideTicketControls();
-    return;
-  }
-  if (newState.hasOwnTickets) {
-    // If an event has own tickets, it cannot have recurrence rules.
-    hideRecurrenceControls();
-    showTicketControls();
-    return;
-  }
-
-  // Finally, if an event has recurrence rules, it cannot have own tickets.
-  showRecurrenceControls();
-  hideTicketControls();
-}
-
-// Initialize the controls visibility based on the initial state.
-onReady(() => handleControls(state));
-
-// Set up a mutation observer to detect when the recurrence rule is added or removed from the recurrence container.
-const recurrenceControlsObserver = new MutationObserver(() => {
-  const recurrenceRulesCount = document.querySelectorAll(recurrenceRule).length;
-  updateState({
-    hasRecurrenceRules: recurrenceRulesCount > 0
-  });
-});
-recurrenceControlsObserver.observe(document.querySelector(recurrenceControls), {
-  childList: true
-});
-
-/*
- * Set up a mutation observer to detect when tickets or RSVPs are added or removed from the tickets metabox.
- * Also: detect when the user is editing or creating a ticket.
- */
-const ticketsObserver = new MutationObserver(() => {
-  // Run the DOM queries only if required.
-  const hasOwnTickets = document.querySelectorAll(rsvpTicketsSelector).length ||
-  // Has RSVP tickets or...
-  document.querySelectorAll(defaultTicketsSelector).length ||
-  // ...has default tickets or...
-  document.querySelectorAll(ticketEditPanelActiveSelector).length; // ...is editing a ticket.
-  updateState({
-    hasOwnTickets
-  });
-});
-ticketsObserver.observe(document.getElementById(ticketsMetaboxId), {
-  childList: true,
-  subtree: true,
-  attributes: true
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/classic-editor/index.js
-
-
-
-/***/ }),
-
-/***/ "YRH8":
+/***/ "DyRx":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -597,6 +278,329 @@ function getSeriesPostIdFromSelection() {
   const seriesSelect = document.getElementById(fieldSelector.substring(1));
   return getSeriesDataFromElement(seriesSelect, 'id');
 }
+
+/***/ }),
+
+/***/ "vtAt":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: ./src/Tickets/Flexible_Tickets/app/series-relationship.js
+var series_relationship = __webpack_require__("DyRx");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/classic-editor/utils.js
+/**
+ * Run a callback when the DOM is ready.
+ *
+ * @param {Function} domReadyCallback The callback function to be called when the DOM is ready.
+ */
+const onReady = domReadyCallback => {
+  if (document.readyState !== 'loading') {
+    domReadyCallback();
+  } else {
+    document.addEventListener('DOMContentLoaded', domReadyCallback);
+  }
+};
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/classic-editor/post-update-control.js
+
+
+
+/**
+ * Subscribe to Series relationship and ticket provider changes to lock/unlock the post publish button and
+ * show/hide the notice.
+ */
+function init() {
+  // Localized data is required to run this script.
+  if (window.TECFtEditorData === undefined || window.TECFtEditorData.seriesRelationship === undefined || window.TECFtEditorData.classic === undefined) {
+    return;
+  }
+  const {
+    ticketPanelEditSelector,
+    ticketPanelEditDefaultProviderAttribute,
+    ticketsMetaboxSelector
+  } = window.TECFtEditorData.classic;
+  const ticketsMetabox = jQuery(ticketsMetaboxSelector);
+
+  /**
+   * Get the event ticket provider from the ticket panel attribute.
+   *
+   * @return {string} The event ticket provider.
+   */
+  function getEventProviderFromPanel() {
+    return document.getElementById(ticketPanelEditSelector.substring(1)).getAttribute(ticketPanelEditDefaultProviderAttribute);
+  }
+
+  /**
+   * Get the event title from the post title input.
+   *
+   * @return {string} The event title.
+   */
+  function getEventTitle() {
+    return document.getElementById('title').value;
+  }
+
+  /**
+   * Lock the post publish  and "Save Draft" buttons.
+   */
+  function lockPostPublish() {
+    Array.from(document.querySelectorAll('#publish,#save-post')).forEach(el => el.disabled = true);
+  }
+
+  /**
+   * Unlock the post publish and "Save Draft" buttons.
+   */
+  function unlockPostPublish() {
+    Array.from(document.querySelectorAll('#publish,#save-post')).forEach(el => el.disabled = false);
+  }
+
+  /**
+   * Toggle the publish lock based on the event and series providers.
+   *
+   * @param {string|null} eventProvider  The current event ticket provider.
+   * @param {string|null} seriesProvider The current series ticket provider.
+   * @param {string}      seriesTitle    Thte title of the currently selected series.
+   */
+  function togglePublishLock(eventProvider, seriesProvider, seriesTitle) {
+    if (eventProvider === seriesProvider || eventProvider === null || seriesProvider === null) {
+      unlockPostPublish();
+      Object(series_relationship["h" /* removeDiscordantProviderNotice */])();
+      return;
+    }
+    lockPostPublish();
+    Object(series_relationship["i" /* showDiscordantProviderNotice */])(getEventTitle(), seriesTitle);
+  }
+
+  /**
+   * Toggle the publish lock when the event ticket provider is changed in the ticket panel.
+   */
+  function onTicketProviderChange() {
+    const seriesProvider = Object(series_relationship["d" /* getSeriesProviderFromSelection */])();
+    const eventProvider = getEventProviderFromPanel();
+    const seriesTitle = Object(series_relationship["f" /* getSeriesTitleFromSelection */])();
+    togglePublishLock(eventProvider, seriesProvider, seriesTitle);
+  }
+
+  /**
+   * Toggle the publish lock when the series is changed in the metabox dropdown.
+   *
+   * @param {Event} event The 'change' event dispatched by Select2.
+   */
+  function onSeriesChange(event) {
+    const seriesProvider = Object(series_relationship["c" /* getSeriesProviderFromEvent */])(event);
+    const eventProvider = getEventProviderFromPanel();
+    const seriesTitle = Object(series_relationship["e" /* getSeriesTitleFromEvent */])(event);
+    togglePublishLock(eventProvider, seriesProvider, seriesTitle);
+  }
+
+  /**
+   * Subscribe to the event dispatched after any ticket panel is swapped.
+   *
+   * @param {Function} onChange The callback function to be called when the ticket panel is swapped.
+   */
+  function subscribeToTicketProviderChange(onChange) {
+    ticketsMetabox.on('after_panel_swap.tickets', onChange);
+  }
+  Object(series_relationship["j" /* subscribeToSeriesChange */])(onSeriesChange);
+  subscribeToTicketProviderChange(onTicketProviderChange);
+}
+onReady(init);
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/classic-editor/tickets-on-recurring-control.js
+var _window, _window$TECFtEditorDa, _window$TECFtEditorDa2, _window2, _window2$TECFtEditorD, _window2$TECFtEditorD2;
+
+
+// The selectors that will be used to interact with the DOM.
+const recurrenceRowSelector = '.recurrence-row';
+const newRecurrenceRowSelector = '.recurrence-row.tribe-datetime-block:not(.tribe-recurrence-exclusion-row)';
+const existingRecurrenceRowSelector = '.recurrence-row.tribe-recurrence-description,' + ' .recurrence-row.tribe-recurrence-exclusion-row';
+const recurrenceNotSupportedRowSelector = '.recurrence-row.tec-events-pro-recurrence-not-supported';
+const recurrenceControls = '.recurrence-container';
+const recurrenceRule = '.recurrence-container .tribe-event-recurrence-rule';
+const ticketTablesSelector = '.tribe-tickets-editor-table-tickets-body';
+const rsvpTicketsSelector = ticketTablesSelector + ' [data-ticket-type="rsvp"]';
+const defaultTicketsSelector = ticketTablesSelector + ' [data-ticket-type="default"]';
+const ticketsMetaboxId = 'tribetickets';
+const ticketWarningSelector = '.tec_ticket-panel__recurring-unsupported-warning';
+const ticketControlsSelector = '#ticket_form_toggle, #rsvp_form_toggle, #settings_form_toggle, .tec_ticket-panel__helper_text__wrap';
+const ticketEditPanelActiveSelector = '#tribe_panel_edit[aria-hidden="false"]';
+
+// Init the control state from the localized data.
+let state = {
+  hasRecurrenceRules: ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : (_window$TECFtEditorDa2 = _window$TECFtEditorDa.event) === null || _window$TECFtEditorDa2 === void 0 ? void 0 : _window$TECFtEditorDa2.isRecurring) || false,
+  hasOwnTickets: ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$TECFtEditorD = _window2.TECFtEditorData) === null || _window2$TECFtEditorD === void 0 ? void 0 : (_window2$TECFtEditorD2 = _window2$TECFtEditorD.event) === null || _window2$TECFtEditorD2 === void 0 ? void 0 : _window2$TECFtEditorD2.hasOwnTickets) || false
+};
+
+// Clone and keep track of the previous state.
+let prevState = Object.assign({}, state);
+
+/**
+ * Update the state and call the callback if the state has changed.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object} newState The updates to the state.
+ */
+function updateState(newState) {
+  prevState = Object.assign({}, state);
+  state = Object.assign({}, state, newState);
+  if (prevState.hasRecurrenceRules === state.hasRecurrenceRules && prevState.hasOwnTickets === state.hasOwnTickets) {
+    // No changes, do nothing.
+    return;
+  }
+  handleControls(state);
+}
+
+/**
+ * Hide the recurrence controls.
+ *
+ * The method will take care of hiding the recurrence controls and showing the recurrence not supported message.
+ *
+ * @since 5.8.0
+ */
+function hideRecurrenceControls() {
+  document.querySelectorAll(recurrenceRowSelector).forEach(el => {
+    el.style.display = 'none';
+  });
+  document.querySelectorAll(recurrenceNotSupportedRowSelector).forEach(el => {
+    el.style.display = 'contents';
+    el.style.visibility = 'visible';
+  });
+}
+
+/**
+ * Show the recurrence controls.
+ *
+ * The method will take care of showing the recurrence controls and hiding the recurrence not supported message.
+ * If the Events has not recurrence rules, the method will show just the button to add recurrence rules.
+ *
+ * @since 5.8.0
+ */
+function showRecurrenceControls() {
+  if (state.hasRecurrenceRules) {
+    document.querySelectorAll(recurrenceRowSelector).forEach(el => {
+      el.style.display = '';
+    });
+  } else {
+    document.querySelectorAll(existingRecurrenceRowSelector).forEach(el => {
+      el.style.display = 'none';
+    });
+    document.querySelectorAll(newRecurrenceRowSelector).forEach(el => {
+      el.style.display = '';
+    });
+  }
+  document.querySelectorAll(recurrenceNotSupportedRowSelector).forEach(el => {
+    el.style.display = 'none';
+  });
+}
+
+/**
+ * Show the ticket controls.
+ *
+ * The method will take care of showing the ticket controls and hiding the ticket warning.
+ *
+ * @since 5.8.0
+ */
+function showTicketControls() {
+  document.querySelectorAll(ticketWarningSelector).forEach(el => {
+    el.style.display = 'none';
+  });
+  document.querySelectorAll(ticketControlsSelector).forEach(el => {
+    el.style.display = '';
+  });
+}
+
+/**
+ * Hide the ticket controls.
+ *
+ * The method will take care of hiding the ticket controls and showing the ticket warning.
+ *
+ * @since 5.8.0
+ */
+function hideTicketControls() {
+  document.querySelectorAll(ticketWarningSelector).forEach(el => {
+    el.style.display = '';
+  });
+  document.querySelectorAll(ticketControlsSelector).forEach(el => {
+    el.style.display = 'none';
+  });
+}
+
+/**
+ * Handle the controls visibility based on the state.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object} newState The new state to hide/show controls based on.
+ */
+function handleControls(newState) {
+  if (!newState.hasRecurrenceRules && !newState.hasOwnTickets) {
+    // The potential state where both recurrence rules and tickets are still possible.
+    showRecurrenceControls();
+    showTicketControls();
+    return;
+  }
+  if (newState.hasOwnTickets && newState.hasRecurrenceRules) {
+    // This newState should not exist; we'll be conservative and hide everything.
+    hideRecurrenceControls();
+    hideTicketControls();
+    return;
+  }
+  if (newState.hasOwnTickets) {
+    // If an event has own tickets, it cannot have recurrence rules.
+    hideRecurrenceControls();
+    showTicketControls();
+    return;
+  }
+
+  // Finally, if an event has recurrence rules, it cannot have own tickets.
+  showRecurrenceControls();
+  hideTicketControls();
+}
+
+// Initialize the controls visibility based on the initial state.
+onReady(() => handleControls(state));
+const recurrenceControlsElement = document.querySelector(recurrenceControls);
+if (recurrenceControlsElement) {
+  // Set up a mutation observer to detect when the recurrence rule is added or removed from the recurrence container.
+  const recurrenceControlsObserver = new MutationObserver(() => {
+    const recurrenceRulesCount = document.querySelectorAll(recurrenceRule).length;
+    updateState({
+      hasRecurrenceRules: recurrenceRulesCount > 0
+    });
+  });
+  recurrenceControlsObserver.observe(recurrenceControlsElement, {
+    childList: true
+  });
+}
+const ticketsMetaboxElement = document.getElementById(ticketsMetaboxId);
+if (ticketsMetaboxElement) {
+  /*
+   * Set up a mutation observer to detect when tickets or RSVPs are added or removed from the tickets metabox.
+   * Also: detect when the user is editing or creating a ticket.
+   */
+  const ticketsObserver = new MutationObserver(() => {
+    // Run the DOM queries only if required.
+    const hasOwnTickets = document.querySelectorAll(rsvpTicketsSelector).length ||
+    // Has RSVP tickets or...
+    document.querySelectorAll(defaultTicketsSelector).length ||
+    // ...has default tickets or...
+    document.querySelectorAll(ticketEditPanelActiveSelector).length; // ...is editing a ticket.
+    updateState({
+      hasOwnTickets
+    });
+  });
+  ticketsObserver.observe(ticketsMetaboxElement, {
+    childList: true,
+    subtree: true,
+    attributes: true
+  });
+}
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/classic-editor/index.js
+
+
 
 /***/ })
 

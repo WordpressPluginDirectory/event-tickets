@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInite99810171ee43e515e07ad2afa4a8519
+class ComposerStaticInit3f3f13f808bea4db0ed758c8b9f0e923
 {
     public static $prefixLengthsPsr4 = array (
         'T' => 
@@ -295,6 +295,60 @@ class ComposerStaticInite99810171ee43e515e07ad2afa4a8519
         'TEC\\Tickets\\Recurrence\\Compatibility' => __DIR__ . '/../..' . '/src/Tickets/Recurrence/Compatibility.php',
         'TEC\\Tickets\\Recurrence\\Hooks' => __DIR__ . '/../..' . '/src/Tickets/Recurrence/Hooks.php',
         'TEC\\Tickets\\Recurrence\\Provider' => __DIR__ . '/../..' . '/src/Tickets/Recurrence/Provider.php',
+        'TEC\\Tickets\\Seating\\Admin' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin.php',
+        'TEC\\Tickets\\Seating\\Admin\\Ajax' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Ajax.php',
+        'TEC\\Tickets\\Seating\\Admin\\Events\\Associated_Events' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Events/Associated_Events.php',
+        'TEC\\Tickets\\Seating\\Admin\\Events\\Controller' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Events/Controller.php',
+        'TEC\\Tickets\\Seating\\Admin\\Maps_Layouts_Home_Page' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Maps_Layouts_Home_Page.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Layout_Card' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Layout_Card.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Layout_Edit' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Layout_Edit.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Layouts' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Layouts.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Map_Card' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Map_Card.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Map_Edit' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Map_Edit.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Maps' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Maps.php',
+        'TEC\\Tickets\\Seating\\Admin\\Tabs\\Tab' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Tabs/Tab.php',
+        'TEC\\Tickets\\Seating\\Admin\\Template' => __DIR__ . '/../..' . '/src/Tickets/Seating/Admin/Template.php',
+        'TEC\\Tickets\\Seating\\Ajax_Methods' => __DIR__ . '/../..' . '/src/Tickets/Seating/Ajax_Methods.php',
+        'TEC\\Tickets\\Seating\\Assets' => __DIR__ . '/../..' . '/src/Tickets/Seating/Assets.php',
+        'TEC\\Tickets\\Seating\\Built_Assets' => __DIR__ . '/../..' . '/src/Tickets/Seating/Built_Assets.php',
+        'TEC\\Tickets\\Seating\\Commerce\\Attendees' => __DIR__ . '/../..' . '/src/Tickets/Seating/Commerce/Attendees.php',
+        'TEC\\Tickets\\Seating\\Commerce\\Controller' => __DIR__ . '/../..' . '/src/Tickets/Seating/Commerce/Controller.php',
+        'TEC\\Tickets\\Seating\\Controller' => __DIR__ . '/../..' . '/src/Tickets/Seating/Controller.php',
+        'TEC\\Tickets\\Seating\\Delete_Operations' => __DIR__ . '/../..' . '/src/Tickets/Seating/Delete_Operations.php',
+        'TEC\\Tickets\\Seating\\Editor' => __DIR__ . '/../..' . '/src/Tickets/Seating/Editor.php',
+        'TEC\\Tickets\\Seating\\Frontend' => __DIR__ . '/../..' . '/src/Tickets/Seating/Frontend.php',
+        'TEC\\Tickets\\Seating\\Frontend\\Session' => __DIR__ . '/../..' . '/src/Tickets/Seating/Frontend/Session.php',
+        'TEC\\Tickets\\Seating\\Frontend\\Timer' => __DIR__ . '/../..' . '/src/Tickets/Seating/Frontend/Timer.php',
+        'TEC\\Tickets\\Seating\\Health' => __DIR__ . '/../..' . '/src/Tickets/Seating/Health.php',
+        'TEC\\Tickets\\Seating\\Libraries\\Uplink' => __DIR__ . '/../..' . '/src/Tickets/Seating/Libraries/Uplink.php',
+        'TEC\\Tickets\\Seating\\Localization' => __DIR__ . '/../..' . '/src/Tickets/Seating/Localization.php',
+        'TEC\\Tickets\\Seating\\Logging' => __DIR__ . '/../..' . '/src/Tickets/Seating/Logging.php',
+        'TEC\\Tickets\\Seating\\Meta' => __DIR__ . '/../..' . '/src/Tickets/Seating/Meta.php',
+        'TEC\\Tickets\\Seating\\Orders\\Attendee' => __DIR__ . '/../..' . '/src/Tickets/Seating/Orders/Attendee.php',
+        'TEC\\Tickets\\Seating\\Orders\\Cart' => __DIR__ . '/../..' . '/src/Tickets/Seating/Orders/Cart.php',
+        'TEC\\Tickets\\Seating\\Orders\\Controller' => __DIR__ . '/../..' . '/src/Tickets/Seating/Orders/Controller.php',
+        'TEC\\Tickets\\Seating\\Orders\\Seats_Report' => __DIR__ . '/../..' . '/src/Tickets/Seating/Orders/Seats_Report.php',
+        'TEC\\Tickets\\Seating\\Orders\\Seats_Tab' => __DIR__ . '/../..' . '/src/Tickets/Seating/Orders/Seats_Tab.php',
+        'TEC\\Tickets\\Seating\\QR' => __DIR__ . '/../..' . '/src/Tickets/Seating/QR.php',
+        'TEC\\Tickets\\Seating\\Service\\Ephemeral_Token' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Ephemeral_Token.php',
+        'TEC\\Tickets\\Seating\\Service\\Error_Content' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Error_Content.php',
+        'TEC\\Tickets\\Seating\\Service\\Layouts' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Layouts.php',
+        'TEC\\Tickets\\Seating\\Service\\Maps' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Maps.php',
+        'TEC\\Tickets\\Seating\\Service\\OAuth_Token' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/OAuth_Token.php',
+        'TEC\\Tickets\\Seating\\Service\\Reservations' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Reservations.php',
+        'TEC\\Tickets\\Seating\\Service\\Seat_Types' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Seat_Types.php',
+        'TEC\\Tickets\\Seating\\Service\\Service' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Service.php',
+        'TEC\\Tickets\\Seating\\Service\\Service_Status' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Service_Status.php',
+        'TEC\\Tickets\\Seating\\Service\\Updater' => __DIR__ . '/../..' . '/src/Tickets/Seating/Service/Updater.php',
+        'TEC\\Tickets\\Seating\\Tables' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables.php',
+        'TEC\\Tickets\\Seating\\Tables\\Custom_Table_Query_Methods' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Custom_Table_Query_Methods.php',
+        'TEC\\Tickets\\Seating\\Tables\\Layouts' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Layouts.php',
+        'TEC\\Tickets\\Seating\\Tables\\Maps' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Maps.php',
+        'TEC\\Tickets\\Seating\\Tables\\Seat_Types' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Seat_Types.php',
+        'TEC\\Tickets\\Seating\\Tables\\Sessions' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Sessions.php',
+        'TEC\\Tickets\\Seating\\Tables\\Truncate_Methods' => __DIR__ . '/../..' . '/src/Tickets/Seating/Tables/Truncate_Methods.php',
+        'TEC\\Tickets\\Seating\\Template' => __DIR__ . '/../..' . '/src/Tickets/Seating/Template.php',
+        'TEC\\Tickets\\Seating\\Uplink' => __DIR__ . '/../..' . '/src/Tickets/Seating/Uplink.php',
         'TEC\\Tickets\\Settings' => __DIR__ . '/../..' . '/src/Tickets/Settings.php',
         'TEC\\Tickets\\Site_Health\\Abstract_Info_Subsection' => __DIR__ . '/../..' . '/src/Tickets/Site_Health/Abstract_Info_Subsection.php',
         'TEC\\Tickets\\Site_Health\\Info_Section' => __DIR__ . '/../..' . '/src/Tickets/Site_Health/Info_Section.php',
@@ -341,9 +395,9 @@ class ComposerStaticInite99810171ee43e515e07ad2afa4a8519
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInite99810171ee43e515e07ad2afa4a8519::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInite99810171ee43e515e07ad2afa4a8519::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInite99810171ee43e515e07ad2afa4a8519::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit3f3f13f808bea4db0ed758c8b9f0e923::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit3f3f13f808bea4db0ed758c8b9f0e923::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit3f3f13f808bea4db0ed758c8b9f0e923::$classMap;
 
         }, null, ClassLoader::class);
     }

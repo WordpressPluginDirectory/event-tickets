@@ -2,7 +2,7 @@
 
 Contributors: theeventscalendar, brianjessee, camwynsp, redscar, tribalmike, rafsuntaskin, aguseo, bordoni, borkweb, GeoffBel, jentheo, leahkoerper, lucatume, neillmcshea, vicskf, zbtirrell, juanfra
 Tags: tickets, event registration, RSVP, ticket sales, attendee management
-Stable tag: 5.15.0
+Stable tag: 5.16.0.1
 Requires at least: 6.3
 Tested up to: 6.6.2
 Requires PHP: 7.4
@@ -203,6 +203,30 @@ Check out our extensive [knowledgebase](https://evnt.is/18wm) for articles on us
 
 == Changelog ==
 
+= [5.16.0.1] 2024-10-30 =
+
+* Fix - Resolved a fatal error that prevented the Sessions table from being set up on some databases with stricter settings. [ET-2262]
+
+= [5.16.0] 2024-10-30 =
+
+* Version - Event Tickets 5.16.0 is only compatible with Event Tickets Plus 6.1.0 or higher.
+* Version - Event Tickets 5.16.0 is only compatible with The Events Calendar 6.8.0 or higher.
+* Feature - Added per-event Seats tab for managing attendees with assigned seating.
+* Feature - Integrate with the new premium Seating Builder SaaS to create Seat Maps and Layouts for assigned seating.
+* Feature - Introduced new premium Seating option for selling tickets with assigned seating.
+* Tweak - Added actions: `tec_tickets_seating_tab_{$tab}`, `tec_tickets_seating_session_interrupt`, `tec_tickets_seating_invalidate_layouts_cache`, `tec_tickets_seating_invalidate_maps_layouts_cache`, `tec_tickets_seating_delete_reservations_from_attendees`, `tec_tickets_seating_deleted_reservations_from_attendees`, `tec_tickets_seating_reservations_updated`, `tec_tickets_seating_seat_selection_timer`
+* Tweak - Added filters: `tec_tickets_seating_active`, `tec_tickets_seating_service_base_url`, `tec_tickets_seating_service_frontend_url`, `tec_tickets_seating_tickets_block_html`, `tec_tickets_seating_session_cookie_expiration_time`, `tec_tickets_seating_selection_timeout`, `tec_tickets_seat_selection_timer_expired_data`, `tec_tickets_seating_fetch_attendees_per_page`, `tec_tickets_seating_ephemeral_token`, `tec_tickets_seating_ephemeral_token_site_url`, `tec_tickets_attendees_page_render_context`, `tec_tickets_attendees_table_sortable_columns`, `tribe_tickets_ticket_inventory`
+* Tweak - Added license key field and SaaS connection UI for premium Seating tool.
+* Tweak - Added Seat column to Attendees tab and page for attendees with assigned seating.
+* Tweak - Added Seat Layout setting to per-event Ticket Settings
+* Tweak - Added two new Site Health checks for Seating.
+* Tweak - Changed views: `emails/template-parts/header/head/styles`, `seating/iframe-view`, `seating/seat-selection-timer`, `seating/tickets-block-error`, `seating/tickets-block`, `v2/tickets/item`
+* Tweak - New compact frontend ticket display for events with assigned seating tickets.
+* Tweak - Removed superfluous tool tip from capacity options in block editor.
+* Tweak - Show seat assignment on My Tickets page for attendees with assigned seating.
+* Tweak - Show seat assignment on tickets for attendees with assigned seating.
+* Language - 130 new strings added, 52 updated, 0 fuzzied, and 0 obsoleted
+
 = [5.15.0] 2024-10-21 =
 
 * Fix - Tickets Commerce orders through Stripe no longer will create duplicate attendees. [ET-2256]
@@ -213,8 +237,6 @@ Check out our extensive [knowledgebase](https://evnt.is/18wm) for articles on us
 * Fix - Wrong ticket stock when attendeed were moved between tickets [ET-2098]
 * Fix - Fix issue with svg display in settings page. [TEC-5282]
 * Tweak - Modify language around ticket capacity on "Tickets" block to improve clarity.
-* Tweak - Added filters: `tec_tickets_admin_tickets_table_default_status`, `tec_tickets_admin_tickets_table_default_sort_by`, `tec_tickets_admin_tickets_table_default_sort_order`, `tec_tickets_admin_tickets_table_columns`, `tec_tickets_admin_tickets_table_default_hidden_columns`, `tec_tickets_admin_tickets_table_sortable_columns`, `tec_tickets_admin_tickets_table_column_default`, `tec_tickets_admin_tickets_table_column_default_{$column_name}`, `tec_tickets_admin_tickets_table_column_name`, `tec_tickets_admin_tickets_table_column_id`, `tec_tickets_admin_tickets_table_event_actions`, `tec_tickets_admin_tickets_table_column_event`, `tec_tickets_admin_tickets_table_column_start_date`, `tec_tickets_admin_tickets_table_column_end_date`, `tec_tickets_admin_tickets_table_column_days_left`, `tec_tickets_admin_tickets_table_column_price`, `tec_tickets_admin_tickets_table_column_sold`, `tec_tickets_admin_tickets_table_column_remaining`, `tec_tickets_admin_tickets_table_column_sales`, `tec_tickets_admin_tickets_table_query_args`, `tec_tickets_admin_tickets_table_status_options`, `tec_tickets_admin_tickets_table_provider_info`, `tec_tickets_admin_tickets_page_url`, `tec_tickets_admin_tickets_screen_options_show_screen`, `tec_tickets_attendees_user_can_export_csv`, `tec_tickets_attendees_table_cache_key`, `tec_tickets_search_attendees_default`
-* Tweak - Added actions: `tec_tickets_editor_list_table_title_icon_`, `tec_tickets_ticket_duplicated`, `tec_tickets_tickets_duplicated`
 * Language - 0 new strings added, 61 updated, 0 fuzzied, and 0 obsoleted
 
 = [5.14.0] 2024-10-09 =

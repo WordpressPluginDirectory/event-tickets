@@ -812,6 +812,15 @@
 					flex: 1 0 100%;
 				}
 
+.tribe-tickets span.tec-tickets__ticket-information__seat-label:after {
+		background-color: #d6d6d6;
+		content: "";
+		display: inline-block;
+		height: 11px;
+		margin-left: 5px;
+		width: 1px;
+	}
+
 /**
  * Event Tickets - Tickets Stylesheet - My Tickets -> Flexible Tickets
  *

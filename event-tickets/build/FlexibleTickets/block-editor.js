@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		2: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -148,7 +148,7 @@
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push(["HP+e",0]);
+/******/ 	deferredModules.push(["cc/f",0,1]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -527,6 +527,201 @@ const IS_FREE_TC_TICKET_ALLOWED = (_window3 = window) === null || _window3 === v
 
 /***/ }),
 
+/***/ "DyRx":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export getSeriesDataFromElement */
+/* unused harmony export getSeriesDataFromEvent */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return getSeriesTitleFromEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getSeriesProviderFromEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getSeriesProviderFromSelection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return getSeriesTitleFromSelection; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getSeriesEditLinkFromMetaBox; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return subscribeToSeriesChange; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return removeDiscordantProviderNotice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return showDiscordantProviderNotice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return hasSelectedSeries; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getSeriesPostIdFromSelection; });
+const {
+  fieldSelector,
+  containerSelector,
+  differentProviderNoticeSelector,
+  differentProviderNoticeTemplate
+} = window.TECFtEditorData.seriesRelationship;
+const noticeSelector = containerSelector + ' ' + differentProviderNoticeSelector;
+
+/**
+ * Get the series data from the metabox dropdown element's value attribute.
+ *
+ * @since 5.8.0
+ *
+ * @param {Element|null} element The metabox dropdown element.
+ * @param {string}       key     The key of the series data to retrieve.
+ *
+ * @return {string|null} The series data read from the element's value attribute, `null` if not found.
+ */
+function getSeriesDataFromElement(element, key) {
+  if (!(element && element.value)) {
+    return null;
+  }
+  const seriesJsonData = element.value;
+  try {
+    return JSON.parse(seriesJsonData)[key] || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Get the series data from the `change` event dispatched by Select2 when the series is changed
+ *
+ * @since 5.8.0
+ *
+ * @param {Event}  event The `change` event dispatched by Select2.
+ * @param {string} key   The key of the series data to retrieve.
+ *
+ * @return {string|null} The series data read from the selected option data, `null` if not found.
+ */
+function getSeriesDataFromEvent(event, key) {
+  if (!event.currentTarget) {
+    return null;
+  }
+  return getSeriesDataFromElement(event.currentTarget, key);
+}
+
+/**
+ * Get the series title from the `change` event dispatched by Select2 when the series is changed
+ * by the user in the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @param {Event} event The `change` event dispatched by Select2.
+ *
+ * @return {string} The title of the series read from the selected option data.
+ */
+function getSeriesTitleFromEvent(event) {
+  return getSeriesDataFromEvent(event, 'title') || '';
+}
+
+/**
+ * Get the series ticket provider from the `change` event dispatched by Select2 when the series is changed
+ *
+ * @since 5.8.0
+ *
+ * @param {Event} event The `change` event dispatched by Select2.
+ *
+ * @return {string|null} The ticket provider of the series read from the selected option data, `null` if not found.
+ */
+function getSeriesProviderFromEvent(event) {
+  return getSeriesDataFromEvent(event, 'ticket_provider');
+}
+
+/**
+ * Get the series ticket provider from the currently selected series in the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @return {string|null} The ticket provider of the series read from the selected option data, `null` if not found.
+ */
+function getSeriesProviderFromSelection() {
+  const seriesSelect = document.getElementById(fieldSelector.substring(1));
+  return getSeriesDataFromElement(seriesSelect, 'ticket_provider');
+}
+
+/**
+ * Get the series title from the currently selected series in the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @return {string|null} The title of the series read from the selected option data, `null` if not found.
+ */
+function getSeriesTitleFromSelection() {
+  const seriesSelect = document.getElementById(fieldSelector.substring(1));
+  return getSeriesDataFromElement(seriesSelect, 'title');
+}
+
+/**
+ * Get the series edit link from the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @param {string|null} append The string to append to the edit link.
+ *
+ * @return {string } The edit link of the series read from the selected option data, or an empty string if not found.
+ */
+function getSeriesEditLinkFromMetaBox() {
+  let append = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#tribetickets';
+  const editLinkElement = document.querySelector(containerSelector + ' a.tec-events-pro-series__edit-link');
+  const editLink = (editLinkElement === null || editLinkElement === void 0 ? void 0 : editLinkElement.getAttribute('href')) || '';
+  return editLink + (append ? append : '');
+}
+
+/**
+ * Subscribe to the series change event.
+ *
+ * @since 5.8.0
+ *
+ * This is the event triggered by the user selecting a series in the metabox dropdown.
+ *
+ * @param {Function} onChange The callback function to be called when the series is changed.
+ */
+function subscribeToSeriesChange(onChange) {
+  jQuery(fieldSelector).on('change', onChange);
+}
+
+/**
+ * Remove the notice that the event and series have different ticket providers.
+ *
+ * @since 5.8.0
+ */
+function removeDiscordantProviderNotice() {
+  Array.from(document.querySelectorAll(noticeSelector)).map(el => el.remove(true));
+}
+
+/**
+ * Show a notice that the event and series have different ticket providers.
+ *
+ * @since 5.8.0
+ *
+ * @param {string} eventTitle  The title of the event.
+ * @param {string} seriesTitle The title of the series.
+ */
+function showDiscordantProviderNotice(eventTitle, seriesTitle) {
+  removeDiscordantProviderNotice();
+  const noticeElement = document.createElement('div');
+  noticeElement.classList.add(differentProviderNoticeSelector.substring(1));
+  noticeElement.style['margin-top'] = 'var(--tec-spacer-1)';
+  noticeElement.textContent = differentProviderNoticeTemplate.replace('%1$s', eventTitle).replace('%2$s', seriesTitle);
+  document.querySelector(containerSelector).append(noticeElement);
+}
+
+/**
+ * Check if the user has selected a series in the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @return {boolean}
+ */
+function hasSelectedSeries() {
+  const seriesSelect = document.getElementById(fieldSelector.substring(1));
+  return (seriesSelect === null || seriesSelect === void 0 ? void 0 : seriesSelect.value) !== '' && (seriesSelect === null || seriesSelect === void 0 ? void 0 : seriesSelect.value) !== '-1';
+}
+
+/**
+ * Get the post ID of the currently selected series in the metabox dropdown.
+ *
+ * @since 5.8.0
+ *
+ * @return {number|null} The post ID of the selected series, `null` if not found.
+ */
+function getSeriesPostIdFromSelection() {
+  const seriesSelect = document.getElementById(fieldSelector.substring(1));
+  return getSeriesDataFromElement(seriesSelect, 'id');
+}
+
+/***/ }),
+
 /***/ "Etll":
 /***/ (function(module, exports) {
 
@@ -538,849 +733,6 @@ module.exports = lodash.includes;
 /***/ (function(module, exports) {
 
 module.exports = wp.element;
-
-/***/ }),
-
-/***/ "HP+e":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: external "wp.data"
-var external_wp_data_ = __webpack_require__("1ZqX");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/types.js
-/* harmony default export */ var types = ({
-  SET_DEFAULT_TICKET_DESCRIPTION: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_DEFAULT_TICKET_DESCRIPTION',
-  SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE',
-  SET_SERIES_DATA: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_SERIES_DATA'
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/actions.js
-
-/* harmony default export */ var actions = ({
-  setDefaultTicketTypeDescriptionTemplate: defaultTicketTypeDescriptionTemplate => ({
-    type: types.SET_DEFAULT_TICKET_DESCRIPTION,
-    defaultTicketTypeDescriptionTemplate
-  }),
-  setMultipleProvidersNoticeTemplate: multipleProvidersNoticeTemplate => ({
-    type: types.SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE,
-    multipleProvidersNoticeTemplate
-  }),
-  setSeriesData: (isInSeries, seriesData) => ({
-    type: types.SET_SERIES_DATA,
-    isInSeries,
-    seriesData
-  })
-});
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
-var defineProperty = __webpack_require__("lSNA");
-var defineProperty_default = /*#__PURE__*/__webpack_require__.n(defineProperty);
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/default-state.js
-var _window, _window$TECFtEditorDa, _window2, _window2$TECFtEditorD, _window3, _window3$tribe_editor, _window3$tribe_editor2, _window4, _window4$TECFtEditorD, _window4$TECFtEditorD2, _window5, _window5$TECFtEditorD, _window5$TECFtEditorD2, _window6, _window6$TECFtEditorD, _window6$TECFtEditorD2, _window7, _window7$TECFtEditorD, _window7$TECFtEditorD2, _window8, _window8$TECFtEditorD, _window8$TECFtEditorD2, _window9, _window9$TECFtEditorD, _window9$TECFtEditorD2, _window10, _window10$TECFtEditor, _window10$TECFtEditor2, _window11, _window11$TECFtEditor, _window11$TECFtEditor2, _window12, _window12$TECFtEditor, _window12$TECFtEditor2, _window13, _window13$TECFtEditor, _window13$TECFtEditor2, _window14, _window14$TECFtEditor, _window14$TECFtEditor2, _window15, _window15$TECFtEditor, _window15$TECFtEditor2, _window16, _window16$TECFtEditor, _window16$TECFtEditor2, _window17, _window17$TECFtEditor, _window17$TECFtEditor2, _window18, _window18$TECFtEditor, _window18$TECFtEditor2;
-/* harmony default export */ var default_state = ({
-  isInSeries: ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : _window$TECFtEditorDa.event.isInSeries) || false,
-  defaultTicketTypeDescriptionTemplate: ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$TECFtEditorD = _window2.TECFtEditorData) === null || _window2$TECFtEditorD === void 0 ? void 0 : _window2$TECFtEditorD.defaultTicketTypeEventInSeriesDescriptionTemplate) || '',
-  multipleProvidersNoticeTemplate: ((_window3 = window) === null || _window3 === void 0 ? void 0 : (_window3$tribe_editor = _window3.tribe_editor_config) === null || _window3$tribe_editor === void 0 ? void 0 : (_window3$tribe_editor2 = _window3$tribe_editor.tickets) === null || _window3$tribe_editor2 === void 0 ? void 0 : _window3$tribe_editor2.multipleProvidersNoticeTemplate) || '',
-  series: {
-    title: ((_window4 = window) === null || _window4 === void 0 ? void 0 : (_window4$TECFtEditorD = _window4.TECFtEditorData) === null || _window4$TECFtEditorD === void 0 ? void 0 : (_window4$TECFtEditorD2 = _window4$TECFtEditorD.series) === null || _window4$TECFtEditorD2 === void 0 ? void 0 : _window4$TECFtEditorD2.title) || '',
-    editLink: ((_window5 = window) === null || _window5 === void 0 ? void 0 : (_window5$TECFtEditorD = _window5.TECFtEditorData) === null || _window5$TECFtEditorD === void 0 ? void 0 : (_window5$TECFtEditorD2 = _window5$TECFtEditorD.series) === null || _window5$TECFtEditorD2 === void 0 ? void 0 : _window5$TECFtEditorD2.editLink) || '',
-    hasSeriesPasses: ((_window6 = window) === null || _window6 === void 0 ? void 0 : (_window6$TECFtEditorD = _window6.TECFtEditorData) === null || _window6$TECFtEditorD === void 0 ? void 0 : (_window6$TECFtEditorD2 = _window6$TECFtEditorD.series) === null || _window6$TECFtEditorD2 === void 0 ? void 0 : _window6$TECFtEditorD2.seriesPassesCount) > 0,
-    seriesPassTotalCapacity: ((_window7 = window) === null || _window7 === void 0 ? void 0 : (_window7$TECFtEditorD = _window7.TECFtEditorData) === null || _window7$TECFtEditorD === void 0 ? void 0 : (_window7$TECFtEditorD2 = _window7$TECFtEditorD.series) === null || _window7$TECFtEditorD2 === void 0 ? void 0 : _window7$TECFtEditorD2.seriesPassTotalCapacity) || 0,
-    seriesPassTotalAvailable: ((_window8 = window) === null || _window8 === void 0 ? void 0 : (_window8$TECFtEditorD = _window8.TECFtEditorData) === null || _window8$TECFtEditorD === void 0 ? void 0 : (_window8$TECFtEditorD2 = _window8$TECFtEditorD.series) === null || _window8$TECFtEditorD2 === void 0 ? void 0 : _window8$TECFtEditorD2.seriesPassAvailableCapacity) || 0,
-    seriesPassSharedCapacity: ((_window9 = window) === null || _window9 === void 0 ? void 0 : (_window9$TECFtEditorD = _window9.TECFtEditorData) === null || _window9$TECFtEditorD === void 0 ? void 0 : (_window9$TECFtEditorD2 = _window9$TECFtEditorD.series) === null || _window9$TECFtEditorD2 === void 0 ? void 0 : _window9$TECFtEditorD2.seriesPassSharedCapacity) || 0,
-    seriesPassSharedCapacityItems: ((_window10 = window) === null || _window10 === void 0 ? void 0 : (_window10$TECFtEditor = _window10.TECFtEditorData) === null || _window10$TECFtEditor === void 0 ? void 0 : (_window10$TECFtEditor2 = _window10$TECFtEditor.series) === null || _window10$TECFtEditor2 === void 0 ? void 0 : _window10$TECFtEditor2.seriesPassSharedCapacityItems) || '',
-    seriesPassIndependentCapacity: ((_window11 = window) === null || _window11 === void 0 ? void 0 : (_window11$TECFtEditor = _window11.TECFtEditorData) === null || _window11$TECFtEditor === void 0 ? void 0 : (_window11$TECFtEditor2 = _window11$TECFtEditor.series) === null || _window11$TECFtEditor2 === void 0 ? void 0 : _window11$TECFtEditor2.seriesPassIndependentCapacity) || 0,
-    seriesPassIndependentCapacityItems: ((_window12 = window) === null || _window12 === void 0 ? void 0 : (_window12$TECFtEditor = _window12.TECFtEditorData) === null || _window12$TECFtEditor === void 0 ? void 0 : (_window12$TECFtEditor2 = _window12$TECFtEditor.series) === null || _window12$TECFtEditor2 === void 0 ? void 0 : _window12$TECFtEditor2.seriesPassIndependentCapacityItems) || '',
-    seriesPassUnlimitedCapacityItems: ((_window13 = window) === null || _window13 === void 0 ? void 0 : (_window13$TECFtEditor = _window13.TECFtEditorData) === null || _window13$TECFtEditor === void 0 ? void 0 : (_window13$TECFtEditor2 = _window13$TECFtEditor.series) === null || _window13$TECFtEditor2 === void 0 ? void 0 : _window13$TECFtEditor2.seriesPassUnlimitedCapacityItems) || '',
-    hasUnlimitedSeriesPasses: ((_window14 = window) === null || _window14 === void 0 ? void 0 : (_window14$TECFtEditor = _window14.TECFtEditorData) === null || _window14$TECFtEditor === void 0 ? void 0 : (_window14$TECFtEditor2 = _window14$TECFtEditor.series) === null || _window14$TECFtEditor2 === void 0 ? void 0 : _window14$TECFtEditor2.hasUnlimitedSeriesPasses) || false,
-    headerLink: ((_window15 = window) === null || _window15 === void 0 ? void 0 : (_window15$TECFtEditor = _window15.TECFtEditorData) === null || _window15$TECFtEditor === void 0 ? void 0 : (_window15$TECFtEditor2 = _window15$TECFtEditor.series) === null || _window15$TECFtEditor2 === void 0 ? void 0 : _window15$TECFtEditor2.headerLink) || '#',
-    headerLinkText: ((_window16 = window) === null || _window16 === void 0 ? void 0 : (_window16$TECFtEditor = _window16.TECFtEditorData) === null || _window16$TECFtEditor === void 0 ? void 0 : (_window16$TECFtEditor2 = _window16$TECFtEditor.series) === null || _window16$TECFtEditor2 === void 0 ? void 0 : _window16$TECFtEditor2.headerLinkText) || '',
-    headerLinkTemplate: ((_window17 = window) === null || _window17 === void 0 ? void 0 : (_window17$TECFtEditor = _window17.TECFtEditorData) === null || _window17$TECFtEditor === void 0 ? void 0 : (_window17$TECFtEditor2 = _window17$TECFtEditor.series) === null || _window17$TECFtEditor2 === void 0 ? void 0 : _window17$TECFtEditor2.headerLinkTemplate) || ''
-  },
-  labels: {
-    seriesPassPluralUppercase: ((_window18 = window) === null || _window18 === void 0 ? void 0 : (_window18$TECFtEditor = _window18.TECFtEditorData) === null || _window18$TECFtEditor === void 0 ? void 0 : (_window18$TECFtEditor2 = _window18$TECFtEditor.labels) === null || _window18$TECFtEditor2 === void 0 ? void 0 : _window18$TECFtEditor2.seriesPassPluralUppercase) || ''
-  }
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/reducer.js
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-
-/* harmony default export */ var reducer = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : default_state;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
-  switch (action.type) {
-    case types.SET_DEFAULT_TICKET_DESCRIPTION:
-      return _objectSpread(_objectSpread({}, state), {}, {
-        defaultTicketTypeDescriptionTemplate: String(action.defaultTicketTypeDescriptionTemplate)
-      });
-    case types.SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE:
-      return _objectSpread(_objectSpread({}, state), {}, {
-        multipleProvidersNoticeTemplate: String(action.multipleProvidersNoticeTemplate)
-      });
-    case types.SET_SERIES_DATA:
-      return _objectSpread(_objectSpread({}, state), {}, {
-        isInSeries: Boolean(action.isInSeries).valueOf(),
-        series: _objectSpread(_objectSpread({}, state.series), action.seriesData)
-      });
-    default:
-      return state;
-  }
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/selectors.js
-/* harmony default export */ var selectors = ({
-  hasSeriesPasses(state) {
-    return state.series.hasSeriesPasses;
-  },
-  isInSeries(state) {
-    return state.isInSeries;
-  },
-  getDefaultTicketTypeDescriptionTemplate(state) {
-    return state.defaultTicketTypeDescriptionTemplate;
-  },
-  getSeriesPassTotalCapacity(state) {
-    return state.series.seriesPassTotalCapacity;
-  },
-  getSeriesPassTotalAvailable(state) {
-    return state.series.seriesPassTotalAvailable;
-  },
-  getSeriesHeaderLink(state) {
-    return state.series.headerLink;
-  },
-  getSeriesHeaderLinkTemplate(state) {
-    return state.series.headerLinkTemplate;
-  },
-  getSeriesHeaderLinkText(state) {
-    return state.series.headerLinkText;
-  },
-  getSeriesInformation(state) {
-    return {
-      title: state.series.title,
-      editLink: state.series.editLink
-    };
-  },
-  getMultipleProvidersNoticeTemplate(state) {
-    return state.multipleProvidersNoticeTemplate;
-  },
-  getSeriesPassSharedCapacity(state) {
-    return state.series.seriesPassSharedCapacity;
-  },
-  getSeriesPassIndependentCapacity(state) {
-    return state.series.seriesPassIndependentCapacity;
-  },
-  getSeriesPassSharedCapacityItems(state) {
-    return state.series.seriesPassSharedCapacityItems;
-  },
-  getSeriesPassIndependentCapacityItems(state) {
-    return state.series.seriesPassIndependentCapacityItems;
-  },
-  getSeriesPassUnlimitedCapacityItems(state) {
-    return state.series.seriesPassUnlimitedCapacityItems;
-  },
-  hasUnlimitedSeriesPasses(state) {
-    return state.series.hasUnlimitedSeriesPasses;
-  },
-  getLabels(state) {
-    return state.labels;
-  }
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/index.js
-
-
-
-
-const store = Object(external_wp_data_["createReduxStore"])('tec-tickets/flexible-tickets', {
-  reducer: reducer,
-  actions: actions,
-  selectors: selectors,
-  controls: {},
-  resolvers: {}
-});
-Object(external_wp_data_["register"])(store);
-// EXTERNAL MODULE: external "wp.hooks"
-var external_wp_hooks_ = __webpack_require__("g56x");
-
-// EXTERNAL MODULE: external "tribe.modules.propTypes"
-var external_tribe_modules_propTypes_ = __webpack_require__("rf6O");
-var external_tribe_modules_propTypes_default = /*#__PURE__*/__webpack_require__.n(external_tribe_modules_propTypes_);
-
-// EXTERNAL MODULE: external "React"
-var external_React_ = __webpack_require__("cDcd");
-
-// EXTERNAL MODULE: external "wp.i18n"
-var external_wp_i18n_ = __webpack_require__("l3Sj");
-
-// EXTERNAL MODULE: external "wp.element"
-var external_wp_element_ = __webpack_require__("GRId");
-
-// EXTERNAL MODULE: ./src/modules/elements/index.js + 26 modules
-var modules_elements = __webpack_require__("jHzm");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/components/series-pass-notice/template.js
-/**
- * External dependencies
- */
-
-
-
-/**
- * Wordpress dependencies
- */
-
-
-
-/**
- * Internal dependencies
- */
-
-const SeriesPassNotice = _ref => {
-  let {
-    seriesPassLink,
-    seriesName
-  } = _ref;
-  return wp.element.createElement("div", null, wp.element.createElement(modules_elements["Notice"], {
-    description: wp.element.createElement("div", {
-      dangerouslySetInnerHTML: {
-        __html: Object(external_wp_i18n_["sprintf"])(Object(external_wp_i18n_["_x"])('Create and manage Series Passes from the %s Series admin.', 'The message displayed to a user editing an Event part of a Series with ' + 'Series Passes to let them know where to manage Series Passes.', 'event-tickets'), Object(external_wp_element_["renderToString"])(wp.element.createElement("a", {
-          className: "helper-link",
-          href: seriesPassLink,
-          target: "_blank",
-          rel: "noopener noreferrer"
-        }, seriesName)))
-      }
-    })
-  }));
-};
-SeriesPassNotice.propTypes = {
-  seriesPassLink: external_tribe_modules_propTypes_default.a.string,
-  seriesName: external_tribe_modules_propTypes_default.a.string
-};
-/* harmony default export */ var template = (SeriesPassNotice);
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/store/hoc.js
-
-const withStore = mapStateToProps => Object(external_wp_data_["withSelect"])(select => mapStateToProps(select('tec-tickets/flexible-tickets')));
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/components/series-pass-notice/container.js
-
-
-const container_mapStateToProps = store => {
-  const {
-    getSeriesInformation
-  } = store;
-  const {
-    title,
-    editLink
-  } = getSeriesInformation();
-  return {
-    seriesName: title,
-    seriesPassLink: editLink + '#tribetickets'
-  };
-};
-/* harmony default export */ var container = (withStore(container_mapStateToProps)(template));
-// EXTERNAL MODULE: external "tribe.common.utils.recurrence"
-var external_tribe_common_utils_recurrence_ = __webpack_require__("8C5M");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/hooks/filters.js
-/**
- * This file contains all the functions that are used to filter the event block editor
- * in its various parts to support the Flexible Tickets feature.
- */
-
-
-
-
-
-
-
-/**
- * Pull the Flexible Tickets data from the dedicated store.
- */
-const ftStore = wp.data.select('tec-tickets/flexible-tickets');
-
-/**
- * Prevents Series Passes from being saved by the Block Editor when editing Events.
- *
- * @since 5.8.0
- *
- * @param {boolean} saveTicketFromPost Whether or not to save the Ticket from the Post.
- * @param {Object}  context            The context of the filter.
- * @param {string}  context.ticketType The ticket types, e.g. `default`, `series_pass`, etc.
- * @param {Object}  context.post       The Post object that is being saved, the format is the one retruned by the WP REST API.
- *
- * @return {boolean} Whether or not to save the Ticket from the Post.
- */
-function doNotEditSeriesPassesOutsideSeries(saveTicketFromPost, _ref) {
-  let {
-    ticketType,
-    post
-  } = _ref;
-  const postType = post === null || post === void 0 ? void 0 : post.type;
-  if (!(typeof ticketType === 'string' && typeof postType === 'string')) {
-    return saveTicketFromPost;
-  }
-  if (ticketType === 'series_pass' && postType !== 'tribe_event_series') {
-    return false;
-  }
-  return saveTicketFromPost;
-}
-
-// Series Passes will appear in the tickets list of Events, but they should not be editable from Events.
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.editTicketFromPost', 'tec.tickets.flexibleTickets', doNotEditSeriesPassesOutsideSeries);
-
-/**
- * Filters the ticket type description when creating a ticket of the `default` type for an Event part of a Series.
- *
- * @since 5.8.0
- *
- * @param {Object} mappedProps                 The properties mapped from the state for the Ticket Type component.
- * @param {string} mappedProps.typeDescription The ticket type description.
- * @param          ticketDetails.ticketDetails
- * @param {Object} ticketDetails               The ticket details.
- *
- * @return {Object} The modified properties mapped from the state for the Ticket Type component.
- */
-function changeTicketTypeDescriptionForEventPartOfSeries(mappedProps, _ref2) {
-  let {
-    ticketDetails
-  } = _ref2;
-  const ticketType = (ticketDetails === null || ticketDetails === void 0 ? void 0 : ticketDetails.type) || 'default';
-  const isInSeries = ftStore.isInSeries();
-  if (!(isInSeries && ticketType === 'default')) {
-    return mappedProps;
-  }
-  const {
-    title: seriesTitle
-  } = ftStore.getSeriesInformation();
-  const newDescription = Object(external_wp_i18n_["sprintf"])(ftStore.getDefaultTicketTypeDescriptionTemplate(), seriesTitle);
-  mappedProps.typeDescription = newDescription || mappedProps.typeDescription;
-  return mappedProps;
-}
-
-// Change the description of default tickets when editing an Event part of a Series.
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Type.mappedProps', 'tec.tickets.flexibleTickets', changeTicketTypeDescriptionForEventPartOfSeries);
-
-/**
- * Forces the Tickets block to show on Recurring Events if they are part of a Series.
- *
- * @since 5.8.0
- *
- * @param {Object}  mappedProps                      The properties mapped from the state for the Tickets component.
- * @param {boolean} mappedProps.noTicketsOnRecurring Whether or not to show the Tickets block on Recurring Events.
- * @param {boolean} mappedProps.canCreateTickets     Whether or not the user can create tickets.
- * @param {Object}  context                          The context of the filter.
- * @param {Object}  context.ownProps                 The props passed to the block.
- * @param {boolean} context.ownProps.isSelected      Whether or not the block is selected.
- *
- * @return {Object} The modified properties mapped from the state for the Tickets component.
- */
-function filterTicketsMappedProps(mappedProps, _ref3) {
-  let {
-    ownProps: {
-      isSelected
-    }
-  } = _ref3;
-  const isInSeries = ftStore.isInSeries();
-  const canCreateTickets = mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.canCreateTickets;
-  if (!(isInSeries && canCreateTickets)) {
-    return mappedProps;
-  }
-  const showWarning = getShowWarning(mappedProps, isSelected);
-  if (showWarning) {
-    mappedProps.showWarning = showWarning;
-    mappedProps.Warning = container;
-  }
-  mappedProps.noTicketsOnRecurring = false;
-  return mappedProps;
-}
-
-// Do show the Tickets block on recurring events if they are part of a series.
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsMappedProps);
-
-/**
- * @param {boolean} mappedProps.hasCreatedTickets  Whether or not the user has created tickets.
- * @param {boolean} mappedProps.hasRecurrenceRules Whether or not the Event has recurrence rules.
- * @param {boolean} mappedProps.hasCreatedTickets  Whether or not the user has created tickets.
- * @param           mappedProps
- * @param {boolean} isSelected                     Whether or not the block is selected.
- * @return {boolean}  Flag indicating whether or not to display the warning.
- */
-function getShowWarning(mappedProps, isSelected) {
-  const hasSeriesPasses = ftStore.hasSeriesPasses();
-  let showWarning = false;
-  if (!mappedProps.hasCreatedTickets && isSelected) {
-    showWarning = true;
-  } else if (mappedProps.hasCreatedTickets && hasSeriesPasses && isSelected) {
-    showWarning = true;
-  } else if (!mappedProps.hasCreatedTickets && !hasSeriesPasses && !isSelected) {
-    showWarning = true;
-  }
-  return showWarning;
-}
-
-/**
- * Modifies the properties mapped from the state for the TicketsContainer component to conform
- * to the Flexible Tickets feature.
- *
- * @since 5.8.0
- *
- * @param {Object}  mappedProps                    The properties mapped from the state for the TicketsContainer component.
- * @param {boolean} mappedProps.showInactiveBlock  Whether or not to show the inactive block.
- * @param {boolean} mappedProps.hasRecurrenceRules Whether or not the Event has recurrence rules.
- * @param {boolean} mappedProps.isSelected         Whether or not the block is selected.
- * @param {boolean} mappedProps.showWarning        Whether or not the Event has a warning to display.
- * @param {Object}  mappedProps.Warning            Warning component to be displayed in case there is one.
- */
-function filterTicketsContainerMappedProps(mappedProps, _ref4) {
-  let {
-    ownProps: {
-      isSelected = false
-    }
-  } = _ref4;
-  const isInSeries = ftStore.isInSeries();
-  if (!isInSeries) {
-    return mappedProps;
-  }
-  const showWarning = getShowWarning(mappedProps, isSelected);
-  if (showWarning) {
-    mappedProps.showWarning = showWarning;
-    mappedProps.Warning = container;
-  }
-  const hasRecurrenceRules = mappedProps.hasRecurrenceRules;
-  mappedProps.canCreateTickets = hasRecurrenceRules ? false : mappedProps.canCreateTickets;
-  mappedProps.showInactiveBlock = hasRecurrenceRules ? false : mappedProps.showInactiveBlock;
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.TicketsContainer.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsContainerMappedProps);
-
-/**
- * Modifies the properties mapped from the state for the TicketsDashboardAction component to conform
- * to the Flexible Tickets feature.
- *
- * @since 5.8.0
- *
- * @param {Object}  mappedProps                         The properties mapped from the state for the
- *                                                      TicketsDashboardAction component.
- * @param {boolean} mappedProps.showWarning             Whether or not to show the warning.
- * @param {boolean} mappedProps.disableSettings         Whether or not to disable the settings.
- * @param {boolean} mappedProps.hasCreatedTickets       Whether or not the user has created tickets.
- * @param {boolean} mappedProps.hasOrdersPage           Whether or not the user has an Orders page.
- * @param {boolean} mappedProps.showConfirm             Whether or not to show the confirmation button.
- * @param {boolean} mappedProps.showNotSupportedMessage Whether or not to show the not supported message.
- * @param {Object}  context                             The context of the filter.
- * @param {Object}  context.isRecurring                 Whether or not the Event is currently recurring.
- *
- * @return {Object} The modified properties mapped from the state for the TicketsDashboardAction component.
- */
-function filterTicketsDashboardActionsMappedProps(mappedProps, _ref5) {
-  let {
-    isRecurring
-  } = _ref5;
-  mappedProps.showWarning = isRecurring;
-  mappedProps.disableSettings = isRecurring;
-  mappedProps.showConfirm = !isRecurring;
-  const isInSeries = ftStore.isInSeries();
-  if (!isInSeries) {
-    // If the Event is not part of a Series and is recurring, it's saving: show the warning.
-    mappedProps.showNotSupportedMessage = isRecurring;
-    return mappedProps;
-  }
-
-  // Show the Orders page link if the Event has own tickets.
-  mappedProps.hasOrdersPage = mappedProps.hasCreatedTickets;
-  // Show the Attendees page link if the Event has either own tickets or Series Passes.
-  const hasSeriesPasses = ftStore.hasSeriesPasses();
-  mappedProps.hasCreatedTickets = hasSeriesPasses;
-  return mappedProps;
-}
-
-// Do not show the warning on Recurring Events if they are part of a Series.
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.TicketsDashboardAction.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsDashboardActionsMappedProps);
-
-/**
- * Modifies the properties mapped from the state for the Availability component to conform
- * to the Flexible Tickets feature.
- *
- * @since 5.8.0
- *
- * @param {Object} mappedProps           The properties mapped from the state for the Availability component.
- * @param {number} mappedProps.total     The total capacity.
- * @param {number} mappedProps.available The available capacity.
- */
-function filterTicketsAvailabilityMappedProps(mappedProps) {
-  const currentCapacity = (mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.total) || 0;
-  const currentAvailability = (mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.available) || 0;
-  const seriesCapacity = ftStore.getSeriesPassTotalCapacity();
-  const seriesAvailability = ftStore.getSeriesPassTotalAvailable();
-  const isInSeries = ftStore.isInSeries();
-  if (isInSeries && seriesCapacity >= 0) {
-    mappedProps.total = currentCapacity + seriesCapacity;
-    mappedProps.available = currentAvailability + seriesAvailability;
-  }
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Availability.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsAvailabilityMappedProps);
-function filterTicketsControlsMappedProps(mappedProps) {
-  const isInSeries = ftStore.isInSeries();
-  if (!isInSeries) {
-    return mappedProps;
-  }
-  mappedProps.disabled = true;
-  const {
-    title: seriesTitle,
-    editLink: seriesEditLink
-  } = ftStore.getSeriesInformation();
-  const link = wp.element.createElement("a", {
-    target: "_blank",
-    href: seriesEditLink + '#tribetickets',
-    rel: "noreferrer"
-  }, seriesTitle);
-  const messageTemplate = ftStore.getMultipleProvidersNoticeTemplate();
-  mappedProps.message = wp.element.createElement("p", {
-    dangerouslySetInnerHTML: {
-      __html: Object(external_wp_i18n_["sprintf"])(messageTemplate, Object(external_wp_element_["renderToString"])(link))
-    }
-  });
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Controls.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsControlsMappedProps);
-function filterUneditableMappedProps(mappedProps) {
-  var _mappedProps$cardsByT;
-  if (!(mappedProps !== null && mappedProps !== void 0 && (_mappedProps$cardsByT = mappedProps.cardsByTicketType) !== null && _mappedProps$cardsByT !== void 0 && _mappedProps$cardsByT.series_pass)) {
-    return mappedProps;
-  }
-  const link = ftStore.getSeriesHeaderLink();
-  const message = ftStore.getSeriesHeaderLinkText();
-  mappedProps.cardsByTicketType.series_pass.description = wp.element.createElement("a", {
-    href: link,
-    target: "_blank",
-    rel: "noreferrer",
-    className: "tickets-heading__description__link"
-  }, message);
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Uneditable.mappedProps', 'tec.tickets.flexibleTickets', filterUneditableMappedProps);
-function filterCapacityTableMappedProps(mappedProps) {
-  const isInSeries = ftStore.isInSeries();
-  if (!isInSeries) {
-    return mappedProps;
-  }
-  const seriesCapacity = Number.parseInt(ftStore.getSeriesPassTotalCapacity()) || 0;
-
-  // If the number of Series Passes is unlimited, the Event capacity is unlimited.
-  const areSeriesPassesUnlimited = ftStore.hasUnlimitedSeriesPasses();
-  mappedProps.totalCapacity = areSeriesPassesUnlimited ? Object(external_wp_i18n_["__"])('Unlimited', 'event-tickets') : mappedProps.totalCapacity + seriesCapacity;
-  mappedProps.rowsAfter = mappedProps.rowsAfter || [];
-  const sharedCapacityItems = ftStore.getSeriesPassSharedCapacityItems();
-  const seriesPassSharedCapacity = ftStore.getSeriesPassSharedCapacity();
-  mappedProps.rowsAfter.push({
-    label: Object(external_wp_i18n_["__"])('Series Pass shared capacity', 'event-tickets'),
-    items: sharedCapacityItems ? `(${sharedCapacityItems})` : '',
-    right: String(seriesPassSharedCapacity)
-  });
-  const independentCapacityItems = ftStore.getSeriesPassIndependentCapacityItems();
-  const seriesPassIndependentCapacity = ftStore.getSeriesPassIndependentCapacity();
-  mappedProps.rowsAfter.push({
-    label: Object(external_wp_i18n_["__"])('Series Pass independent capacity', 'event-tickets'),
-    items: independentCapacityItems ? `(${independentCapacityItems})` : '',
-    right: String(seriesPassIndependentCapacity)
-  });
-  if (areSeriesPassesUnlimited) {
-    const unlimitedCapacityItems = ftStore.getSeriesPassUnlimitedCapacityItems();
-    mappedProps.rowsAfter.push({
-      label: Object(external_wp_i18n_["__"])('Series Pass unlimited capacity', 'event-tickets'),
-      items: unlimitedCapacityItems ? `(${unlimitedCapacityItems})` : '',
-      right: Object(external_wp_i18n_["__"])('Unlimited', 'event-tickets')
-    });
-  }
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.CapacityTable.mappedProps', 'tec.tickets.flexibleTickets', filterCapacityTableMappedProps);
-
-/**
- * Filters the mapped properties to display a specific message when dealing with an unsaved Recurring Event.
- * An unsaved Recurring Event is one that is Recurring but not yet part of a Series.
- *
- * @since 5.8.0
- *
- * @param {Object}  mappedProps The component properties as mapped from the current state.
- * @param {Object } state       The state of the main Event Tickets store.
- *
- * @return {Object} The mapped properties, altered if required.
- */
-function filterNotSupportedMessageMappedProps(mappedProps, _ref6) {
-  let {
-    state
-  } = _ref6;
-  const isInSeries = ftStore.isInSeries();
-  if (!Object(external_tribe_common_utils_recurrence_["hasRecurrenceRules"])(state) || isInSeries) {
-    return mappedProps;
-  }
-  mappedProps.content = null;
-  const {
-    seriesPassPluralUppercase
-  } = ftStore.getLabels();
-  const link = wp.element.createElement("a", {
-    className: "helper-link",
-    href: "https://evnt.is/-series-passes",
-    target: "_blank",
-    rel: "noopener noreferrer"
-  }, seriesPassPluralUppercase);
-  // Translators: %s is a link to Series Passes knowledge base that reads "Series Passes".
-  const messageTemplate = Object(external_wp_i18n_["_x"])("Once you save this event, you'll be able to add %s from the Series admin.", 'Block editor not supported notice', 'event-tickets');
-  mappedProps.ctaLink = wp.element.createElement("span", {
-    dangerouslySetInnerHTML: {
-      __html: Object(external_wp_i18n_["sprintf"])(messageTemplate, Object(external_wp_element_["renderToString"])(link))
-    }
-  });
-  return mappedProps;
-}
-Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.NotSupportedMessage.mappedProps', 'tec.tickets.flexibleTickets', filterNotSupportedMessageMappedProps);
-// EXTERNAL MODULE: external "tribe.common.store"
-var external_tribe_common_store_ = __webpack_require__("g8L8");
-
-// EXTERNAL MODULE: ./src/Tickets/Blocks/app/flexible-tickets/series-relationship.js
-var series_relationship = __webpack_require__("YRH8");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/series-relationship/update-control.js
-
-
-
-const lockId = 'tec.flexible-tickets.different-ticket-provider';
-
-/**
- * Get the event ticket provider from the TEC store state.
- *
- * @return {string|null} The ticket provider of the event read from the current state, or `null` if not found.
- */
-function getEventProviderFromStore() {
-  const state = external_tribe_common_store_["store"].getState();
-  if (!(state.tickets && state.tickets.blocks && state.tickets.blocks.ticket && state.tickets.blocks.ticket.provider)) {
-    return null;
-  }
-  return state.tickets.blocks.ticket.provider;
-}
-
-/**
- * Lock the post publish button when the event and series have different ticket providers.
- */
-function lockPostPublish() {
-  Object(external_wp_data_["dispatch"])('core/editor').lockPostSaving(lockId);
-}
-
-/**
- * Unlock the post publish button.
- */
-function unlockPostPublish() {
-  Object(external_wp_data_["dispatch"])('core/editor').unlockPostSaving(lockId);
-}
-
-/**
- * Get the event title from the current state.
- *
- * This is not "live" but pretty close to it.
- *
- * @return {string} The title of the event read from the current state.
- */
-function getEventTitleFromState() {
-  return Object(external_wp_data_["select"])('core/editor').getEditedPostAttribute('title');
-}
-
-/**
- * Toggle the publish lock based on the event and series providers.
- *
- * @param {string|null} eventProvider  The current event ticket provider.
- * @param {string|null} seriesProvider The current series ticket provider.
- * @param {string}      seriesTitle    The title of the series.
- */
-function togglePublishLock(eventProvider, seriesProvider, seriesTitle) {
-  if (eventProvider === seriesProvider || eventProvider === null || seriesProvider === null) {
-    unlockPostPublish();
-    Object(series_relationship["h" /* removeDiscordantProviderNotice */])();
-    return;
-  }
-  lockPostPublish();
-  Object(series_relationship["i" /* showDiscordantProviderNotice */])(getEventTitleFromState(), seriesTitle);
-}
-
-/**
- * Toggle the publish lock when the series is changed in the metabox dropdown.
- *
- * @param {Event} event The 'change' event dispatched by Select2.
- */
-function togglePublishLockFromMetaboxEvent(event) {
-  const seriesProvider = Object(series_relationship["c" /* getSeriesProviderFromEvent */])(event);
-  const eventProvider = getEventProviderFromStore();
-  togglePublishLock(eventProvider, seriesProvider, Object(series_relationship["e" /* getSeriesTitleFromEvent */])(event));
-}
-
-/**
- * Toggle the publish lock when the ticket provider is changed in the Ticket Settings section of the Editor.
- */
-function togglePublishLockFromTicketSettings() {
-  const seriesProvider = Object(series_relationship["d" /* getSeriesProviderFromSelection */])();
-  const eventProvider = getEventProviderFromStore();
-  const seriesTitle = Object(series_relationship["f" /* getSeriesTitleFromSelection */])();
-  togglePublishLock(eventProvider, seriesProvider, seriesTitle);
-}
-
-/**
- * Subscribe to the series change event when the metabox is rendered.
- */
-function subscribeToSeriesChangeOnStateUpdate() {
-  if (!Object(external_wp_data_["select"])('core/edit-post').areMetaBoxesInitialized()) {
-    // Before metaboxes are initialized, the series metabox is not yet rendered.
-    return;
-  }
-
-  // Subscribe to the ticket provider change in the ticket settings metabox.
-  external_tribe_common_store_["store"].subscribe(togglePublishLockFromTicketSettings);
-  Object(series_relationship["j" /* subscribeToSeriesChange */])(togglePublishLockFromMetaboxEvent);
-}
-
-// Start by subscribing to core/edit-post section of the WP store.
-Object(external_wp_data_["subscribe"])(subscribeToSeriesChangeOnStateUpdate, 'core/edit-post');
-// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/actions.js
-var ticket_actions = __webpack_require__("hImw");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/metaboxes.js
-
-
-/*
- * Local state: when it changes value then the metaboxes have either started
- * or finished saving.
- *
- * @type {boolean|null}
- */
-let wasSavingMetaBoxes = null;
-const onMetaBoxesUpdateCompletedCallbacks = [];
-
-// Unsubscribe function; will start as a no-op to keep with the expected type.
-let unsubscribeFromMetaBoxesUpdates = () => {};
-const updateUneditableTicketsOnMetaboxUpdate = function () {
-  const isSavingMetaBoxes = Object(external_wp_data_["select"])('core/edit-post').isSavingMetaBoxes();
-  if (wasSavingMetaBoxes === null) {
-    // Initialize the saving metaboxes state.
-    wasSavingMetaBoxes = isSavingMetaBoxes;
-    return;
-  }
-  if (wasSavingMetaBoxes !== isSavingMetaBoxes) {
-    if (!isSavingMetaBoxes) {
-      // The metaboxes have finished saving: update the uneditable tickets.
-
-      // Avoid infinite loop: unsubscribe, update, subscribe.
-      unsubscribeFromMetaBoxesUpdates();
-      onMetaBoxesUpdateCompletedCallbacks.forEach(callback => callback());
-      unsubscribeFromMetaBoxesUpdates = subscribeToMetaBoxesUpdates();
-    } else {
-      // The metaboxes are saving: no-op.
-    }
-  }
-  wasSavingMetaBoxes = isSavingMetaBoxes;
-};
-
-/**
- * Subscribe to updates to the metaboxes saving state.
- *
- * @return {Function} The unsubscribe function.
- */
-const subscribeToMetaBoxesUpdates = () => Object(external_wp_data_["subscribe"])(updateUneditableTicketsOnMetaboxUpdate);
-
-// Start the subscription and replace the no-op unsubscribe function with the real one.
-unsubscribeFromMetaBoxesUpdates = subscribeToMetaBoxesUpdates();
-const onMetaBoxesUpdateCompleted = callback => {
-  onMetaBoxesUpdateCompletedCallbacks.push(callback);
-  const index = onMetaBoxesUpdateCompletedCallbacks.length - 1;
-  return () => onMetaBoxesUpdateCompletedCallbacks.splice(index, 1);
-};
-// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/constants.js
-var constants = __webpack_require__("DOwB");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/series-relationship/series-update.js
-/**
- * Following an update that will save the metaboxes values, update the
- * uneditable tickets in the Tickets block, if required and, following their
- * update, update the Series data.
- */
-
-
-
-
-
-
-
-
-const series_update_ftStore = wp.data.select('tec-tickets/flexible-tickets');
-const {
-  setSeriesData
-} = wp.data.dispatch('tec-tickets/flexible-tickets');
-function updateSeriesData() {
-  let uneditableTickets = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  const isInSeries = Object(series_relationship["g" /* hasSelectedSeries */])();
-  const seriesPasses = uneditableTickets.filter(ticket => ticket.type === 'series_pass');
-  const {
-    independent,
-    shared,
-    unlimited
-  } = seriesPasses.reduce((acc, ticket) => {
-    if ((ticket === null || ticket === void 0 ? void 0 : ticket.capacityType) === constants["UNLIMITED"]) {
-      acc.unlimited.push(ticket);
-      return acc;
-    }
-    if (ticket.isShared) {
-      acc.shared.push(ticket);
-    } else {
-      acc.independent.push(ticket);
-    }
-    return acc;
-  }, {
-    independent: [],
-    shared: [],
-    unlimited: []
-  });
-  const independentCapacity = independent.reduce((acc, ticket) => acc + ((ticket === null || ticket === void 0 ? void 0 : ticket.capacity) || 0), 0);
-  const sharedCapacity = shared.reduce((acc, ticket) => Math.max(acc, (ticket === null || ticket === void 0 ? void 0 : ticket.capacity) || 0), 0);
-  const independentAvailable = independent.reduce((acc, ticket) => acc + ((ticket === null || ticket === void 0 ? void 0 : ticket.available) || 0), 0);
-  const sharedAvailable = shared.reduce((acc, ticket) => Math.max(acc, (ticket === null || ticket === void 0 ? void 0 : ticket.available) || 0), 0);
-  const hasUnlimitedSeriesPasses = Boolean(unlimited.length);
-  const seriesPostId = Object(series_relationship["b" /* getSeriesPostIdFromSelection */])();
-  const seriesPlainUrl = Object(external_wp_i18n_["sprintf"])(series_update_ftStore.getSeriesHeaderLinkTemplate(), seriesPostId);
-  setSeriesData(isInSeries, {
-    title: Object(series_relationship["f" /* getSeriesTitleFromSelection */])(),
-    editLink: Object(series_relationship["a" /* getSeriesEditLinkFromMetaBox */])(),
-    hasSeriesPasses: Boolean(independent.length || shared.length),
-    seriesPassTotalCapacity: sharedCapacity + independentCapacity,
-    seriesPassTotalAvailable: sharedAvailable + independentAvailable,
-    seriesPassSharedCapacity: sharedCapacity,
-    seriesPassIndependentCapacity: independentCapacity,
-    seriesPassIndependentCapacityItems: independent.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
-    seriesPassSharedCapacityItems: shared.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
-    seriesPassUnlimitedCapacityItems: unlimited.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
-    hasUnlimitedSeriesPasses,
-    headerLink: seriesPlainUrl
-  });
-}
-
-// When the uneditble Tickets are updated, update the Series information.
-Object(external_wp_hooks_["addAction"])('tec.tickets.blocks.uneditableTicketsUpdated', 'tec.tickets.flexibleTickets', updateSeriesData);
-
-// When metaboxes are done updating, update the uneditable tickets fetching them from the backend.
-onMetaBoxesUpdateCompleted(function () {
-  // Tell the Event Tickets store to update the uneditable tickets.
-  // After the update this will trigger the `tec.tickets.blocks.uneditableTicketsUpdated` action.
-  external_tribe_common_store_["store"].dispatch(Object(ticket_actions["updateUneditableTickets"])());
-});
-// CONCATENATED MODULE: ./src/Tickets/Blocks/app/flexible-tickets/block-editor/index.js
-/**
- * The main bundle for the Flexible Tickets feature in Block Editor context.
- */
-
-
-
-
-
 
 /***/ }),
 
@@ -1402,6 +754,481 @@ module.exports = lodash.noop;
 /***/ (function(module, exports) {
 
 module.exports = tribe.modules.classnames;
+
+/***/ }),
+
+/***/ "LVGI":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getState", function() { return getState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getBlock", function() { return getBlock; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsIsSelected", function() { return getTicketsIsSelected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsIsSettingsOpen", function() { return getTicketsIsSettingsOpen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsIsSettingsLoading", function() { return getTicketsIsSettingsLoading; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsProvider", function() { return getTicketsProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsSharedCapacity", function() { return getTicketsSharedCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsSharedCapacityInt", function() { return getTicketsSharedCapacityInt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsTempSharedCapacity", function() { return getTicketsTempSharedCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsTempSharedCapacityInt", function() { return getTicketsTempSharedCapacityInt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsHeaderImage", function() { return getTicketsHeaderImage; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsHeaderImageId", function() { return getTicketsHeaderImageId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsHeaderImageSrc", function() { return getTicketsHeaderImageSrc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsHeaderImageAlt", function() { return getTicketsHeaderImageAlt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTickets", function() { return getTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsAllClientIds", function() { return getTicketsAllClientIds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsByClientId", function() { return getTicketsByClientId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsArray", function() { return getTicketsArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsCount", function() { return getTicketsCount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasTickets", function() { return hasTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasCreatedTickets", function() { return hasCreatedTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentTickets", function() { return getIndependentTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSharedTickets", function() { return getSharedTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSharedTicketsCount", function() { return getSharedTicketsCount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUnlimitedTickets", function() { return getUnlimitedTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasATicketSelected", function() { return hasATicketSelected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketsIdsInBlocks", function() { return getTicketsIdsInBlocks; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUneditableTickets", function() { return getUneditableTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUneditableTicketsAreLoading", function() { return getUneditableTicketsAreLoading; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketClientId", function() { return getTicketClientId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicket", function() { return getTicket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSold", function() { return getTicketSold; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketAvailable", function() { return getTicketAvailable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketId", function() { return getTicketId; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCurrencySymbol", function() { return getTicketCurrencySymbol; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCurrencyPosition", function() { return getTicketCurrencyPosition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCurrencyDecimalPoint", function() { return getTicketCurrencyDecimalPoint; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCurrencyNumberOfDecimals", function() { return getTicketCurrencyNumberOfDecimals; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCurrencyThousandsSep", function() { return getTicketCurrencyThousandsSep; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketProvider", function() { return getTicketProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketHasAttendeeInfoFields", function() { return getTicketHasAttendeeInfoFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketIsLoading", function() { return getTicketIsLoading; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketIsModalOpen", function() { return getTicketIsModalOpen; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketHasBeenCreated", function() { return getTicketHasBeenCreated; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketHasChanges", function() { return getTicketHasChanges; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketHasDurationError", function() { return getTicketHasDurationError; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketIsSelected", function() { return getTicketIsSelected; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketDisabled", function() { return isTicketDisabled; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketDetails", function() { return getTicketDetails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTitle", function() { return getTicketTitle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketDescription", function() { return getTicketDescription; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketPrice", function() { return getTicketPrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketOnSale", function() { return getTicketOnSale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSku", function() { return getTicketSku; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketIACSetting", function() { return getTicketIACSetting; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartDate", function() { return getTicketStartDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartDateInput", function() { return getTicketStartDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartDateMoment", function() { return getTicketStartDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndDate", function() { return getTicketEndDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndDateInput", function() { return getTicketEndDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndDateMoment", function() { return getTicketEndDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartTime", function() { return getTicketStartTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartTimeNoSeconds", function() { return getTicketStartTimeNoSeconds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndTime", function() { return getTicketEndTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndTimeNoSeconds", function() { return getTicketEndTimeNoSeconds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketStartTimeInput", function() { return getTicketStartTimeInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketEndTimeInput", function() { return getTicketEndTimeInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCapacityType", function() { return getTicketCapacityType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCapacity", function() { return getTicketCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketCapacityInt", function() { return getTicketCapacityInt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSalePriceChecked", function() { return getSalePriceChecked; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSalePrice", function() { return getSalePrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleStartDate", function() { return getTicketSaleStartDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleStartDateInput", function() { return getTicketSaleStartDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleStartDateMoment", function() { return getTicketSaleStartDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleEndDate", function() { return getTicketSaleEndDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleEndDateInput", function() { return getTicketSaleEndDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketSaleEndDateMoment", function() { return getTicketSaleEndDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isUnlimitedTicket", function() { return isUnlimitedTicket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isSharedTicket", function() { return isSharedTicket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIndependentTicket", function() { return isIndependentTicket; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketPast", function() { return isTicketPast; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketFuture", function() { return isTicketFuture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketOnSale", function() { return isTicketOnSale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasTicketOnSale", function() { return hasTicketOnSale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allTicketsPast", function() { return allTicketsPast; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "allTicketsFuture", function() { return allTicketsFuture; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketAttendeeInfoFields", function() { return getTicketAttendeeInfoFields; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempDetails", function() { return getTicketTempDetails; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempTitle", function() { return getTicketTempTitle; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempDescription", function() { return getTicketTempDescription; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempPrice", function() { return getTicketTempPrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSku", function() { return getTicketTempSku; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempIACSetting", function() { return getTicketTempIACSetting; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartDate", function() { return getTicketTempStartDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartDateInput", function() { return getTicketTempStartDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartDateMoment", function() { return getTicketTempStartDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndDate", function() { return getTicketTempEndDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndDateInput", function() { return getTicketTempEndDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndDateMoment", function() { return getTicketTempEndDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartTime", function() { return getTicketTempStartTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartTimeNoSeconds", function() { return getTicketTempStartTimeNoSeconds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndTime", function() { return getTicketTempEndTime; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndTimeNoSeconds", function() { return getTicketTempEndTimeNoSeconds; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempStartTimeInput", function() { return getTicketTempStartTimeInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempEndTimeInput", function() { return getTicketTempEndTimeInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempCapacityType", function() { return getTicketTempCapacityType; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempCapacity", function() { return getTicketTempCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempCapacityInt", function() { return getTicketTempCapacityInt; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempCapacityTypeOption", function() { return getTicketTempCapacityTypeOption; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTempSalePriceChecked", function() { return getTempSalePriceChecked; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTempSalePrice", function() { return getTempSalePrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleStartDate", function() { return getTicketTempSaleStartDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleStartDateInput", function() { return getTicketTempSaleStartDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleStartDateMoment", function() { return getTicketTempSaleStartDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleEndDate", function() { return getTicketTempSaleEndDate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleEndDateInput", function() { return getTicketTempSaleEndDateInput; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketTempSaleEndDateMoment", function() { return getTicketTempSaleEndDateMoment; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "showSalePrice", function() { return showSalePrice; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketSalePriceValid", function() { return isTicketSalePriceValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTempTitleValid", function() { return isTempTitleValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTempCapacityValid", function() { return isTempCapacityValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTempSharedCapacityValid", function() { return isTempSharedCapacityValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isZeroPriceValid", function() { return isZeroPriceValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isTicketValid", function() { return isTicketValid; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getTotalCapacity", function() { return _getTotalCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getTotalTempCapacity", function() { return _getTotalTempCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getTotalSold", function() { return _getTotalSold; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "_getTotalAvailable", function() { return _getTotalAvailable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentTicketsCapacity", function() { return getIndependentTicketsCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentTicketsTempCapacity", function() { return getIndependentTicketsTempCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentTicketsSold", function() { return getIndependentTicketsSold; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentTicketsAvailable", function() { return getIndependentTicketsAvailable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSharedTicketsSold", function() { return getSharedTicketsSold; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSharedTicketsAvailable", function() { return getSharedTicketsAvailable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentAndSharedTicketsCapacity", function() { return getIndependentAndSharedTicketsCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentAndSharedTicketsTempCapacity", function() { return getIndependentAndSharedTicketsTempCapacity; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentAndSharedTicketsSold", function() { return getIndependentAndSharedTicketsSold; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIndependentAndSharedTicketsAvailable", function() { return getIndependentAndSharedTicketsAvailable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getTicketProviders", function() { return getTicketProviders; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDefaultTicketProvider", function() { return getDefaultTicketProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasValidTicketProvider", function() { return hasValidTicketProvider; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasMultipleTicketProviders", function() { return hasMultipleTicketProviders; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hasTicketProviders", function() { return hasTicketProviders; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "canCreateTickets", function() { return canCreateTickets; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCurrentPostTypeLabel", function() { return getCurrentPostTypeLabel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "currentPostIsEvent", function() { return currentPostIsEvent; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getNumericPrice", function() { return getNumericPrice; });
+/* harmony import */ var lodash_trim__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("XNrZ");
+/* harmony import */ var lodash_trim__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash_trim__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var lodash_find__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("6OzC");
+/* harmony import */ var lodash_find__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash_find__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var reselect__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("MWqi");
+/* harmony import */ var reselect__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(reselect__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("wy2R");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("DOwB");
+/* harmony import */ var _options__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__("dJ32");
+/* harmony import */ var _moderntribe_common_utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__("B8vQ");
+/* harmony import */ var _moderntribe_common_utils__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_moderntribe_common_utils__WEBPACK_IMPORTED_MODULE_6__);
+
+
+/**
+ * External dependencies
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+
+
+const {
+  UNLIMITED,
+  INDEPENDENT,
+  SHARED,
+  TICKET_TYPES,
+  IS_FREE_TC_TICKET_ALLOWED
+} = _constants__WEBPACK_IMPORTED_MODULE_4__;
+const {
+  tickets: ticketsConfig,
+  post: postConfig
+} = _moderntribe_common_utils__WEBPACK_IMPORTED_MODULE_6__["globals"];
+const getState = state => state;
+const getBlock = state => state.tickets.blocks.ticket;
+
+//
+// ─── BLOCK SELECTORS ────────────────────────────────────────────────────────────
+//
+
+const getTicketsIsSelected = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.isSelected);
+const getTicketsIsSettingsOpen = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.isSettingsOpen);
+const getTicketsIsSettingsLoading = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.isSettingsLoading);
+const getTicketsProvider = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.provider);
+const getTicketsSharedCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.sharedCapacity);
+const getTicketsSharedCapacityInt = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsSharedCapacity], capacity => parseInt(capacity, 10) || 0);
+const getTicketsTempSharedCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.tempSharedCapacity);
+const getTicketsTempSharedCapacityInt = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsTempSharedCapacity], capacity => parseInt(capacity, 10) || 0);
+
+//
+// ─── HEADER IMAGE SELECTORS ─────────────────────────────────────────────────────
+//
+
+const getTicketsHeaderImage = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.headerImage);
+const getTicketsHeaderImageId = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.id);
+const getTicketsHeaderImageSrc = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.src);
+const getTicketsHeaderImageAlt = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.alt);
+
+//
+// ─── TICKETS SELECTORS ──────────────────────────────────────────────────────────
+//
+
+const getTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], block => block.tickets);
+const getTicketsAllClientIds = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTickets], tickets => [...new Set(tickets.allClientIds)]);
+const getTicketsByClientId = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTickets], tickets => tickets.byClientId);
+const getTicketsArray = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsAllClientIds, getTicketsByClientId], (ids, tickets) => ids.map(id => tickets[id]));
+const getTicketsCount = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsAllClientIds], allClientIds => allClientIds.length);
+const hasTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsCount], count => count > 0);
+const hasCreatedTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.reduce((hasCreated, ticket) => hasCreated || ticket.hasBeenCreated, false));
+const getIndependentTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[INDEPENDENT]));
+const getSharedTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[SHARED]));
+const getSharedTicketsCount = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getSharedTickets], tickets => tickets.length);
+const getUnlimitedTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[UNLIMITED]));
+const hasATicketSelected = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.reduce((selected, ticket) => selected || ticket.isSelected, false));
+const getTicketsIdsInBlocks = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsArray], tickets => tickets.reduce((accumulator, ticket) => {
+  if (ticket.ticketId !== 0) {
+    accumulator.push(ticket.ticketId);
+  }
+  return accumulator;
+}, []));
+const getUneditableTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], function (block) {
+  return block.uneditableTickets || [];
+});
+const getUneditableTicketsAreLoading = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getBlock], function (block) {
+  return block.uneditableTicketsLoading || false;
+});
+
+//
+// ─── TICKET SELECTORS ───────────────────────────────────────────────────────────
+//
+
+const getTicketClientId = (state, ownProps) => ownProps.clientId;
+const getTicket = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsByClientId, getTicketClientId], (tickets, clientId) => tickets[clientId] || {});
+const getTicketSold = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.sold);
+const getTicketAvailable = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.available);
+const getTicketId = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.ticketId);
+const getTicketCurrencySymbol = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.currencySymbol);
+const getTicketCurrencyPosition = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.currencyPosition);
+const getTicketCurrencyDecimalPoint = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.currencyDecimalPoint);
+const getTicketCurrencyNumberOfDecimals = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.currencyNumberOfDecimals);
+const getTicketCurrencyThousandsSep = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.currencyThousandsSep);
+const getTicketProvider = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.provider);
+const getTicketHasAttendeeInfoFields = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.hasAttendeeInfoFields);
+const getTicketIsLoading = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.isLoading);
+const getTicketIsModalOpen = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.isModalOpen);
+const getTicketHasBeenCreated = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.hasBeenCreated);
+const getTicketHasChanges = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.hasChanges);
+const getTicketHasDurationError = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.hasDurationError);
+const getTicketIsSelected = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.isSelected);
+const isTicketDisabled = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([hasATicketSelected, getTicketIsSelected, getTicketIsLoading, getTicketsIsSettingsOpen], (hasSelected, isSelected, isLoading, isSettingsOpen) => hasSelected && !isSelected || isLoading || isSettingsOpen);
+
+//
+// ─── TICKET DETAILS SELECTORS ───────────────────────────────────────────────────
+//
+
+const getTicketDetails = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.details || {});
+const getTicketTitle = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.title);
+const getTicketDescription = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.description);
+const getTicketPrice = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.price);
+const getTicketOnSale = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.on_sale);
+const getTicketSku = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.sku);
+const getTicketIACSetting = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.iac);
+const getTicketStartDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.startDate);
+const getTicketStartDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.startDateInput);
+const getTicketStartDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.startDateMoment);
+const getTicketEndDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.endDate);
+const getTicketEndDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.endDateInput);
+const getTicketEndDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.endDateMoment);
+const getTicketStartTime = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.startTime || '');
+const getTicketStartTimeNoSeconds = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketStartTime], startTime => startTime.slice(0, -3));
+const getTicketEndTime = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.endTime || '');
+const getTicketEndTimeNoSeconds = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketEndTime], endTime => endTime.slice(0, -3));
+const getTicketStartTimeInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.startTimeInput);
+const getTicketEndTimeInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.endTimeInput);
+const getTicketCapacityType = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.capacityType);
+const getTicketCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.capacity);
+const getTicketCapacityInt = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketCapacity], capacity => parseInt(capacity, 10) || 0);
+const getSalePriceChecked = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.salePriceChecked);
+const getSalePrice = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.salePrice);
+const getTicketSaleStartDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleStartDate);
+const getTicketSaleStartDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleStartDateInput);
+const getTicketSaleStartDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleStartDateMoment);
+const getTicketSaleEndDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleEndDate);
+const getTicketSaleEndDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleEndDateInput);
+const getTicketSaleEndDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.saleEndDateMoment);
+const isUnlimitedTicket = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[UNLIMITED]);
+const isSharedTicket = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[SHARED]);
+const isIndependentTicket = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[INDEPENDENT]);
+const isTicketPast = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketEndDateMoment], endDate => moment__WEBPACK_IMPORTED_MODULE_3___default()().isAfter(endDate));
+const isTicketFuture = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketStartDateMoment], startDate => moment__WEBPACK_IMPORTED_MODULE_3___default()().isBefore(startDate));
+const isTicketOnSale = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketHasBeenCreated, isTicketPast, isTicketFuture], (hasBeenCreated, isPast, isFuture) => hasBeenCreated && !isPast && !isFuture);
+const hasTicketOnSale = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((onSale, clientId) => onSale || isTicketOnSale(state, {
+  clientId
+}), false));
+const allTicketsPast = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((isPast, clientId) => {
+  const props = {
+    clientId
+  };
+  return getTicketHasBeenCreated(state, props) ? isPast && isTicketPast(state, props) : isPast;
+}, true));
+const allTicketsFuture = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((isFuture, clientId) => {
+  const props = {
+    clientId
+  };
+  return getTicketHasBeenCreated(state, props) ? isFuture && isTicketFuture(state, props) : isFuture;
+}, true));
+const getTicketAttendeeInfoFields = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketDetails], details => details.attendeeInfoFields || []);
+
+//
+// ─── TICKET TEMP DETAILS SELECTORS ──────────────────────────────────────────────
+//
+
+const getTicketTempDetails = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicket], ticket => ticket.tempDetails || {});
+const getTicketTempTitle = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.title);
+const getTicketTempDescription = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.description);
+const getTicketTempPrice = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.price);
+const getTicketTempSku = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.sku);
+const getTicketTempIACSetting = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.iac);
+const getTicketTempStartDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDate);
+const getTicketTempStartDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDateInput);
+const getTicketTempStartDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDateMoment);
+const getTicketTempEndDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDate);
+const getTicketTempEndDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDateInput);
+const getTicketTempEndDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDateMoment);
+const getTicketTempStartTime = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startTime || '');
+const getTicketTempStartTimeNoSeconds = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempStartTime], startTime => startTime.slice(0, -3));
+const getTicketTempEndTime = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endTime || '');
+const getTicketTempEndTimeNoSeconds = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempEndTime], endTime => endTime.slice(0, -3));
+const getTicketTempStartTimeInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startTimeInput);
+const getTicketTempEndTimeInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endTimeInput);
+const getTicketTempCapacityType = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.capacityType);
+const getTicketTempCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.capacity);
+const getTicketTempCapacityInt = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempCapacity], capacity => parseInt(capacity, 10) || 0);
+const getTicketTempCapacityTypeOption = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempCapacityType], capacityType => lodash_find__WEBPACK_IMPORTED_MODULE_1___default()(_options__WEBPACK_IMPORTED_MODULE_5__["CAPACITY_TYPE_OPTIONS"], {
+  value: capacityType
+}) || {});
+const getTempSalePriceChecked = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.salePriceChecked);
+const getTempSalePrice = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.salePrice);
+const getTicketTempSaleStartDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDate);
+const getTicketTempSaleStartDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDateInput);
+const getTicketTempSaleStartDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDateMoment);
+const getTicketTempSaleEndDate = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDate);
+const getTicketTempSaleEndDateInput = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDateInput);
+const getTicketTempSaleEndDateMoment = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDateMoment);
+const showSalePrice = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsProvider], provider => provider === _constants__WEBPACK_IMPORTED_MODULE_4__["TICKETS_COMMERCE_MODULE_CLASS"]);
+const isTicketSalePriceValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTempSalePrice, getTicketTempPrice, getTicketCurrencyDecimalPoint, getTicketCurrencyNumberOfDecimals, getTicketCurrencyThousandsSep], (salePrice, price, decimalPoint, decimalPlaces, thousandSep) => {
+  if (salePrice === '' || price === '') {
+    return true;
+  }
+  if (!decimalPoint || !decimalPlaces || !thousandSep) {
+    return true;
+  }
+
+  // eslint-disable-next-line no-use-before-define
+  const salePriceVal = getNumericPrice(salePrice, decimalPoint, decimalPlaces, thousandSep);
+  // eslint-disable-next-line no-use-before-define
+  const priceVal = getNumericPrice(price, decimalPoint, decimalPlaces, thousandSep);
+  return salePriceVal < priceVal;
+});
+const isTempTitleValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempTitle], title => lodash_trim__WEBPACK_IMPORTED_MODULE_0___default()(title) !== '');
+const isTempCapacityValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempCapacity], capacity => lodash_trim__WEBPACK_IMPORTED_MODULE_0___default()(capacity) !== '' && !isNaN(capacity) && capacity > 0);
+const isTempSharedCapacityValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsTempSharedCapacity], capacity => lodash_trim__WEBPACK_IMPORTED_MODULE_0___default()(capacity) !== '' && !isNaN(capacity) && capacity > 0);
+const isZeroPriceValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempPrice, getTicketsProvider], (price, provider) => {
+  if (0 < parseInt(price, 10)) {
+    return true;
+  }
+  if (_constants__WEBPACK_IMPORTED_MODULE_4__["TC_CLASS"] === provider) {
+    return false;
+  }
+  if (_constants__WEBPACK_IMPORTED_MODULE_4__["TICKETS_COMMERCE_MODULE_CLASS"] === provider) {
+    return IS_FREE_TC_TICKET_ALLOWED;
+  }
+  return true;
+});
+const isTicketValid = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketTempCapacityType, isTempTitleValid, isTempCapacityValid, isTempSharedCapacityValid, isZeroPriceValid], (capacityType, titleValid, capacityValid, sharedCapacityValid, zeroPriceValid) => {
+  if (capacityType === TICKET_TYPES[UNLIMITED]) {
+    return titleValid && zeroPriceValid;
+  } else if (capacityType === TICKET_TYPES[SHARED]) {
+    return titleValid && sharedCapacityValid && zeroPriceValid;
+  }
+  return titleValid && capacityValid && zeroPriceValid;
+});
+
+//
+// ─── AMOUNT REDUCERS ────────────────────────────────────────────────────────────
+//
+
+const _getTotalCapacity = tickets => tickets.reduce((total, ticket) => {
+  const capacity = parseInt(ticket.details.capacity, 10) || 0;
+  return total + capacity;
+}, 0);
+const _getTotalTempCapacity = tickets => tickets.reduce((total, ticket) => {
+  const tempCapacity = parseInt(ticket.tempDetails.capacity, 10) || 0;
+  return total + tempCapacity;
+}, 0);
+const _getTotalSold = tickets => tickets.reduce((total, ticket) => {
+  const sold = parseInt(ticket.sold, 10) || 0;
+  return total + sold;
+}, 0);
+const _getTotalAvailable = tickets => tickets.reduce((total, ticket) => {
+  const available = parseInt(ticket.available, 10) || 0;
+  return total + available;
+}, 0);
+const getIndependentTicketsCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])(getIndependentTickets, _getTotalCapacity);
+const getIndependentTicketsTempCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])(getIndependentTickets, _getTotalTempCapacity);
+const getIndependentTicketsSold = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])(getIndependentTickets, _getTotalSold);
+const getIndependentTicketsAvailable = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])(getIndependentTickets, _getTotalAvailable);
+const getSharedTicketsSold = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])(getSharedTickets, _getTotalSold);
+const getSharedTicketsAvailable = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketsSharedCapacityInt, getSharedTicketsSold], (sharedCapacity, sharedSold) => Math.max(sharedCapacity - sharedSold, 0));
+const getIndependentAndSharedTicketsCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getIndependentTicketsCapacity, getTicketsSharedCapacityInt], (independentCapacity, sharedCapacity) => independentCapacity + sharedCapacity);
+const getIndependentAndSharedTicketsTempCapacity = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getIndependentTicketsTempCapacity, getTicketsTempSharedCapacityInt], (independentTempCapacity, tempSharedCapacity) => independentTempCapacity + tempSharedCapacity);
+const getIndependentAndSharedTicketsSold = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getIndependentTicketsSold, getSharedTicketsSold], (independentSold, sharedSold) => independentSold + sharedSold);
+const getIndependentAndSharedTicketsAvailable = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getIndependentTicketsAvailable, getSharedTicketsAvailable], (independentAvailable, sharedAvailable) => independentAvailable + sharedAvailable);
+
+//
+// ─── MISC SELECTORS ─────────────────────────────────────────────────────────────
+//
+
+const getTicketProviders = () => {
+  const tickets = ticketsConfig();
+  return tickets.providers || [];
+};
+const getDefaultTicketProvider = () => {
+  const tickets = ticketsConfig();
+  return tickets.default_provider || '';
+};
+const hasValidTicketProvider = () => {
+  const provider = getDefaultTicketProvider();
+  return provider !== '' && provider !== _constants__WEBPACK_IMPORTED_MODULE_4__["RSVP_CLASS"];
+};
+const hasMultipleTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 1);
+const hasTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 0);
+const canCreateTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([hasTicketProviders, hasValidTicketProvider], (providers, validDefaultProvider) => providers && validDefaultProvider);
+const getCurrentPostTypeLabel = function () {
+  var _post$labels;
+  let key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'singular_name';
+  const post = postConfig();
+  return (post === null || post === void 0 ? void 0 : (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
+};
+const currentPostIsEvent = () => {
+  const post = postConfig();
+  return (post === null || post === void 0 ? void 0 : post.type) === 'tribe_events';
+};
+const getNumericPrice = (price, decimalPoint, decimalPlaces, thousandSep) => {
+  // Remove thousand separators.
+  let newValue = price.replace(new RegExp('\\' + thousandSep, 'g'), '');
+
+  // Replace decimal separator with period.
+  newValue = newValue.replace(decimalPoint, '.');
+
+  // Round to specified number of decimal places.
+  newValue = parseFloat(newValue).toFixed(decimalPlaces);
+  newValue = parseInt(newValue.replace('.', ''));
+  return newValue;
+};
 
 /***/ }),
 
@@ -1438,6 +1265,7 @@ __webpack_require__.d(__webpack_exports__, "Close", function() { return /* reexp
 __webpack_require__.d(__webpack_exports__, "Ticket", function() { return /* reexport */ ticket_left; });
 __webpack_require__.d(__webpack_exports__, "ECP", function() { return /* reexport */ ecp; });
 __webpack_require__.d(__webpack_exports__, "Bulb", function() { return /* reexport */ bulb; });
+__webpack_require__.d(__webpack_exports__, "Seat", function() { return /* reexport */ seat; });
 
 // EXTERNAL MODULE: external "React"
 var external_React_ = __webpack_require__("cDcd");
@@ -2228,7 +2056,56 @@ function bulb_objectWithoutProperties(obj, keys) {
     fill: "#334AFF"
   }));
 });
+// CONCATENATED MODULE: ./src/modules/icons/seat.svg
+var seat_extends = Object.assign || function (target) {
+  for (var i = 1; i < arguments.length; i++) {
+    var source = arguments[i];
+    for (var key in source) {
+      if (Object.prototype.hasOwnProperty.call(source, key)) {
+        target[key] = source[key];
+      }
+    }
+  }
+  return target;
+};
+function seat_objectWithoutProperties(obj, keys) {
+  var target = {};
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+  return target;
+}
+
+/* harmony default export */ var seat = (_ref => {
+  let {
+      styles = {}
+    } = _ref,
+    props = seat_objectWithoutProperties(_ref, ["styles"]);
+  return /*#__PURE__*/external_React_default.a.createElement("svg", seat_extends({
+    width: "21",
+    height: "21",
+    viewBox: "0 0 21 21",
+    fill: "none",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, props), /*#__PURE__*/external_React_default.a.createElement("g", {
+    clipPath: "url(#a)",
+    fill: "#727272"
+  }, /*#__PURE__*/external_React_default.a.createElement("path", {
+    d: "M17.833 11.08c-.139-.891-.808-1.337-1.254-1.644-.093-.065-.214-.149-.27-.195-.297-.967-.418-2.119-.53-3.132-.092-.855-.185-1.663-.362-2.286C14.748 1.5 13.02 1.5 12.183 1.5H8.717c-.827 0-2.555 0-3.224 2.323-.186.623-.27 1.431-.363 2.296C5.02 7.13 4.89 8.274 4.6 9.25c-.064.047-.185.13-.278.195-.446.298-1.115.753-1.255 1.645-.279 1.784-.223 2.788.214 3.448.455.697 1.282 1.161 2.063 1.161h.344l-.474 2.993a.694.694 0 0 0 .688.808.697.697 0 0 0 .687-.585l.53-3.216h6.672l.53 3.216a.697.697 0 0 0 .687.585c.038 0 .075 0 .112-.01a.695.695 0 0 0 .576-.798l-.492-2.993h.343c.781 0 1.608-.464 2.063-1.161.446-.67.502-1.673.223-3.457zm-1.384 2.687c-.233.343-.632.538-.902.538H5.363c-.27 0-.679-.185-.902-.538-.214-.326-.214-1.153-.01-2.472.047-.27.28-.447.66-.707.307-.204.67-.446.8-.864.353-1.115.483-2.36.604-3.457.083-.799.167-1.552.316-2.053.353-1.227.948-1.32 1.886-1.32h3.476c.938 0 1.533.093 1.895 1.32.15.501.233 1.254.316 2.053.121 1.097.26 2.351.604 3.457.13.418.484.66.8.874.38.26.613.427.66.706.195 1.31.195 2.137-.02 2.463z"
+  }), /*#__PURE__*/external_React_default.a.createElement("path", {
+    d: "M13.642 11.239H7.258a.702.702 0 0 0-.697.697c0 .38.316.697.697.697h6.394a.702.702 0 0 0 .697-.697.704.704 0 0 0-.707-.697z"
+  })), /*#__PURE__*/external_React_default.a.createElement("defs", null, /*#__PURE__*/external_React_default.a.createElement("clipPath", {
+    id: "a"
+  }, /*#__PURE__*/external_React_default.a.createElement("path", {
+    fill: "#fff",
+    transform: "translate(2.9 1.5)",
+    d: "M0 0h15.101v18H0z"
+  }))));
+});
 // CONCATENATED MODULE: ./src/modules/icons/index.js
+
 
 
 
@@ -2264,170 +2141,13 @@ function bulb_objectWithoutProperties(obj, keys) {
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, "b", function() { return /* reexport */ constants; });
-__webpack_require__.d(__webpack_exports__, "d", function() { return /* reexport */ options_namespaceObject; });
+__webpack_require__.d(__webpack_exports__, "d", function() { return /* reexport */ options; });
 __webpack_require__.d(__webpack_exports__, "g", function() { return /* reexport */ types; });
 __webpack_require__.d(__webpack_exports__, "a", function() { return /* reexport */ actions; });
-__webpack_require__.d(__webpack_exports__, "f", function() { return /* reexport */ selectors_namespaceObject; });
+__webpack_require__.d(__webpack_exports__, "f", function() { return /* reexport */ selectors; });
 __webpack_require__.d(__webpack_exports__, "e", function() { return /* reexport */ watchers; });
 
 // UNUSED EXPORTS: utils
-
-// NAMESPACE OBJECT: ./src/modules/data/blocks/ticket/options.js
-var options_namespaceObject = {};
-__webpack_require__.r(options_namespaceObject);
-__webpack_require__.d(options_namespaceObject, "CAPACITY_TYPE_OPTIONS", function() { return CAPACITY_TYPE_OPTIONS; });
-
-// NAMESPACE OBJECT: ./src/modules/data/blocks/ticket/selectors.js
-var selectors_namespaceObject = {};
-__webpack_require__.r(selectors_namespaceObject);
-__webpack_require__.d(selectors_namespaceObject, "getState", function() { return getState; });
-__webpack_require__.d(selectors_namespaceObject, "getBlock", function() { return getBlock; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsIsSelected", function() { return getTicketsIsSelected; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsIsSettingsOpen", function() { return getTicketsIsSettingsOpen; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsIsSettingsLoading", function() { return getTicketsIsSettingsLoading; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsProvider", function() { return getTicketsProvider; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsSharedCapacity", function() { return getTicketsSharedCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsSharedCapacityInt", function() { return getTicketsSharedCapacityInt; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsTempSharedCapacity", function() { return getTicketsTempSharedCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsTempSharedCapacityInt", function() { return getTicketsTempSharedCapacityInt; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsHeaderImage", function() { return getTicketsHeaderImage; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsHeaderImageId", function() { return getTicketsHeaderImageId; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsHeaderImageSrc", function() { return getTicketsHeaderImageSrc; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsHeaderImageAlt", function() { return getTicketsHeaderImageAlt; });
-__webpack_require__.d(selectors_namespaceObject, "getTickets", function() { return getTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsAllClientIds", function() { return getTicketsAllClientIds; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsByClientId", function() { return getTicketsByClientId; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsArray", function() { return getTicketsArray; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsCount", function() { return getTicketsCount; });
-__webpack_require__.d(selectors_namespaceObject, "hasTickets", function() { return hasTickets; });
-__webpack_require__.d(selectors_namespaceObject, "hasCreatedTickets", function() { return selectors_hasCreatedTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentTickets", function() { return getIndependentTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getSharedTickets", function() { return getSharedTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getSharedTicketsCount", function() { return getSharedTicketsCount; });
-__webpack_require__.d(selectors_namespaceObject, "getUnlimitedTickets", function() { return getUnlimitedTickets; });
-__webpack_require__.d(selectors_namespaceObject, "hasATicketSelected", function() { return hasATicketSelected; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketsIdsInBlocks", function() { return getTicketsIdsInBlocks; });
-__webpack_require__.d(selectors_namespaceObject, "getUneditableTickets", function() { return getUneditableTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getUneditableTicketsAreLoading", function() { return getUneditableTicketsAreLoading; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketClientId", function() { return getTicketClientId; });
-__webpack_require__.d(selectors_namespaceObject, "getTicket", function() { return getTicket; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSold", function() { return getTicketSold; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketAvailable", function() { return getTicketAvailable; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketId", function() { return getTicketId; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCurrencySymbol", function() { return getTicketCurrencySymbol; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCurrencyPosition", function() { return getTicketCurrencyPosition; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCurrencyDecimalPoint", function() { return getTicketCurrencyDecimalPoint; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCurrencyNumberOfDecimals", function() { return getTicketCurrencyNumberOfDecimals; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCurrencyThousandsSep", function() { return getTicketCurrencyThousandsSep; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketProvider", function() { return getTicketProvider; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketHasAttendeeInfoFields", function() { return getTicketHasAttendeeInfoFields; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketIsLoading", function() { return getTicketIsLoading; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketIsModalOpen", function() { return getTicketIsModalOpen; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketHasBeenCreated", function() { return getTicketHasBeenCreated; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketHasChanges", function() { return getTicketHasChanges; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketHasDurationError", function() { return getTicketHasDurationError; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketIsSelected", function() { return getTicketIsSelected; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketDisabled", function() { return isTicketDisabled; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketDetails", function() { return getTicketDetails; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTitle", function() { return getTicketTitle; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketDescription", function() { return getTicketDescription; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketPrice", function() { return getTicketPrice; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketOnSale", function() { return getTicketOnSale; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSku", function() { return getTicketSku; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketIACSetting", function() { return getTicketIACSetting; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartDate", function() { return getTicketStartDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartDateInput", function() { return getTicketStartDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartDateMoment", function() { return getTicketStartDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndDate", function() { return getTicketEndDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndDateInput", function() { return getTicketEndDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndDateMoment", function() { return getTicketEndDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartTime", function() { return getTicketStartTime; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartTimeNoSeconds", function() { return getTicketStartTimeNoSeconds; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndTime", function() { return getTicketEndTime; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndTimeNoSeconds", function() { return getTicketEndTimeNoSeconds; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketStartTimeInput", function() { return getTicketStartTimeInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketEndTimeInput", function() { return getTicketEndTimeInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCapacityType", function() { return getTicketCapacityType; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCapacity", function() { return getTicketCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketCapacityInt", function() { return getTicketCapacityInt; });
-__webpack_require__.d(selectors_namespaceObject, "getSalePriceChecked", function() { return getSalePriceChecked; });
-__webpack_require__.d(selectors_namespaceObject, "getSalePrice", function() { return getSalePrice; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleStartDate", function() { return getTicketSaleStartDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleStartDateInput", function() { return getTicketSaleStartDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleStartDateMoment", function() { return getTicketSaleStartDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleEndDate", function() { return getTicketSaleEndDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleEndDateInput", function() { return getTicketSaleEndDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketSaleEndDateMoment", function() { return getTicketSaleEndDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "isUnlimitedTicket", function() { return isUnlimitedTicket; });
-__webpack_require__.d(selectors_namespaceObject, "isSharedTicket", function() { return isSharedTicket; });
-__webpack_require__.d(selectors_namespaceObject, "isIndependentTicket", function() { return isIndependentTicket; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketPast", function() { return isTicketPast; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketFuture", function() { return isTicketFuture; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketOnSale", function() { return isTicketOnSale; });
-__webpack_require__.d(selectors_namespaceObject, "hasTicketOnSale", function() { return hasTicketOnSale; });
-__webpack_require__.d(selectors_namespaceObject, "allTicketsPast", function() { return allTicketsPast; });
-__webpack_require__.d(selectors_namespaceObject, "allTicketsFuture", function() { return allTicketsFuture; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketAttendeeInfoFields", function() { return getTicketAttendeeInfoFields; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempDetails", function() { return getTicketTempDetails; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempTitle", function() { return getTicketTempTitle; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempDescription", function() { return getTicketTempDescription; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempPrice", function() { return getTicketTempPrice; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSku", function() { return getTicketTempSku; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempIACSetting", function() { return getTicketTempIACSetting; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartDate", function() { return getTicketTempStartDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartDateInput", function() { return getTicketTempStartDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartDateMoment", function() { return getTicketTempStartDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndDate", function() { return getTicketTempEndDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndDateInput", function() { return getTicketTempEndDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndDateMoment", function() { return getTicketTempEndDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartTime", function() { return getTicketTempStartTime; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartTimeNoSeconds", function() { return getTicketTempStartTimeNoSeconds; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndTime", function() { return getTicketTempEndTime; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndTimeNoSeconds", function() { return getTicketTempEndTimeNoSeconds; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempStartTimeInput", function() { return getTicketTempStartTimeInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempEndTimeInput", function() { return getTicketTempEndTimeInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempCapacityType", function() { return getTicketTempCapacityType; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempCapacity", function() { return getTicketTempCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempCapacityInt", function() { return getTicketTempCapacityInt; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempCapacityTypeOption", function() { return getTicketTempCapacityTypeOption; });
-__webpack_require__.d(selectors_namespaceObject, "getTempSalePriceChecked", function() { return getTempSalePriceChecked; });
-__webpack_require__.d(selectors_namespaceObject, "getTempSalePrice", function() { return getTempSalePrice; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleStartDate", function() { return getTicketTempSaleStartDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleStartDateInput", function() { return getTicketTempSaleStartDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleStartDateMoment", function() { return getTicketTempSaleStartDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleEndDate", function() { return getTicketTempSaleEndDate; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleEndDateInput", function() { return getTicketTempSaleEndDateInput; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketTempSaleEndDateMoment", function() { return getTicketTempSaleEndDateMoment; });
-__webpack_require__.d(selectors_namespaceObject, "showSalePrice", function() { return selectors_showSalePrice; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketSalePriceValid", function() { return isTicketSalePriceValid; });
-__webpack_require__.d(selectors_namespaceObject, "isTempTitleValid", function() { return isTempTitleValid; });
-__webpack_require__.d(selectors_namespaceObject, "isTempCapacityValid", function() { return isTempCapacityValid; });
-__webpack_require__.d(selectors_namespaceObject, "isTempSharedCapacityValid", function() { return isTempSharedCapacityValid; });
-__webpack_require__.d(selectors_namespaceObject, "isZeroPriceValid", function() { return isZeroPriceValid; });
-__webpack_require__.d(selectors_namespaceObject, "isTicketValid", function() { return isTicketValid; });
-__webpack_require__.d(selectors_namespaceObject, "_getTotalCapacity", function() { return _getTotalCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "_getTotalTempCapacity", function() { return _getTotalTempCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "_getTotalSold", function() { return _getTotalSold; });
-__webpack_require__.d(selectors_namespaceObject, "_getTotalAvailable", function() { return _getTotalAvailable; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentTicketsCapacity", function() { return getIndependentTicketsCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentTicketsTempCapacity", function() { return getIndependentTicketsTempCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentTicketsSold", function() { return getIndependentTicketsSold; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentTicketsAvailable", function() { return getIndependentTicketsAvailable; });
-__webpack_require__.d(selectors_namespaceObject, "getSharedTicketsSold", function() { return getSharedTicketsSold; });
-__webpack_require__.d(selectors_namespaceObject, "getSharedTicketsAvailable", function() { return getSharedTicketsAvailable; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentAndSharedTicketsCapacity", function() { return getIndependentAndSharedTicketsCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentAndSharedTicketsTempCapacity", function() { return getIndependentAndSharedTicketsTempCapacity; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentAndSharedTicketsSold", function() { return getIndependentAndSharedTicketsSold; });
-__webpack_require__.d(selectors_namespaceObject, "getIndependentAndSharedTicketsAvailable", function() { return getIndependentAndSharedTicketsAvailable; });
-__webpack_require__.d(selectors_namespaceObject, "getTicketProviders", function() { return getTicketProviders; });
-__webpack_require__.d(selectors_namespaceObject, "getDefaultTicketProvider", function() { return getDefaultTicketProvider; });
-__webpack_require__.d(selectors_namespaceObject, "hasValidTicketProvider", function() { return hasValidTicketProvider; });
-__webpack_require__.d(selectors_namespaceObject, "hasMultipleTicketProviders", function() { return hasMultipleTicketProviders; });
-__webpack_require__.d(selectors_namespaceObject, "hasTicketProviders", function() { return hasTicketProviders; });
-__webpack_require__.d(selectors_namespaceObject, "canCreateTickets", function() { return canCreateTickets; });
-__webpack_require__.d(selectors_namespaceObject, "getCurrentPostTypeLabel", function() { return getCurrentPostTypeLabel; });
-__webpack_require__.d(selectors_namespaceObject, "currentPostIsEvent", function() { return currentPostIsEvent; });
-__webpack_require__.d(selectors_namespaceObject, "getNumericPrice", function() { return getNumericPrice; });
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
 var defineProperty = __webpack_require__("lSNA");
@@ -2446,355 +2166,9 @@ var types = __webpack_require__("enZp");
 // EXTERNAL MODULE: external "tribe.common.utils"
 var external_tribe_common_utils_ = __webpack_require__("B8vQ");
 
-// EXTERNAL MODULE: external "lodash.trim"
-var external_lodash_trim_ = __webpack_require__("XNrZ");
-var external_lodash_trim_default = /*#__PURE__*/__webpack_require__.n(external_lodash_trim_);
+// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/selectors.js
+var selectors = __webpack_require__("LVGI");
 
-// EXTERNAL MODULE: external "lodash.find"
-var external_lodash_find_ = __webpack_require__("6OzC");
-var external_lodash_find_default = /*#__PURE__*/__webpack_require__.n(external_lodash_find_);
-
-// EXTERNAL MODULE: external "tribe.modules.reselect"
-var external_tribe_modules_reselect_ = __webpack_require__("MWqi");
-
-// EXTERNAL MODULE: external "moment"
-var external_moment_ = __webpack_require__("wy2R");
-var external_moment_default = /*#__PURE__*/__webpack_require__.n(external_moment_);
-
-// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/constants.js
-var constants = __webpack_require__("DOwB");
-
-// EXTERNAL MODULE: external "wp.i18n"
-var external_wp_i18n_ = __webpack_require__("l3Sj");
-
-// CONCATENATED MODULE: ./src/modules/data/blocks/ticket/options.js
-/**
- * External dependencies
- */
-
-
-/**
- * Internal dependencies
- */
-
-const CAPACITY_TYPE_OPTIONS = [{
-  label: Object(external_wp_i18n_["__"])('Share capacity with other tickets', 'event-tickets'),
-  value: constants["TICKET_TYPES"][constants["SHARED"]]
-}, {
-  label: Object(external_wp_i18n_["__"])('Set capacity for this ticket only', 'event-tickets'),
-  value: constants["TICKET_TYPES"][constants["INDEPENDENT"]]
-}, {
-  label: Object(external_wp_i18n_["__"])('Unlimited', 'event-tickets'),
-  value: constants["TICKET_TYPES"][constants["UNLIMITED"]]
-}];
-// CONCATENATED MODULE: ./src/modules/data/blocks/ticket/selectors.js
-
-
-/**
- * External dependencies
- */
-
-
-
-/**
- * Internal dependencies
- */
-
-
-
-const {
-  UNLIMITED,
-  INDEPENDENT,
-  SHARED,
-  TICKET_TYPES,
-  IS_FREE_TC_TICKET_ALLOWED
-} = constants;
-const {
-  tickets: ticketsConfig,
-  post: postConfig
-} = external_tribe_common_utils_["globals"];
-const getState = state => state;
-const getBlock = state => state.tickets.blocks.ticket;
-
-//
-// ─── BLOCK SELECTORS ────────────────────────────────────────────────────────────
-//
-
-const getTicketsIsSelected = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.isSelected);
-const getTicketsIsSettingsOpen = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.isSettingsOpen);
-const getTicketsIsSettingsLoading = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.isSettingsLoading);
-const getTicketsProvider = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.provider);
-const getTicketsSharedCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.sharedCapacity);
-const getTicketsSharedCapacityInt = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsSharedCapacity], capacity => parseInt(capacity, 10) || 0);
-const getTicketsTempSharedCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.tempSharedCapacity);
-const getTicketsTempSharedCapacityInt = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsTempSharedCapacity], capacity => parseInt(capacity, 10) || 0);
-
-//
-// ─── HEADER IMAGE SELECTORS ─────────────────────────────────────────────────────
-//
-
-const getTicketsHeaderImage = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.headerImage);
-const getTicketsHeaderImageId = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.id);
-const getTicketsHeaderImageSrc = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.src);
-const getTicketsHeaderImageAlt = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsHeaderImage], headerImage => headerImage.alt);
-
-//
-// ─── TICKETS SELECTORS ──────────────────────────────────────────────────────────
-//
-
-const getTickets = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], block => block.tickets);
-const getTicketsAllClientIds = Object(external_tribe_modules_reselect_["createSelector"])([getTickets], tickets => [...new Set(tickets.allClientIds)]);
-const getTicketsByClientId = Object(external_tribe_modules_reselect_["createSelector"])([getTickets], tickets => tickets.byClientId);
-const getTicketsArray = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsAllClientIds, getTicketsByClientId], (ids, tickets) => ids.map(id => tickets[id]));
-const getTicketsCount = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsAllClientIds], allClientIds => allClientIds.length);
-const hasTickets = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsCount], count => count > 0);
-const selectors_hasCreatedTickets = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.reduce((hasCreated, ticket) => hasCreated || ticket.hasBeenCreated, false));
-const getIndependentTickets = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[INDEPENDENT]));
-const getSharedTickets = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[SHARED]));
-const getSharedTicketsCount = Object(external_tribe_modules_reselect_["createSelector"])([getSharedTickets], tickets => tickets.length);
-const getUnlimitedTickets = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.filter(ticket => ticket.details.capacityType === TICKET_TYPES[UNLIMITED]));
-const hasATicketSelected = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.reduce((selected, ticket) => selected || ticket.isSelected, false));
-const getTicketsIdsInBlocks = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsArray], tickets => tickets.reduce((accumulator, ticket) => {
-  if (ticket.ticketId !== 0) {
-    accumulator.push(ticket.ticketId);
-  }
-  return accumulator;
-}, []));
-const getUneditableTickets = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], function (block) {
-  return block.uneditableTickets || [];
-});
-const getUneditableTicketsAreLoading = Object(external_tribe_modules_reselect_["createSelector"])([getBlock], function (block) {
-  return block.uneditableTicketsLoading || false;
-});
-
-//
-// ─── TICKET SELECTORS ───────────────────────────────────────────────────────────
-//
-
-const getTicketClientId = (state, ownProps) => ownProps.clientId;
-const getTicket = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsByClientId, getTicketClientId], (tickets, clientId) => tickets[clientId] || {});
-const getTicketSold = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.sold);
-const getTicketAvailable = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.available);
-const getTicketId = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.ticketId);
-const getTicketCurrencySymbol = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.currencySymbol);
-const getTicketCurrencyPosition = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.currencyPosition);
-const getTicketCurrencyDecimalPoint = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.currencyDecimalPoint);
-const getTicketCurrencyNumberOfDecimals = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.currencyNumberOfDecimals);
-const getTicketCurrencyThousandsSep = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.currencyThousandsSep);
-const getTicketProvider = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.provider);
-const getTicketHasAttendeeInfoFields = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.hasAttendeeInfoFields);
-const getTicketIsLoading = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.isLoading);
-const getTicketIsModalOpen = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.isModalOpen);
-const getTicketHasBeenCreated = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.hasBeenCreated);
-const getTicketHasChanges = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.hasChanges);
-const getTicketHasDurationError = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.hasDurationError);
-const getTicketIsSelected = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.isSelected);
-const isTicketDisabled = Object(external_tribe_modules_reselect_["createSelector"])([hasATicketSelected, getTicketIsSelected, getTicketIsLoading, getTicketsIsSettingsOpen], (hasSelected, isSelected, isLoading, isSettingsOpen) => hasSelected && !isSelected || isLoading || isSettingsOpen);
-
-//
-// ─── TICKET DETAILS SELECTORS ───────────────────────────────────────────────────
-//
-
-const getTicketDetails = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.details || {});
-const getTicketTitle = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.title);
-const getTicketDescription = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.description);
-const getTicketPrice = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.price);
-const getTicketOnSale = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.on_sale);
-const getTicketSku = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.sku);
-const getTicketIACSetting = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.iac);
-const getTicketStartDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.startDate);
-const getTicketStartDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.startDateInput);
-const getTicketStartDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.startDateMoment);
-const getTicketEndDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.endDate);
-const getTicketEndDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.endDateInput);
-const getTicketEndDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.endDateMoment);
-const getTicketStartTime = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.startTime || '');
-const getTicketStartTimeNoSeconds = Object(external_tribe_modules_reselect_["createSelector"])([getTicketStartTime], startTime => startTime.slice(0, -3));
-const getTicketEndTime = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.endTime || '');
-const getTicketEndTimeNoSeconds = Object(external_tribe_modules_reselect_["createSelector"])([getTicketEndTime], endTime => endTime.slice(0, -3));
-const getTicketStartTimeInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.startTimeInput);
-const getTicketEndTimeInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.endTimeInput);
-const getTicketCapacityType = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.capacityType);
-const getTicketCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.capacity);
-const getTicketCapacityInt = Object(external_tribe_modules_reselect_["createSelector"])([getTicketCapacity], capacity => parseInt(capacity, 10) || 0);
-const getSalePriceChecked = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.salePriceChecked);
-const getSalePrice = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.salePrice);
-const getTicketSaleStartDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleStartDate);
-const getTicketSaleStartDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleStartDateInput);
-const getTicketSaleStartDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleStartDateMoment);
-const getTicketSaleEndDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleEndDate);
-const getTicketSaleEndDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleEndDateInput);
-const getTicketSaleEndDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.saleEndDateMoment);
-const isUnlimitedTicket = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[UNLIMITED]);
-const isSharedTicket = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[SHARED]);
-const isIndependentTicket = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.capacityType === TICKET_TYPES[INDEPENDENT]);
-const isTicketPast = Object(external_tribe_modules_reselect_["createSelector"])([getTicketEndDateMoment], endDate => external_moment_default()().isAfter(endDate));
-const isTicketFuture = Object(external_tribe_modules_reselect_["createSelector"])([getTicketStartDateMoment], startDate => external_moment_default()().isBefore(startDate));
-const isTicketOnSale = Object(external_tribe_modules_reselect_["createSelector"])([getTicketHasBeenCreated, isTicketPast, isTicketFuture], (hasBeenCreated, isPast, isFuture) => hasBeenCreated && !isPast && !isFuture);
-const hasTicketOnSale = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((onSale, clientId) => onSale || isTicketOnSale(state, {
-  clientId
-}), false));
-const allTicketsPast = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((isPast, clientId) => {
-  const props = {
-    clientId
-  };
-  return getTicketHasBeenCreated(state, props) ? isPast && isTicketPast(state, props) : isPast;
-}, true));
-const allTicketsFuture = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsAllClientIds, getState], (allClientIds, state) => allClientIds.reduce((isFuture, clientId) => {
-  const props = {
-    clientId
-  };
-  return getTicketHasBeenCreated(state, props) ? isFuture && isTicketFuture(state, props) : isFuture;
-}, true));
-const getTicketAttendeeInfoFields = Object(external_tribe_modules_reselect_["createSelector"])([getTicketDetails], details => details.attendeeInfoFields || []);
-
-//
-// ─── TICKET TEMP DETAILS SELECTORS ──────────────────────────────────────────────
-//
-
-const getTicketTempDetails = Object(external_tribe_modules_reselect_["createSelector"])([getTicket], ticket => ticket.tempDetails || {});
-const getTicketTempTitle = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.title);
-const getTicketTempDescription = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.description);
-const getTicketTempPrice = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.price);
-const getTicketTempSku = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.sku);
-const getTicketTempIACSetting = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.iac);
-const getTicketTempStartDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDate);
-const getTicketTempStartDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDateInput);
-const getTicketTempStartDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startDateMoment);
-const getTicketTempEndDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDate);
-const getTicketTempEndDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDateInput);
-const getTicketTempEndDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endDateMoment);
-const getTicketTempStartTime = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startTime || '');
-const getTicketTempStartTimeNoSeconds = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempStartTime], startTime => startTime.slice(0, -3));
-const getTicketTempEndTime = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endTime || '');
-const getTicketTempEndTimeNoSeconds = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempEndTime], endTime => endTime.slice(0, -3));
-const getTicketTempStartTimeInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.startTimeInput);
-const getTicketTempEndTimeInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.endTimeInput);
-const getTicketTempCapacityType = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.capacityType);
-const getTicketTempCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.capacity);
-const getTicketTempCapacityInt = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempCapacity], capacity => parseInt(capacity, 10) || 0);
-const getTicketTempCapacityTypeOption = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempCapacityType], capacityType => external_lodash_find_default()(CAPACITY_TYPE_OPTIONS, {
-  value: capacityType
-}) || {});
-const getTempSalePriceChecked = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.salePriceChecked);
-const getTempSalePrice = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.salePrice);
-const getTicketTempSaleStartDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDate);
-const getTicketTempSaleStartDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDateInput);
-const getTicketTempSaleStartDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleStartDateMoment);
-const getTicketTempSaleEndDate = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDate);
-const getTicketTempSaleEndDateInput = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDateInput);
-const getTicketTempSaleEndDateMoment = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempDetails], tempDetails => tempDetails.saleEndDateMoment);
-const selectors_showSalePrice = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsProvider], provider => provider === constants["TICKETS_COMMERCE_MODULE_CLASS"]);
-const isTicketSalePriceValid = Object(external_tribe_modules_reselect_["createSelector"])([getTempSalePrice, getTicketTempPrice, getTicketCurrencyDecimalPoint, getTicketCurrencyNumberOfDecimals, getTicketCurrencyThousandsSep], (salePrice, price, decimalPoint, decimalPlaces, thousandSep) => {
-  if (salePrice === '' || price === '') {
-    return true;
-  }
-  if (!decimalPoint || !decimalPlaces || !thousandSep) {
-    return true;
-  }
-
-  // eslint-disable-next-line no-use-before-define
-  const salePriceVal = getNumericPrice(salePrice, decimalPoint, decimalPlaces, thousandSep);
-  // eslint-disable-next-line no-use-before-define
-  const priceVal = getNumericPrice(price, decimalPoint, decimalPlaces, thousandSep);
-  return salePriceVal < priceVal;
-});
-const isTempTitleValid = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempTitle], title => external_lodash_trim_default()(title) !== '');
-const isTempCapacityValid = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempCapacity], capacity => external_lodash_trim_default()(capacity) !== '' && !isNaN(capacity) && capacity > 0);
-const isTempSharedCapacityValid = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsTempSharedCapacity], capacity => external_lodash_trim_default()(capacity) !== '' && !isNaN(capacity) && capacity > 0);
-const isZeroPriceValid = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempPrice, getTicketsProvider], (price, provider) => {
-  if (0 < parseInt(price, 10)) {
-    return true;
-  }
-  if (constants["TC_CLASS"] === provider) {
-    return false;
-  }
-  if (constants["TICKETS_COMMERCE_MODULE_CLASS"] === provider) {
-    return IS_FREE_TC_TICKET_ALLOWED;
-  }
-  return true;
-});
-const isTicketValid = Object(external_tribe_modules_reselect_["createSelector"])([getTicketTempCapacityType, isTempTitleValid, isTempCapacityValid, isTempSharedCapacityValid, isZeroPriceValid], (capacityType, titleValid, capacityValid, sharedCapacityValid, zeroPriceValid) => {
-  if (capacityType === TICKET_TYPES[UNLIMITED]) {
-    return titleValid && zeroPriceValid;
-  } else if (capacityType === TICKET_TYPES[SHARED]) {
-    return titleValid && sharedCapacityValid && zeroPriceValid;
-  }
-  return titleValid && capacityValid && zeroPriceValid;
-});
-
-//
-// ─── AMOUNT REDUCERS ────────────────────────────────────────────────────────────
-//
-
-const _getTotalCapacity = tickets => tickets.reduce((total, ticket) => {
-  const capacity = parseInt(ticket.details.capacity, 10) || 0;
-  return total + capacity;
-}, 0);
-const _getTotalTempCapacity = tickets => tickets.reduce((total, ticket) => {
-  const tempCapacity = parseInt(ticket.tempDetails.capacity, 10) || 0;
-  return total + tempCapacity;
-}, 0);
-const _getTotalSold = tickets => tickets.reduce((total, ticket) => {
-  const sold = parseInt(ticket.sold, 10) || 0;
-  return total + sold;
-}, 0);
-const _getTotalAvailable = tickets => tickets.reduce((total, ticket) => {
-  const available = parseInt(ticket.available, 10) || 0;
-  return total + available;
-}, 0);
-const getIndependentTicketsCapacity = Object(external_tribe_modules_reselect_["createSelector"])(getIndependentTickets, _getTotalCapacity);
-const getIndependentTicketsTempCapacity = Object(external_tribe_modules_reselect_["createSelector"])(getIndependentTickets, _getTotalTempCapacity);
-const getIndependentTicketsSold = Object(external_tribe_modules_reselect_["createSelector"])(getIndependentTickets, _getTotalSold);
-const getIndependentTicketsAvailable = Object(external_tribe_modules_reselect_["createSelector"])(getIndependentTickets, _getTotalAvailable);
-const getSharedTicketsSold = Object(external_tribe_modules_reselect_["createSelector"])(getSharedTickets, _getTotalSold);
-const getSharedTicketsAvailable = Object(external_tribe_modules_reselect_["createSelector"])([getTicketsSharedCapacityInt, getSharedTicketsSold], (sharedCapacity, sharedSold) => Math.max(sharedCapacity - sharedSold, 0));
-const getIndependentAndSharedTicketsCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getIndependentTicketsCapacity, getTicketsSharedCapacityInt], (independentCapacity, sharedCapacity) => independentCapacity + sharedCapacity);
-const getIndependentAndSharedTicketsTempCapacity = Object(external_tribe_modules_reselect_["createSelector"])([getIndependentTicketsTempCapacity, getTicketsTempSharedCapacityInt], (independentTempCapacity, tempSharedCapacity) => independentTempCapacity + tempSharedCapacity);
-const getIndependentAndSharedTicketsSold = Object(external_tribe_modules_reselect_["createSelector"])([getIndependentTicketsSold, getSharedTicketsSold], (independentSold, sharedSold) => independentSold + sharedSold);
-const getIndependentAndSharedTicketsAvailable = Object(external_tribe_modules_reselect_["createSelector"])([getIndependentTicketsAvailable, getSharedTicketsAvailable], (independentAvailable, sharedAvailable) => independentAvailable + sharedAvailable);
-
-//
-// ─── MISC SELECTORS ─────────────────────────────────────────────────────────────
-//
-
-const getTicketProviders = () => {
-  const tickets = ticketsConfig();
-  return tickets.providers || [];
-};
-const getDefaultTicketProvider = () => {
-  const tickets = ticketsConfig();
-  return tickets.default_provider || '';
-};
-const hasValidTicketProvider = () => {
-  const provider = getDefaultTicketProvider();
-  return provider !== '' && provider !== constants["RSVP_CLASS"];
-};
-const hasMultipleTicketProviders = Object(external_tribe_modules_reselect_["createSelector"])([getTicketProviders], providers => providers.length > 1);
-const hasTicketProviders = Object(external_tribe_modules_reselect_["createSelector"])([getTicketProviders], providers => providers.length > 0);
-const canCreateTickets = Object(external_tribe_modules_reselect_["createSelector"])([hasTicketProviders, hasValidTicketProvider], (providers, validDefaultProvider) => providers && validDefaultProvider);
-const getCurrentPostTypeLabel = function () {
-  var _post$labels;
-  let key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'singular_name';
-  const post = postConfig();
-  return (post === null || post === void 0 ? void 0 : (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
-};
-const currentPostIsEvent = () => {
-  const post = postConfig();
-  return (post === null || post === void 0 ? void 0 : post.type) === 'tribe_events';
-};
-const getNumericPrice = (price, decimalPoint, decimalPlaces, thousandSep) => {
-  // Remove thousand separators.
-  let newValue = price.replace(new RegExp('\\' + thousandSep, 'g'), '');
-
-  // Replace decimal separator with period.
-  newValue = newValue.replace(decimalPoint, '.');
-
-  // Round to specified number of decimal places.
-  newValue = parseFloat(newValue).toFixed(decimalPlaces);
-  newValue = parseInt(newValue.replace('.', ''));
-  return newValue;
-};
 // EXTERNAL MODULE: external "wp.hooks"
 var external_wp_hooks_ = __webpack_require__("g56x");
 
@@ -2806,7 +2180,7 @@ var external_wp_hooks_ = __webpack_require__("g56x");
 const {
   settings,
   priceSettings,
-  tickets: utils_ticketsConfig
+  tickets: ticketsConfig
 } = external_tribe_common_utils_["globals"];
 /**
  * Internal dependencies
@@ -2820,8 +2194,8 @@ const {
  * @param provider The tickets provider class
  */
 const getProviderCurrency = provider => {
-  const tickets = utils_ticketsConfig();
-  const providers = getTicketProviders();
+  const tickets = ticketsConfig();
+  const providers = Object(selectors["getTicketProviders"])();
 
   // if we don't get the provider, return the default one
   if ('' === provider) {
@@ -2837,7 +2211,7 @@ const getProviderCurrency = provider => {
  * @param provider The tickets provider class
  */
 const getProviderCurrencyDecimalPoint = provider => {
-  const providers = getTicketProviders();
+  const providers = Object(selectors["getTicketProviders"])();
   const defaultCurrencyDecimalPoint = '.';
 
   // if we don't get the provider, return the default one
@@ -2854,7 +2228,7 @@ const getProviderCurrencyDecimalPoint = provider => {
  * @param provider The tickets provider class
  */
 const getProviderCurrencyNumberOfDecimals = provider => {
-  const providers = getTicketProviders();
+  const providers = Object(selectors["getTicketProviders"])();
   const defaultCurrencyNumberOfDecimals = 2;
 
   // if we don't get the provider, return the default one
@@ -2871,7 +2245,7 @@ const getProviderCurrencyNumberOfDecimals = provider => {
  * @param provider The tickets provider class
  */
 const getProviderCurrencyThousandsSep = provider => {
-  const providers = getTicketProviders();
+  const providers = Object(selectors["getTicketProviders"])();
   const defaultCurrencyThousandsSep = ',';
 
   // if we don't get the provider, return the default one
@@ -2886,28 +2260,28 @@ const getProviderCurrencyThousandsSep = provider => {
  * Get the default provider's currency symbol
  */
 const getDefaultProviderCurrency = () => {
-  return getProviderCurrency(getDefaultTicketProvider());
+  return getProviderCurrency(Object(selectors["getDefaultTicketProvider"])());
 };
 
 /**
  * Get the default provider's currency decimal point
  */
 const getDefaultProviderCurrencyDecimalPoint = () => {
-  return getProviderCurrencyDecimalPoint(getDefaultTicketProvider());
+  return getProviderCurrencyDecimalPoint(Object(selectors["getDefaultTicketProvider"])());
 };
 
 /**
  * Get the default provider's currency number of decimals
  */
 const getDefaultProviderCurrencyNumberOfDecimals = () => {
-  return getProviderCurrencyNumberOfDecimals(getDefaultTicketProvider());
+  return getProviderCurrencyNumberOfDecimals(Object(selectors["getDefaultTicketProvider"])());
 };
 
 /**
  * Get the default provider's currency thousands separator
  */
 const getDefaultProviderCurrencyThousandsSep = () => {
-  return getProviderCurrencyThousandsSep(getDefaultTicketProvider());
+  return getProviderCurrencyThousandsSep(Object(selectors["getDefaultTicketProvider"])());
 };
 
 /**
@@ -2942,6 +2316,13 @@ const isTicketEditableFromPost = (ticketId, ticketType, post) => {
     post
   });
 };
+// EXTERNAL MODULE: external "moment"
+var external_moment_ = __webpack_require__("wy2R");
+var external_moment_default = /*#__PURE__*/__webpack_require__.n(external_moment_);
+
+// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/constants.js
+var constants = __webpack_require__("DOwB");
+
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket/details.js
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
@@ -3693,6 +3074,9 @@ const reducer_DEFAULT_STATE = {
       return state;
   }
 });
+// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/options.js
+var options = __webpack_require__("dJ32");
+
 // EXTERNAL MODULE: ./src/modules/data/blocks/ticket/actions.js
 var actions = __webpack_require__("hImw");
 
@@ -3705,6 +3089,9 @@ var external_tribe_modules_reduxSaga_effects_ = __webpack_require__("RmXt");
 
 // EXTERNAL MODULE: external "wp.data"
 var external_wp_data_ = __webpack_require__("1ZqX");
+
+// EXTERNAL MODULE: external "wp.i18n"
+var external_wp_i18n_ = __webpack_require__("l3Sj");
 
 // EXTERNAL MODULE: external "wp.blocks"
 var external_wp_blocks_ = __webpack_require__("HSyU");
@@ -3725,7 +3112,7 @@ var external_tribe_common_data_ = __webpack_require__("ZNLL");
 var move_types = __webpack_require__("4Uf/");
 
 // EXTERNAL MODULE: ./src/modules/data/shared/move/selectors.js
-var selectors = __webpack_require__("ihba");
+var move_selectors = __webpack_require__("ihba");
 
 // EXTERNAL MODULE: ./src/modules/data/shared/sagas.js
 var sagas = __webpack_require__("ghtj");
@@ -3767,9 +3154,9 @@ function sagas_objectSpread(target) { for (var i = 1; i < arguments.length; i++)
 
 
 const {
-  UNLIMITED: sagas_UNLIMITED,
-  SHARED: sagas_SHARED,
-  TICKET_TYPES: sagas_TICKET_TYPES,
+  UNLIMITED,
+  SHARED,
+  TICKET_TYPES,
   PROVIDER_CLASS_TO_PROVIDER_MAPPING
 } = constants;
 const {
@@ -3908,7 +3295,7 @@ function* setTicketsInitialState(action) {
   });
 
   // Get only the IDs of the tickets that are not in the block list already.
-  const ticketsInBlock = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsIdsInBlocks);
+  const ticketsInBlock = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsIdsInBlocks"]);
   const ticketsDiff = editableTickets.filter(item => !external_lodash_includes_default()(ticketsInBlock, item.id));
   if (ticketsDiff.length >= 1) {
     yield Object(external_tribe_modules_reduxSaga_effects_["call"])(createMissingTicketBlocks, ticketsDiff.map(ticket => ticket.id));
@@ -3926,13 +3313,13 @@ function* setTicketsInitialState(action) {
   }
   let provider = get('provider', reducer_DEFAULT_STATE.provider);
   if (provider === constants["RSVP_CLASS"] || !provider) {
-    const defaultProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getDefaultTicketProvider);
+    const defaultProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getDefaultTicketProvider"]);
     provider = defaultProvider === constants["RSVP_CLASS"] ? '' : defaultProvider;
   }
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketsProvider"](provider));
 }
 function* resetTicketsBlock() {
-  const hasCreatedTickets = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors_hasCreatedTickets);
+  const hasCreatedTickets = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["hasCreatedTickets"]);
   yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlocks"]()), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketsIsSettingsOpen"](false))]);
   if (!hasCreatedTickets) {
     const currentMeta = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getEditedPostAttribute'], 'meta');
@@ -3985,7 +3372,7 @@ function* setTicketInitialState(action) {
   if (hasTicketsPlus) {
     yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]]))]);
   }
-  const sharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsSharedCapacity);
+  const sharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsSharedCapacity"]);
   if (sharedCapacity) {
     yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCapacity"](clientId, sharedCapacity)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempCapacity"](clientId, sharedCapacity))]);
   }
@@ -4001,40 +3388,50 @@ function* setTicketInitialState(action) {
   yield Object(external_tribe_modules_reduxSaga_effects_["fork"])(saveTicketWithPostSave, clientId);
 }
 function* setBodyDetails(clientId) {
-  const body = new FormData();
+  let body = new FormData();
   const props = {
     clientId
   };
   const rootClientId = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockRootClientId'], clientId);
-  const ticketProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketProvider, props);
-  const ticketsProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsProvider);
+  const ticketProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketProvider"], props);
+  const ticketsProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsProvider"]);
   body.append('post_id', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getCurrentPostId']));
   body.append('provider', ticketProvider || ticketsProvider);
-  body.append('name', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempTitle, props));
-  body.append('description', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempDescription, props));
-  body.append('price', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempPrice, props));
-  body.append('start_date', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDate, props));
-  body.append('start_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTime, props));
-  body.append('end_date', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDate, props));
-  body.append('end_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTime, props));
-  body.append('sku', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSku, props));
-  body.append('iac', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempIACSetting, props));
+  body.append('name', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempTitle"], props));
+  body.append('description', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempDescription"], props));
+  body.append('price', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempPrice"], props));
+  body.append('start_date', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDate"], props));
+  body.append('start_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], props));
+  body.append('end_date', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDate"], props));
+  body.append('end_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props));
+  body.append('sku', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props));
+  body.append('iac', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props));
   body.append('menu_order', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockIndex'], clientId, rootClientId));
-  const capacityType = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacityType, props);
-  const capacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacity, props);
-  const isUnlimited = capacityType === sagas_TICKET_TYPES[sagas_UNLIMITED];
+  const capacityType = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props);
+  const capacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props);
+  const isUnlimited = capacityType === TICKET_TYPES[UNLIMITED];
   body.append('ticket[mode]', isUnlimited ? '' : capacityType);
   body.append('ticket[capacity]', isUnlimited ? '' : capacity);
-  if (capacityType === sagas_TICKET_TYPES[sagas_SHARED]) {
-    body.append('ticket[event_capacity]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsTempSharedCapacity));
+  if (capacityType === TICKET_TYPES[SHARED]) {
+    body.append('ticket[event_capacity]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsTempSharedCapacity"]));
   }
-  const showSalePrice = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors_showSalePrice, props);
+  const showSalePrice = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["showSalePrice"], props);
   if (showSalePrice) {
-    body.append('ticket[sale_price][checked]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTempSalePriceChecked, props));
-    body.append('ticket[sale_price][price]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTempSalePrice, props));
-    body.append('ticket[sale_price][start_date]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleStartDate, props));
-    body.append('ticket[sale_price][end_date]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleEndDate, props));
+    body.append('ticket[sale_price][checked]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTempSalePriceChecked"], props));
+    body.append('ticket[sale_price][price]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTempSalePrice"], props));
+    body.append('ticket[sale_price][start_date]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDate"], props));
+    body.append('ticket[sale_price][end_date]', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDate"], props));
   }
+
+  /**
+   * Fires after the body details have been set and before the request is sent.
+   * The action will fire both when a ticket is being created and when an existing ticket is being updated.
+   *
+   * @since 5.16.0
+   * @param {Object} body The body of the request.
+   * @param {string} clientId The client ID of the ticket block that is being created or updated.
+   */
+  body = Object(external_wp_hooks_["applyFilters"])('tec.tickets.blocks.setBodyDetails', body, clientId);
   return body;
 }
 function* removeTicketBlock(clientId) {
@@ -4186,8 +3583,8 @@ function* createNewTicket(action) {
       }
     });
     if (response.ok) {
-      const sharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsSharedCapacity);
-      const tempSharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsTempSharedCapacity);
+      const sharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsSharedCapacity"]);
+      const tempSharedCapacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsTempSharedCapacity"]);
       if (sharedCapacity === '' && !isNaN(tempSharedCapacity) && tempSharedCapacity > 0) {
         yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketsSharedCapacity"](tempSharedCapacity));
       }
@@ -4197,7 +3594,7 @@ function* createNewTicket(action) {
       } = ticket; // eslint-disable-line camelcase
       const salePriceChecked = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.enabled) || false;
       const salePrice = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.sale_price) || '';
-      const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity, saleStartDate, saleStartDateInput, saleStartDateMoment, saleEndDate, saleEndDateInput, saleEndDateMoment] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempTitle, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempDescription, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempPrice, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSku, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempIACSetting, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDateMoment, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateMoment, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTime, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTime, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTimeInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTimeInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacityType, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacity, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleStartDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleStartDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleStartDateMoment, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleEndDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleEndDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSaleEndDateMoment, props)]);
+      const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity, saleStartDate, saleStartDateInput, saleStartDateMoment, saleEndDate, saleEndDateInput, saleEndDateMoment] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempTitle"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempDescription"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempPrice"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDateMoment"], props)]);
       yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, {
         title,
         description,
@@ -4225,6 +3622,14 @@ function* createNewTicket(action) {
         saleEndDateInput,
         saleEndDateMoment
       })), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketId"](clientId, ticket.id)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, PROVIDER_CLASS_TO_PROVIDER_MAPPING[ticket.provider_class])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false))]);
+
+      /**
+       * Fires after the ticket has been created.
+       *
+       * @since 5.16.0
+       * @param {string} clientId The ticket's client ID.
+       */
+      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketCreated', clientId);
       yield Object(external_tribe_modules_reduxSaga_effects_["fork"])(saveTicketWithPostSave, clientId);
     }
   } catch (e) {
@@ -4248,7 +3653,7 @@ function* updateTicket(action) {
   } = restNonce(); // eslint-disable-line camelcase
   const body = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(setBodyDetails, clientId);
   body.append('edit_ticket_nonce', edit_ticket_nonce);
-  const ticketId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketId, props);
+  const ticketId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketId"], props);
   try {
     const data = [];
     for (const [key, value] of body.entries()) {
@@ -4287,7 +3692,7 @@ function* updateTicket(action) {
       const saleEndDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, sale_end_date);
       const saleEndDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, saleEndDateMoment);
       const saleEndDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment);
-      const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempTitle, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempDescription, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempPrice, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempSku, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempIACSetting, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDateMoment, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDate, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateMoment, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTime, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTime, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTimeInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTimeInput, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacityType, props), Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempCapacity, props)]);
+      const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempTitle"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempDescription"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempPrice"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props)]);
       yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, {
         title,
         description,
@@ -4316,6 +3721,14 @@ function* updateTicket(action) {
         saleEndDateInput,
         saleEndDateMoment
       })), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, capacity_details.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDate"](clientId, saleStartDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, saleStartDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateMoment"](clientId, saleStartDateMoment)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDate"](clientId, saleEndDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, saleEndDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateMoment"](clientId, saleEndDateMoment))]);
+
+      /**
+       * Fires after the ticket has been updated.
+       *
+       * @since 5.16.0
+       * @param {string} clientId The ticket's client ID.
+       */
+      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketUpdated', clientId);
     }
   } catch (e) {
     console.error(e);
@@ -4341,8 +3754,8 @@ function* deleteTicket(action) {
     shouldDelete = true;
   }
   if (shouldDelete) {
-    const ticketId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketId, props);
-    const hasBeenCreated = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketHasBeenCreated, props);
+    const ticketId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketId"], props);
+    const hasBeenCreated = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketHasBeenCreated"], props);
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](clientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](clientId));
     yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'clearSelectedBlock']);
@@ -4597,7 +4010,7 @@ function* saveTicketWithPostSave(clientId) {
   let savingChannel, notSavingChannel;
   try {
     // Do nothing when not already created
-    if (yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketHasBeenCreated, {
+    if (yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketHasBeenCreated"], {
       clientId
     })) {
       // Create channels for use
@@ -4640,7 +4053,7 @@ function* saveTicketWithPostSave(clientId) {
  * @yields
  */
 function* syncTicketsSaleEndWithEventStart(prevStartDate) {
-  const ticketIds = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsAllClientIds);
+  const ticketIds = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsAllClientIds"]);
   for (let index = 0; index < ticketIds.length; index++) {
     const clientId = ticketIds[index];
     yield Object(external_tribe_modules_reduxSaga_effects_["call"])(syncTicketSaleEndWithEventStart, prevStartDate, clientId);
@@ -4658,10 +4071,10 @@ function* syncTicketsSaleEndWithEventStart(prevStartDate) {
  */
 function* syncTicketSaleEndWithEventStart(prevStartDate, clientId) {
   try {
-    const tempEndMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateMoment, {
+    const tempEndMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], {
       clientId
     });
-    const endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketEndDateMoment, {
+    const endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketEndDateMoment"], {
       clientId
     });
     const {
@@ -4743,19 +4156,19 @@ function* handleEventStartDateChanges() {
 }
 function* handleTicketDurationError(clientId) {
   let hasDurationError = false;
-  const startDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartDateMoment, {
+  const startDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateMoment"], {
     clientId
   });
-  const endDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndDateMoment, {
+  const endDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], {
     clientId
   });
   if (!startDateMoment || !endDateMoment) {
     hasDurationError = true;
   } else {
-    const startTime = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempStartTime, {
+    const startTime = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], {
       clientId
     });
-    const endTime = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketTempEndTime, {
+    const endTime = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], {
       clientId
     });
     const startTimeSeconds = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["time"].toSeconds, startTime, external_tribe_common_utils_["time"].TIME_FORMAT_HH_MM_SS);
@@ -4854,8 +4267,8 @@ function* handleTicketEndTimeInput(action) {
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndTimeInput"](clientId, endTimeInput));
 }
 function* handleTicketMove() {
-  const ticketClientIds = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(getTicketsAllClientIds);
-  const modalClientId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["a" /* getModalClientId */]);
+  const ticketClientIds = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsAllClientIds"]);
+  const modalClientId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(move_selectors["a" /* getModalClientId */]);
   if (ticketClientIds.includes(modalClientId)) {
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](modalClientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](modalClientId));
@@ -5018,201 +4431,6 @@ const DEFAULT_STATE = {
 
 /***/ }),
 
-/***/ "YRH8":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export getSeriesDataFromElement */
-/* unused harmony export getSeriesDataFromEvent */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return getSeriesTitleFromEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return getSeriesProviderFromEvent; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return getSeriesProviderFromSelection; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return getSeriesTitleFromSelection; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getSeriesEditLinkFromMetaBox; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return subscribeToSeriesChange; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return removeDiscordantProviderNotice; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return showDiscordantProviderNotice; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return hasSelectedSeries; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getSeriesPostIdFromSelection; });
-const {
-  fieldSelector,
-  containerSelector,
-  differentProviderNoticeSelector,
-  differentProviderNoticeTemplate
-} = window.TECFtEditorData.seriesRelationship;
-const noticeSelector = containerSelector + ' ' + differentProviderNoticeSelector;
-
-/**
- * Get the series data from the metabox dropdown element's value attribute.
- *
- * @since 5.8.0
- *
- * @param {Element|null} element The metabox dropdown element.
- * @param {string}       key     The key of the series data to retrieve.
- *
- * @return {string|null} The series data read from the element's value attribute, `null` if not found.
- */
-function getSeriesDataFromElement(element, key) {
-  if (!(element && element.value)) {
-    return null;
-  }
-  const seriesJsonData = element.value;
-  try {
-    return JSON.parse(seriesJsonData)[key] || null;
-  } catch (e) {
-    return null;
-  }
-}
-
-/**
- * Get the series data from the `change` event dispatched by Select2 when the series is changed
- *
- * @since 5.8.0
- *
- * @param {Event}  event The `change` event dispatched by Select2.
- * @param {string} key   The key of the series data to retrieve.
- *
- * @return {string|null} The series data read from the selected option data, `null` if not found.
- */
-function getSeriesDataFromEvent(event, key) {
-  if (!event.currentTarget) {
-    return null;
-  }
-  return getSeriesDataFromElement(event.currentTarget, key);
-}
-
-/**
- * Get the series title from the `change` event dispatched by Select2 when the series is changed
- * by the user in the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @param {Event} event The `change` event dispatched by Select2.
- *
- * @return {string} The title of the series read from the selected option data.
- */
-function getSeriesTitleFromEvent(event) {
-  return getSeriesDataFromEvent(event, 'title') || '';
-}
-
-/**
- * Get the series ticket provider from the `change` event dispatched by Select2 when the series is changed
- *
- * @since 5.8.0
- *
- * @param {Event} event The `change` event dispatched by Select2.
- *
- * @return {string|null} The ticket provider of the series read from the selected option data, `null` if not found.
- */
-function getSeriesProviderFromEvent(event) {
-  return getSeriesDataFromEvent(event, 'ticket_provider');
-}
-
-/**
- * Get the series ticket provider from the currently selected series in the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @return {string|null} The ticket provider of the series read from the selected option data, `null` if not found.
- */
-function getSeriesProviderFromSelection() {
-  const seriesSelect = document.getElementById(fieldSelector.substring(1));
-  return getSeriesDataFromElement(seriesSelect, 'ticket_provider');
-}
-
-/**
- * Get the series title from the currently selected series in the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @return {string|null} The title of the series read from the selected option data, `null` if not found.
- */
-function getSeriesTitleFromSelection() {
-  const seriesSelect = document.getElementById(fieldSelector.substring(1));
-  return getSeriesDataFromElement(seriesSelect, 'title');
-}
-
-/**
- * Get the series edit link from the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @param {string|null} append The string to append to the edit link.
- *
- * @return {string } The edit link of the series read from the selected option data, or an empty string if not found.
- */
-function getSeriesEditLinkFromMetaBox() {
-  let append = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#tribetickets';
-  const editLinkElement = document.querySelector(containerSelector + ' a.tec-events-pro-series__edit-link');
-  const editLink = (editLinkElement === null || editLinkElement === void 0 ? void 0 : editLinkElement.getAttribute('href')) || '';
-  return editLink + (append ? append : '');
-}
-
-/**
- * Subscribe to the series change event.
- *
- * @since 5.8.0
- *
- * This is the event triggered by the user selecting a series in the metabox dropdown.
- *
- * @param {Function} onChange The callback function to be called when the series is changed.
- */
-function subscribeToSeriesChange(onChange) {
-  jQuery(fieldSelector).on('change', onChange);
-}
-
-/**
- * Remove the notice that the event and series have different ticket providers.
- *
- * @since 5.8.0
- */
-function removeDiscordantProviderNotice() {
-  Array.from(document.querySelectorAll(noticeSelector)).map(el => el.remove(true));
-}
-
-/**
- * Show a notice that the event and series have different ticket providers.
- *
- * @since 5.8.0
- *
- * @param {string} eventTitle  The title of the event.
- * @param {string} seriesTitle The title of the series.
- */
-function showDiscordantProviderNotice(eventTitle, seriesTitle) {
-  removeDiscordantProviderNotice();
-  const noticeElement = document.createElement('div');
-  noticeElement.classList.add(differentProviderNoticeSelector.substring(1));
-  noticeElement.style['margin-top'] = 'var(--tec-spacer-1)';
-  noticeElement.textContent = differentProviderNoticeTemplate.replace('%1$s', eventTitle).replace('%2$s', seriesTitle);
-  document.querySelector(containerSelector).append(noticeElement);
-}
-
-/**
- * Check if the user has selected a series in the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @return {boolean}
- */
-function hasSelectedSeries() {
-  const seriesSelect = document.getElementById(fieldSelector.substring(1));
-  return (seriesSelect === null || seriesSelect === void 0 ? void 0 : seriesSelect.value) !== '' && (seriesSelect === null || seriesSelect === void 0 ? void 0 : seriesSelect.value) !== '-1';
-}
-
-/**
- * Get the post ID of the currently selected series in the metabox dropdown.
- *
- * @since 5.8.0
- *
- * @return {number|null} The post ID of the selected series, `null` if not found.
- */
-function getSeriesPostIdFromSelection() {
-  const seriesSelect = document.getElementById(fieldSelector.substring(1));
-  return getSeriesDataFromElement(seriesSelect, 'id');
-}
-
-/***/ }),
-
 /***/ "ZNLL":
 /***/ (function(module, exports) {
 
@@ -5224,6 +4442,880 @@ module.exports = tribe.common.data;
 /***/ (function(module, exports) {
 
 module.exports = React;
+
+/***/ }),
+
+/***/ "cc/f":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+// ESM COMPAT FLAG
+__webpack_require__.r(__webpack_exports__);
+
+// EXTERNAL MODULE: external "wp.data"
+var external_wp_data_ = __webpack_require__("1ZqX");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/types.js
+/* harmony default export */ var types = ({
+  SET_DEFAULT_TICKET_DESCRIPTION: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_DEFAULT_TICKET_DESCRIPTION',
+  SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE',
+  SET_SERIES_DATA: 'TEC-TICKETS-FLEXIBLE-TICKETS/SET_SERIES_DATA'
+});
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/actions.js
+
+/* harmony default export */ var actions = ({
+  setDefaultTicketTypeDescriptionTemplate: defaultTicketTypeDescriptionTemplate => ({
+    type: types.SET_DEFAULT_TICKET_DESCRIPTION,
+    defaultTicketTypeDescriptionTemplate
+  }),
+  setMultipleProvidersNoticeTemplate: multipleProvidersNoticeTemplate => ({
+    type: types.SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE,
+    multipleProvidersNoticeTemplate
+  }),
+  setSeriesData: (isInSeries, seriesData) => ({
+    type: types.SET_SERIES_DATA,
+    isInSeries,
+    seriesData
+  })
+});
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
+var defineProperty = __webpack_require__("lSNA");
+var defineProperty_default = /*#__PURE__*/__webpack_require__.n(defineProperty);
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/default-state.js
+var _window, _window$TECFtEditorDa, _window2, _window2$TECFtEditorD, _window3, _window3$tribe_editor, _window3$tribe_editor2, _window4, _window4$TECFtEditorD, _window4$TECFtEditorD2, _window5, _window5$TECFtEditorD, _window5$TECFtEditorD2, _window6, _window6$TECFtEditorD, _window6$TECFtEditorD2, _window7, _window7$TECFtEditorD, _window7$TECFtEditorD2, _window8, _window8$TECFtEditorD, _window8$TECFtEditorD2, _window9, _window9$TECFtEditorD, _window9$TECFtEditorD2, _window10, _window10$TECFtEditor, _window10$TECFtEditor2, _window11, _window11$TECFtEditor, _window11$TECFtEditor2, _window12, _window12$TECFtEditor, _window12$TECFtEditor2, _window13, _window13$TECFtEditor, _window13$TECFtEditor2, _window14, _window14$TECFtEditor, _window14$TECFtEditor2, _window15, _window15$TECFtEditor, _window15$TECFtEditor2, _window16, _window16$TECFtEditor, _window16$TECFtEditor2, _window17, _window17$TECFtEditor, _window17$TECFtEditor2, _window18, _window18$TECFtEditor, _window18$TECFtEditor2;
+/* harmony default export */ var default_state = ({
+  isInSeries: ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : _window$TECFtEditorDa.event.isInSeries) || false,
+  defaultTicketTypeDescriptionTemplate: ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$TECFtEditorD = _window2.TECFtEditorData) === null || _window2$TECFtEditorD === void 0 ? void 0 : _window2$TECFtEditorD.defaultTicketTypeEventInSeriesDescriptionTemplate) || '',
+  multipleProvidersNoticeTemplate: ((_window3 = window) === null || _window3 === void 0 ? void 0 : (_window3$tribe_editor = _window3.tribe_editor_config) === null || _window3$tribe_editor === void 0 ? void 0 : (_window3$tribe_editor2 = _window3$tribe_editor.tickets) === null || _window3$tribe_editor2 === void 0 ? void 0 : _window3$tribe_editor2.multipleProvidersNoticeTemplate) || '',
+  series: {
+    title: ((_window4 = window) === null || _window4 === void 0 ? void 0 : (_window4$TECFtEditorD = _window4.TECFtEditorData) === null || _window4$TECFtEditorD === void 0 ? void 0 : (_window4$TECFtEditorD2 = _window4$TECFtEditorD.series) === null || _window4$TECFtEditorD2 === void 0 ? void 0 : _window4$TECFtEditorD2.title) || '',
+    editLink: ((_window5 = window) === null || _window5 === void 0 ? void 0 : (_window5$TECFtEditorD = _window5.TECFtEditorData) === null || _window5$TECFtEditorD === void 0 ? void 0 : (_window5$TECFtEditorD2 = _window5$TECFtEditorD.series) === null || _window5$TECFtEditorD2 === void 0 ? void 0 : _window5$TECFtEditorD2.editLink) || '',
+    hasSeriesPasses: ((_window6 = window) === null || _window6 === void 0 ? void 0 : (_window6$TECFtEditorD = _window6.TECFtEditorData) === null || _window6$TECFtEditorD === void 0 ? void 0 : (_window6$TECFtEditorD2 = _window6$TECFtEditorD.series) === null || _window6$TECFtEditorD2 === void 0 ? void 0 : _window6$TECFtEditorD2.seriesPassesCount) > 0,
+    seriesPassTotalCapacity: ((_window7 = window) === null || _window7 === void 0 ? void 0 : (_window7$TECFtEditorD = _window7.TECFtEditorData) === null || _window7$TECFtEditorD === void 0 ? void 0 : (_window7$TECFtEditorD2 = _window7$TECFtEditorD.series) === null || _window7$TECFtEditorD2 === void 0 ? void 0 : _window7$TECFtEditorD2.seriesPassTotalCapacity) || 0,
+    seriesPassTotalAvailable: ((_window8 = window) === null || _window8 === void 0 ? void 0 : (_window8$TECFtEditorD = _window8.TECFtEditorData) === null || _window8$TECFtEditorD === void 0 ? void 0 : (_window8$TECFtEditorD2 = _window8$TECFtEditorD.series) === null || _window8$TECFtEditorD2 === void 0 ? void 0 : _window8$TECFtEditorD2.seriesPassAvailableCapacity) || 0,
+    seriesPassSharedCapacity: ((_window9 = window) === null || _window9 === void 0 ? void 0 : (_window9$TECFtEditorD = _window9.TECFtEditorData) === null || _window9$TECFtEditorD === void 0 ? void 0 : (_window9$TECFtEditorD2 = _window9$TECFtEditorD.series) === null || _window9$TECFtEditorD2 === void 0 ? void 0 : _window9$TECFtEditorD2.seriesPassSharedCapacity) || 0,
+    seriesPassSharedCapacityItems: ((_window10 = window) === null || _window10 === void 0 ? void 0 : (_window10$TECFtEditor = _window10.TECFtEditorData) === null || _window10$TECFtEditor === void 0 ? void 0 : (_window10$TECFtEditor2 = _window10$TECFtEditor.series) === null || _window10$TECFtEditor2 === void 0 ? void 0 : _window10$TECFtEditor2.seriesPassSharedCapacityItems) || '',
+    seriesPassIndependentCapacity: ((_window11 = window) === null || _window11 === void 0 ? void 0 : (_window11$TECFtEditor = _window11.TECFtEditorData) === null || _window11$TECFtEditor === void 0 ? void 0 : (_window11$TECFtEditor2 = _window11$TECFtEditor.series) === null || _window11$TECFtEditor2 === void 0 ? void 0 : _window11$TECFtEditor2.seriesPassIndependentCapacity) || 0,
+    seriesPassIndependentCapacityItems: ((_window12 = window) === null || _window12 === void 0 ? void 0 : (_window12$TECFtEditor = _window12.TECFtEditorData) === null || _window12$TECFtEditor === void 0 ? void 0 : (_window12$TECFtEditor2 = _window12$TECFtEditor.series) === null || _window12$TECFtEditor2 === void 0 ? void 0 : _window12$TECFtEditor2.seriesPassIndependentCapacityItems) || '',
+    seriesPassUnlimitedCapacityItems: ((_window13 = window) === null || _window13 === void 0 ? void 0 : (_window13$TECFtEditor = _window13.TECFtEditorData) === null || _window13$TECFtEditor === void 0 ? void 0 : (_window13$TECFtEditor2 = _window13$TECFtEditor.series) === null || _window13$TECFtEditor2 === void 0 ? void 0 : _window13$TECFtEditor2.seriesPassUnlimitedCapacityItems) || '',
+    hasUnlimitedSeriesPasses: ((_window14 = window) === null || _window14 === void 0 ? void 0 : (_window14$TECFtEditor = _window14.TECFtEditorData) === null || _window14$TECFtEditor === void 0 ? void 0 : (_window14$TECFtEditor2 = _window14$TECFtEditor.series) === null || _window14$TECFtEditor2 === void 0 ? void 0 : _window14$TECFtEditor2.hasUnlimitedSeriesPasses) || false,
+    headerLink: ((_window15 = window) === null || _window15 === void 0 ? void 0 : (_window15$TECFtEditor = _window15.TECFtEditorData) === null || _window15$TECFtEditor === void 0 ? void 0 : (_window15$TECFtEditor2 = _window15$TECFtEditor.series) === null || _window15$TECFtEditor2 === void 0 ? void 0 : _window15$TECFtEditor2.headerLink) || '#',
+    headerLinkText: ((_window16 = window) === null || _window16 === void 0 ? void 0 : (_window16$TECFtEditor = _window16.TECFtEditorData) === null || _window16$TECFtEditor === void 0 ? void 0 : (_window16$TECFtEditor2 = _window16$TECFtEditor.series) === null || _window16$TECFtEditor2 === void 0 ? void 0 : _window16$TECFtEditor2.headerLinkText) || '',
+    headerLinkTemplate: ((_window17 = window) === null || _window17 === void 0 ? void 0 : (_window17$TECFtEditor = _window17.TECFtEditorData) === null || _window17$TECFtEditor === void 0 ? void 0 : (_window17$TECFtEditor2 = _window17$TECFtEditor.series) === null || _window17$TECFtEditor2 === void 0 ? void 0 : _window17$TECFtEditor2.headerLinkTemplate) || ''
+  },
+  labels: {
+    seriesPassPluralUppercase: ((_window18 = window) === null || _window18 === void 0 ? void 0 : (_window18$TECFtEditor = _window18.TECFtEditorData) === null || _window18$TECFtEditor === void 0 ? void 0 : (_window18$TECFtEditor2 = _window18$TECFtEditor.labels) === null || _window18$TECFtEditor2 === void 0 ? void 0 : _window18$TECFtEditor2.seriesPassPluralUppercase) || ''
+  }
+});
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/reducer.js
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+
+/* harmony default export */ var reducer = (function () {
+  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : default_state;
+  let action = arguments.length > 1 ? arguments[1] : undefined;
+  switch (action.type) {
+    case types.SET_DEFAULT_TICKET_DESCRIPTION:
+      return _objectSpread(_objectSpread({}, state), {}, {
+        defaultTicketTypeDescriptionTemplate: String(action.defaultTicketTypeDescriptionTemplate)
+      });
+    case types.SET_MULTIPLE_PROVIDERS_NOTICE_TEMPLATE:
+      return _objectSpread(_objectSpread({}, state), {}, {
+        multipleProvidersNoticeTemplate: String(action.multipleProvidersNoticeTemplate)
+      });
+    case types.SET_SERIES_DATA:
+      return _objectSpread(_objectSpread({}, state), {}, {
+        isInSeries: Boolean(action.isInSeries).valueOf(),
+        series: _objectSpread(_objectSpread({}, state.series), action.seriesData)
+      });
+    default:
+      return state;
+  }
+});
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/selectors.js
+/* harmony default export */ var selectors = ({
+  hasSeriesPasses(state) {
+    return state.series.hasSeriesPasses;
+  },
+  isInSeries(state) {
+    return state.isInSeries;
+  },
+  getDefaultTicketTypeDescriptionTemplate(state) {
+    return state.defaultTicketTypeDescriptionTemplate;
+  },
+  getSeriesPassTotalCapacity(state) {
+    return state.series.seriesPassTotalCapacity;
+  },
+  getSeriesPassTotalAvailable(state) {
+    return state.series.seriesPassTotalAvailable;
+  },
+  getSeriesHeaderLink(state) {
+    return state.series.headerLink;
+  },
+  getSeriesHeaderLinkTemplate(state) {
+    return state.series.headerLinkTemplate;
+  },
+  getSeriesHeaderLinkText(state) {
+    return state.series.headerLinkText;
+  },
+  getSeriesInformation(state) {
+    return {
+      title: state.series.title,
+      editLink: state.series.editLink
+    };
+  },
+  getMultipleProvidersNoticeTemplate(state) {
+    return state.multipleProvidersNoticeTemplate;
+  },
+  getSeriesPassSharedCapacity(state) {
+    return state.series.seriesPassSharedCapacity;
+  },
+  getSeriesPassIndependentCapacity(state) {
+    return state.series.seriesPassIndependentCapacity;
+  },
+  getSeriesPassSharedCapacityItems(state) {
+    return state.series.seriesPassSharedCapacityItems;
+  },
+  getSeriesPassIndependentCapacityItems(state) {
+    return state.series.seriesPassIndependentCapacityItems;
+  },
+  getSeriesPassUnlimitedCapacityItems(state) {
+    return state.series.seriesPassUnlimitedCapacityItems;
+  },
+  hasUnlimitedSeriesPasses(state) {
+    return state.series.hasUnlimitedSeriesPasses;
+  },
+  getLabels(state) {
+    return state.labels;
+  }
+});
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/index.js
+
+
+
+
+const store = Object(external_wp_data_["createReduxStore"])('tec-tickets/flexible-tickets', {
+  reducer: reducer,
+  actions: actions,
+  selectors: selectors,
+  controls: {},
+  resolvers: {}
+});
+Object(external_wp_data_["register"])(store);
+// EXTERNAL MODULE: external "wp.hooks"
+var external_wp_hooks_ = __webpack_require__("g56x");
+
+// EXTERNAL MODULE: external "tribe.modules.propTypes"
+var external_tribe_modules_propTypes_ = __webpack_require__("rf6O");
+var external_tribe_modules_propTypes_default = /*#__PURE__*/__webpack_require__.n(external_tribe_modules_propTypes_);
+
+// EXTERNAL MODULE: external "React"
+var external_React_ = __webpack_require__("cDcd");
+
+// EXTERNAL MODULE: external "wp.i18n"
+var external_wp_i18n_ = __webpack_require__("l3Sj");
+
+// EXTERNAL MODULE: external "wp.element"
+var external_wp_element_ = __webpack_require__("GRId");
+
+// EXTERNAL MODULE: ./src/modules/elements/index.js + 26 modules
+var modules_elements = __webpack_require__("jHzm");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/components/series-pass-notice/template.js
+/**
+ * External dependencies
+ */
+
+
+
+/**
+ * Wordpress dependencies
+ */
+
+
+
+/**
+ * Internal dependencies
+ */
+
+const SeriesPassNotice = _ref => {
+  let {
+    seriesPassLink,
+    seriesName
+  } = _ref;
+  return wp.element.createElement("div", null, wp.element.createElement(modules_elements["Notice"], {
+    description: wp.element.createElement("div", {
+      dangerouslySetInnerHTML: {
+        __html: Object(external_wp_i18n_["sprintf"])(Object(external_wp_i18n_["_x"])('Create and manage Series Passes from the %s Series admin.', 'The message displayed to a user editing an Event part of a Series with ' + 'Series Passes to let them know where to manage Series Passes.', 'event-tickets'), Object(external_wp_element_["renderToString"])(wp.element.createElement("a", {
+          className: "helper-link",
+          href: seriesPassLink,
+          target: "_blank",
+          rel: "noopener noreferrer"
+        }, seriesName)))
+      }
+    })
+  }));
+};
+SeriesPassNotice.propTypes = {
+  seriesPassLink: external_tribe_modules_propTypes_default.a.string,
+  seriesName: external_tribe_modules_propTypes_default.a.string
+};
+/* harmony default export */ var template = (SeriesPassNotice);
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/store/hoc.js
+
+const withStore = mapStateToProps => Object(external_wp_data_["withSelect"])(select => mapStateToProps(select('tec-tickets/flexible-tickets')));
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/components/series-pass-notice/container.js
+
+
+const container_mapStateToProps = store => {
+  const {
+    getSeriesInformation
+  } = store;
+  const {
+    title,
+    editLink
+  } = getSeriesInformation();
+  return {
+    seriesName: title,
+    seriesPassLink: editLink + '#tribetickets'
+  };
+};
+/* harmony default export */ var container = (withStore(container_mapStateToProps)(template));
+// EXTERNAL MODULE: external "tribe.common.utils.recurrence"
+var external_tribe_common_utils_recurrence_ = __webpack_require__("8C5M");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/hooks/filters.js
+/**
+ * This file contains all the functions that are used to filter the event block editor
+ * in its various parts to support the Flexible Tickets feature.
+ */
+
+
+
+
+
+
+
+/**
+ * Pull the Flexible Tickets data from the dedicated store.
+ */
+const ftStore = wp.data.select('tec-tickets/flexible-tickets');
+
+/**
+ * Prevents Series Passes from being saved by the Block Editor when editing Events.
+ *
+ * @since 5.8.0
+ *
+ * @param {boolean} saveTicketFromPost Whether or not to save the Ticket from the Post.
+ * @param {Object}  context            The context of the filter.
+ * @param {string}  context.ticketType The ticket types, e.g. `default`, `series_pass`, etc.
+ * @param {Object}  context.post       The Post object that is being saved, the format is the one retruned by the WP REST API.
+ *
+ * @return {boolean} Whether or not to save the Ticket from the Post.
+ */
+function doNotEditSeriesPassesOutsideSeries(saveTicketFromPost, _ref) {
+  let {
+    ticketType,
+    post
+  } = _ref;
+  const postType = post === null || post === void 0 ? void 0 : post.type;
+  if (!(typeof ticketType === 'string' && typeof postType === 'string')) {
+    return saveTicketFromPost;
+  }
+  if (ticketType === 'series_pass' && postType !== 'tribe_event_series') {
+    return false;
+  }
+  return saveTicketFromPost;
+}
+
+// Series Passes will appear in the tickets list of Events, but they should not be editable from Events.
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.editTicketFromPost', 'tec.tickets.flexibleTickets', doNotEditSeriesPassesOutsideSeries);
+
+/**
+ * Filters the ticket type description when creating a ticket of the `default` type for an Event part of a Series.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object} mappedProps                 The properties mapped from the state for the Ticket Type component.
+ * @param {string} mappedProps.typeDescription The ticket type description.
+ * @param          ticketDetails.ticketDetails
+ * @param {Object} ticketDetails               The ticket details.
+ *
+ * @return {Object} The modified properties mapped from the state for the Ticket Type component.
+ */
+function changeTicketTypeDescriptionForEventPartOfSeries(mappedProps, _ref2) {
+  let {
+    ticketDetails
+  } = _ref2;
+  const ticketType = (ticketDetails === null || ticketDetails === void 0 ? void 0 : ticketDetails.type) || 'default';
+  const isInSeries = ftStore.isInSeries();
+  if (!(isInSeries && ticketType === 'default')) {
+    return mappedProps;
+  }
+  const {
+    title: seriesTitle
+  } = ftStore.getSeriesInformation();
+  const newDescription = Object(external_wp_i18n_["sprintf"])(ftStore.getDefaultTicketTypeDescriptionTemplate(), seriesTitle);
+  mappedProps.typeDescription = newDescription || mappedProps.typeDescription;
+  return mappedProps;
+}
+
+// Change the description of default tickets when editing an Event part of a Series.
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Type.mappedProps', 'tec.tickets.flexibleTickets', changeTicketTypeDescriptionForEventPartOfSeries);
+
+/**
+ * Forces the Tickets block to show on Recurring Events if they are part of a Series.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object}  mappedProps                      The properties mapped from the state for the Tickets component.
+ * @param {boolean} mappedProps.noTicketsOnRecurring Whether or not to show the Tickets block on Recurring Events.
+ * @param {boolean} mappedProps.canCreateTickets     Whether or not the user can create tickets.
+ * @param {Object}  context                          The context of the filter.
+ * @param {Object}  context.ownProps                 The props passed to the block.
+ * @param {boolean} context.ownProps.isSelected      Whether or not the block is selected.
+ *
+ * @return {Object} The modified properties mapped from the state for the Tickets component.
+ */
+function filterTicketsMappedProps(mappedProps, _ref3) {
+  let {
+    ownProps: {
+      isSelected
+    }
+  } = _ref3;
+  const isInSeries = ftStore.isInSeries();
+  const canCreateTickets = mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.canCreateTickets;
+  if (!(isInSeries && canCreateTickets)) {
+    return mappedProps;
+  }
+  const showWarning = getShowWarning(mappedProps, isSelected);
+  if (showWarning) {
+    mappedProps.showWarning = showWarning;
+    mappedProps.Warning = container;
+  }
+  mappedProps.noTicketsOnRecurring = false;
+  return mappedProps;
+}
+
+// Do show the Tickets block on recurring events if they are part of a series.
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsMappedProps);
+
+/**
+ * @param {boolean} mappedProps.hasCreatedTickets  Whether or not the user has created tickets.
+ * @param {boolean} mappedProps.hasRecurrenceRules Whether or not the Event has recurrence rules.
+ * @param {boolean} mappedProps.hasCreatedTickets  Whether or not the user has created tickets.
+ * @param           mappedProps
+ * @param {boolean} isSelected                     Whether or not the block is selected.
+ * @return {boolean}  Flag indicating whether or not to display the warning.
+ */
+function getShowWarning(mappedProps, isSelected) {
+  const hasSeriesPasses = ftStore.hasSeriesPasses();
+  let showWarning = false;
+  if (!mappedProps.hasCreatedTickets && isSelected) {
+    showWarning = true;
+  } else if (mappedProps.hasCreatedTickets && hasSeriesPasses && isSelected) {
+    showWarning = true;
+  } else if (!mappedProps.hasCreatedTickets && !hasSeriesPasses && !isSelected) {
+    showWarning = true;
+  }
+  return showWarning;
+}
+
+/**
+ * Modifies the properties mapped from the state for the TicketsContainer component to conform
+ * to the Flexible Tickets feature.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object}  mappedProps                    The properties mapped from the state for the TicketsContainer component.
+ * @param {boolean} mappedProps.showInactiveBlock  Whether or not to show the inactive block.
+ * @param {boolean} mappedProps.hasRecurrenceRules Whether or not the Event has recurrence rules.
+ * @param {boolean} mappedProps.isSelected         Whether or not the block is selected.
+ * @param {boolean} mappedProps.showWarning        Whether or not the Event has a warning to display.
+ * @param {Object}  mappedProps.Warning            Warning component to be displayed in case there is one.
+ */
+function filterTicketsContainerMappedProps(mappedProps, _ref4) {
+  let {
+    ownProps: {
+      isSelected = false
+    }
+  } = _ref4;
+  const isInSeries = ftStore.isInSeries();
+  if (!isInSeries) {
+    return mappedProps;
+  }
+  const showWarning = getShowWarning(mappedProps, isSelected);
+  if (showWarning) {
+    mappedProps.showWarning = showWarning;
+    mappedProps.Warning = container;
+  }
+  const hasRecurrenceRules = mappedProps.hasRecurrenceRules;
+  mappedProps.canCreateTickets = hasRecurrenceRules ? false : mappedProps.canCreateTickets;
+  mappedProps.showInactiveBlock = hasRecurrenceRules ? false : mappedProps.showInactiveBlock;
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.TicketsContainer.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsContainerMappedProps);
+
+/**
+ * Modifies the properties mapped from the state for the TicketsDashboardAction component to conform
+ * to the Flexible Tickets feature.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object}  mappedProps                         The properties mapped from the state for the
+ *                                                      TicketsDashboardAction component.
+ * @param {boolean} mappedProps.showWarning             Whether or not to show the warning.
+ * @param {boolean} mappedProps.disableSettings         Whether or not to disable the settings.
+ * @param {boolean} mappedProps.hasCreatedTickets       Whether or not the user has created tickets.
+ * @param {boolean} mappedProps.hasOrdersPage           Whether or not the user has an Orders page.
+ * @param {boolean} mappedProps.showConfirm             Whether or not to show the confirmation button.
+ * @param {boolean} mappedProps.showNotSupportedMessage Whether or not to show the not supported message.
+ * @param {Object}  context                             The context of the filter.
+ * @param {Object}  context.isRecurring                 Whether or not the Event is currently recurring.
+ *
+ * @return {Object} The modified properties mapped from the state for the TicketsDashboardAction component.
+ */
+function filterTicketsDashboardActionsMappedProps(mappedProps, _ref5) {
+  let {
+    isRecurring
+  } = _ref5;
+  mappedProps.showWarning = isRecurring;
+  mappedProps.disableSettings = isRecurring;
+  mappedProps.showConfirm = !isRecurring;
+  const isInSeries = ftStore.isInSeries();
+  if (!isInSeries) {
+    // If the Event is not part of a Series and is recurring, it's saving: show the warning.
+    mappedProps.showNotSupportedMessage = isRecurring;
+    return mappedProps;
+  }
+
+  // Show the Orders page link if the Event has own tickets.
+  mappedProps.hasOrdersPage = mappedProps.hasCreatedTickets;
+  // Show the Attendees page link if the Event has either own tickets or Series Passes.
+  const hasSeriesPasses = ftStore.hasSeriesPasses();
+  mappedProps.hasCreatedTickets = hasSeriesPasses;
+  return mappedProps;
+}
+
+// Do not show the warning on Recurring Events if they are part of a Series.
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.TicketsDashboardAction.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsDashboardActionsMappedProps);
+
+/**
+ * Modifies the properties mapped from the state for the Availability component to conform
+ * to the Flexible Tickets feature.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object} mappedProps           The properties mapped from the state for the Availability component.
+ * @param {number} mappedProps.total     The total capacity.
+ * @param {number} mappedProps.available The available capacity.
+ */
+function filterTicketsAvailabilityMappedProps(mappedProps) {
+  const currentCapacity = (mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.total) || 0;
+  const currentAvailability = (mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.available) || 0;
+  const seriesCapacity = ftStore.getSeriesPassTotalCapacity();
+  const seriesAvailability = ftStore.getSeriesPassTotalAvailable();
+  const isInSeries = ftStore.isInSeries();
+  if (isInSeries && seriesCapacity >= 0) {
+    mappedProps.total = currentCapacity + seriesCapacity;
+    mappedProps.available = currentAvailability + seriesAvailability;
+  }
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Availability.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsAvailabilityMappedProps);
+function filterTicketsControlsMappedProps(mappedProps) {
+  const isInSeries = ftStore.isInSeries();
+  if (!isInSeries) {
+    return mappedProps;
+  }
+  mappedProps.disabled = true;
+  const {
+    title: seriesTitle,
+    editLink: seriesEditLink
+  } = ftStore.getSeriesInformation();
+  const link = wp.element.createElement("a", {
+    target: "_blank",
+    href: seriesEditLink + '#tribetickets',
+    rel: "noreferrer"
+  }, seriesTitle);
+  const messageTemplate = ftStore.getMultipleProvidersNoticeTemplate();
+  mappedProps.message = wp.element.createElement("p", {
+    dangerouslySetInnerHTML: {
+      __html: Object(external_wp_i18n_["sprintf"])(messageTemplate, Object(external_wp_element_["renderToString"])(link))
+    }
+  });
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Controls.mappedProps', 'tec.tickets.flexibleTickets', filterTicketsControlsMappedProps);
+function filterUneditableMappedProps(mappedProps) {
+  var _mappedProps$cardsByT;
+  if (!(mappedProps !== null && mappedProps !== void 0 && (_mappedProps$cardsByT = mappedProps.cardsByTicketType) !== null && _mappedProps$cardsByT !== void 0 && _mappedProps$cardsByT.series_pass)) {
+    return mappedProps;
+  }
+  const link = ftStore.getSeriesHeaderLink();
+  const message = ftStore.getSeriesHeaderLinkText();
+  mappedProps.cardsByTicketType.series_pass.description = wp.element.createElement("a", {
+    href: link,
+    target: "_blank",
+    rel: "noreferrer",
+    className: "tickets-heading__description__link"
+  }, message);
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.Uneditable.mappedProps', 'tec.tickets.flexibleTickets', filterUneditableMappedProps);
+function filterCapacityTableMappedProps(mappedProps) {
+  const isInSeries = ftStore.isInSeries();
+  if (!isInSeries) {
+    return mappedProps;
+  }
+  const seriesCapacity = Number.parseInt(ftStore.getSeriesPassTotalCapacity()) || 0;
+
+  // If the number of Series Passes is unlimited, the Event capacity is unlimited.
+  const areSeriesPassesUnlimited = ftStore.hasUnlimitedSeriesPasses();
+  mappedProps.totalCapacity = areSeriesPassesUnlimited ? Object(external_wp_i18n_["__"])('Unlimited', 'event-tickets') : mappedProps.totalCapacity + seriesCapacity;
+  mappedProps.rowsAfter = mappedProps.rowsAfter || [];
+  const sharedCapacityItems = ftStore.getSeriesPassSharedCapacityItems();
+  const seriesPassSharedCapacity = ftStore.getSeriesPassSharedCapacity();
+  mappedProps.rowsAfter.push({
+    label: Object(external_wp_i18n_["__"])('Series Pass shared capacity', 'event-tickets'),
+    items: sharedCapacityItems ? `(${sharedCapacityItems})` : '',
+    right: String(seriesPassSharedCapacity)
+  });
+  const independentCapacityItems = ftStore.getSeriesPassIndependentCapacityItems();
+  const seriesPassIndependentCapacity = ftStore.getSeriesPassIndependentCapacity();
+  mappedProps.rowsAfter.push({
+    label: Object(external_wp_i18n_["__"])('Series Pass independent capacity', 'event-tickets'),
+    items: independentCapacityItems ? `(${independentCapacityItems})` : '',
+    right: String(seriesPassIndependentCapacity)
+  });
+  if (areSeriesPassesUnlimited) {
+    const unlimitedCapacityItems = ftStore.getSeriesPassUnlimitedCapacityItems();
+    mappedProps.rowsAfter.push({
+      label: Object(external_wp_i18n_["__"])('Series Pass unlimited capacity', 'event-tickets'),
+      items: unlimitedCapacityItems ? `(${unlimitedCapacityItems})` : '',
+      right: Object(external_wp_i18n_["__"])('Unlimited', 'event-tickets')
+    });
+  }
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.CapacityTable.mappedProps', 'tec.tickets.flexibleTickets', filterCapacityTableMappedProps);
+
+/**
+ * Filters the mapped properties to display a specific message when dealing with an unsaved Recurring Event.
+ * An unsaved Recurring Event is one that is Recurring but not yet part of a Series.
+ *
+ * @since 5.8.0
+ *
+ * @param {Object}  mappedProps The component properties as mapped from the current state.
+ * @param {Object } state       The state of the main Event Tickets store.
+ *
+ * @return {Object} The mapped properties, altered if required.
+ */
+function filterNotSupportedMessageMappedProps(mappedProps, _ref6) {
+  let {
+    state
+  } = _ref6;
+  const isInSeries = ftStore.isInSeries();
+  if (!Object(external_tribe_common_utils_recurrence_["hasRecurrenceRules"])(state) || isInSeries) {
+    return mappedProps;
+  }
+  mappedProps.content = null;
+  const {
+    seriesPassPluralUppercase
+  } = ftStore.getLabels();
+  const link = wp.element.createElement("a", {
+    className: "helper-link",
+    href: "https://evnt.is/-series-passes",
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, seriesPassPluralUppercase);
+  // Translators: %s is a link to Series Passes knowledge base that reads "Series Passes".
+  const messageTemplate = Object(external_wp_i18n_["_x"])("Once you save this event, you'll be able to add %s from the Series admin.", 'Block editor not supported notice', 'event-tickets');
+  mappedProps.ctaLink = wp.element.createElement("span", {
+    dangerouslySetInnerHTML: {
+      __html: Object(external_wp_i18n_["sprintf"])(messageTemplate, Object(external_wp_element_["renderToString"])(link))
+    }
+  });
+  return mappedProps;
+}
+Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.Tickets.NotSupportedMessage.mappedProps', 'tec.tickets.flexibleTickets', filterNotSupportedMessageMappedProps);
+// EXTERNAL MODULE: external "tribe.common.store"
+var external_tribe_common_store_ = __webpack_require__("g8L8");
+
+// EXTERNAL MODULE: ./src/Tickets/Flexible_Tickets/app/series-relationship.js
+var series_relationship = __webpack_require__("DyRx");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/series-relationship/update-control.js
+
+
+
+const lockId = 'tec.flexible-tickets.different-ticket-provider';
+
+/**
+ * Get the event ticket provider from the TEC store state.
+ *
+ * @return {string|null} The ticket provider of the event read from the current state, or `null` if not found.
+ */
+function getEventProviderFromStore() {
+  const state = external_tribe_common_store_["store"].getState();
+  if (!(state.tickets && state.tickets.blocks && state.tickets.blocks.ticket && state.tickets.blocks.ticket.provider)) {
+    return null;
+  }
+  return state.tickets.blocks.ticket.provider;
+}
+
+/**
+ * Lock the post publish button when the event and series have different ticket providers.
+ */
+function lockPostPublish() {
+  Object(external_wp_data_["dispatch"])('core/editor').lockPostSaving(lockId);
+}
+
+/**
+ * Unlock the post publish button.
+ */
+function unlockPostPublish() {
+  Object(external_wp_data_["dispatch"])('core/editor').unlockPostSaving(lockId);
+}
+
+/**
+ * Get the event title from the current state.
+ *
+ * This is not "live" but pretty close to it.
+ *
+ * @return {string} The title of the event read from the current state.
+ */
+function getEventTitleFromState() {
+  return Object(external_wp_data_["select"])('core/editor').getEditedPostAttribute('title');
+}
+
+/**
+ * Toggle the publish lock based on the event and series providers.
+ *
+ * @param {string|null} eventProvider  The current event ticket provider.
+ * @param {string|null} seriesProvider The current series ticket provider.
+ * @param {string}      seriesTitle    The title of the series.
+ */
+function togglePublishLock(eventProvider, seriesProvider, seriesTitle) {
+  if (eventProvider === seriesProvider || eventProvider === null || seriesProvider === null) {
+    unlockPostPublish();
+    Object(series_relationship["h" /* removeDiscordantProviderNotice */])();
+    return;
+  }
+  lockPostPublish();
+  Object(series_relationship["i" /* showDiscordantProviderNotice */])(getEventTitleFromState(), seriesTitle);
+}
+
+/**
+ * Toggle the publish lock when the series is changed in the metabox dropdown.
+ *
+ * @param {Event} event The 'change' event dispatched by Select2.
+ */
+function togglePublishLockFromMetaboxEvent(event) {
+  const seriesProvider = Object(series_relationship["c" /* getSeriesProviderFromEvent */])(event);
+  const eventProvider = getEventProviderFromStore();
+  togglePublishLock(eventProvider, seriesProvider, Object(series_relationship["e" /* getSeriesTitleFromEvent */])(event));
+}
+
+/**
+ * Toggle the publish lock when the ticket provider is changed in the Ticket Settings section of the Editor.
+ */
+function togglePublishLockFromTicketSettings() {
+  const seriesProvider = Object(series_relationship["d" /* getSeriesProviderFromSelection */])();
+  const eventProvider = getEventProviderFromStore();
+  const seriesTitle = Object(series_relationship["f" /* getSeriesTitleFromSelection */])();
+  togglePublishLock(eventProvider, seriesProvider, seriesTitle);
+}
+
+/**
+ * Subscribe to the series change event when the metabox is rendered.
+ */
+function subscribeToSeriesChangeOnStateUpdate() {
+  if (!Object(external_wp_data_["select"])('core/edit-post').areMetaBoxesInitialized()) {
+    // Before metaboxes are initialized, the series metabox is not yet rendered.
+    return;
+  }
+
+  // Subscribe to the ticket provider change in the ticket settings metabox.
+  external_tribe_common_store_["store"].subscribe(togglePublishLockFromTicketSettings);
+  Object(series_relationship["j" /* subscribeToSeriesChange */])(togglePublishLockFromMetaboxEvent);
+}
+
+// Start by subscribing to core/edit-post section of the WP store.
+Object(external_wp_data_["subscribe"])(subscribeToSeriesChangeOnStateUpdate, 'core/edit-post');
+// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/actions.js
+var ticket_actions = __webpack_require__("hImw");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/metaboxes.js
+
+
+/*
+ * Local state: when it changes value then the metaboxes have either started
+ * or finished saving.
+ *
+ * @type {boolean|null}
+ */
+let wasSavingMetaBoxes = null;
+const onMetaBoxesUpdateCompletedCallbacks = [];
+
+// Unsubscribe function; will start as a no-op to keep with the expected type.
+let unsubscribeFromMetaBoxesUpdates = () => {};
+const updateUneditableTicketsOnMetaboxUpdate = function () {
+  const isSavingMetaBoxes = Object(external_wp_data_["select"])('core/edit-post').isSavingMetaBoxes();
+  if (wasSavingMetaBoxes === null) {
+    // Initialize the saving metaboxes state.
+    wasSavingMetaBoxes = isSavingMetaBoxes;
+    return;
+  }
+  if (wasSavingMetaBoxes !== isSavingMetaBoxes) {
+    if (!isSavingMetaBoxes) {
+      // The metaboxes have finished saving: update the uneditable tickets.
+
+      // Avoid infinite loop: unsubscribe, update, subscribe.
+      unsubscribeFromMetaBoxesUpdates();
+      onMetaBoxesUpdateCompletedCallbacks.forEach(callback => callback());
+      unsubscribeFromMetaBoxesUpdates = subscribeToMetaBoxesUpdates();
+    } else {
+      // The metaboxes are saving: no-op.
+    }
+  }
+  wasSavingMetaBoxes = isSavingMetaBoxes;
+};
+
+/**
+ * Subscribe to updates to the metaboxes saving state.
+ *
+ * @return {Function} The unsubscribe function.
+ */
+const subscribeToMetaBoxesUpdates = () => Object(external_wp_data_["subscribe"])(updateUneditableTicketsOnMetaboxUpdate);
+
+// Start the subscription and replace the no-op unsubscribe function with the real one.
+unsubscribeFromMetaBoxesUpdates = subscribeToMetaBoxesUpdates();
+const onMetaBoxesUpdateCompleted = callback => {
+  onMetaBoxesUpdateCompletedCallbacks.push(callback);
+  const index = onMetaBoxesUpdateCompletedCallbacks.length - 1;
+  return () => onMetaBoxesUpdateCompletedCallbacks.splice(index, 1);
+};
+// EXTERNAL MODULE: ./src/modules/data/blocks/ticket/constants.js
+var constants = __webpack_require__("DOwB");
+
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/series-relationship/series-update.js
+/**
+ * Following an update that will save the metaboxes values, update the
+ * uneditable tickets in the Tickets block, if required and, following their
+ * update, update the Series data.
+ */
+
+
+
+
+
+
+
+
+const series_update_ftStore = wp.data.select('tec-tickets/flexible-tickets');
+const {
+  setSeriesData
+} = wp.data.dispatch('tec-tickets/flexible-tickets');
+function updateSeriesData() {
+  let uneditableTickets = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+  const isInSeries = Object(series_relationship["g" /* hasSelectedSeries */])();
+  const seriesPasses = uneditableTickets.filter(ticket => ticket.type === 'series_pass');
+  const {
+    independent,
+    shared,
+    unlimited
+  } = seriesPasses.reduce((acc, ticket) => {
+    if ((ticket === null || ticket === void 0 ? void 0 : ticket.capacityType) === constants["UNLIMITED"]) {
+      acc.unlimited.push(ticket);
+      return acc;
+    }
+    if (ticket.isShared) {
+      acc.shared.push(ticket);
+    } else {
+      acc.independent.push(ticket);
+    }
+    return acc;
+  }, {
+    independent: [],
+    shared: [],
+    unlimited: []
+  });
+  const independentCapacity = independent.reduce((acc, ticket) => acc + ((ticket === null || ticket === void 0 ? void 0 : ticket.capacity) || 0), 0);
+  const sharedCapacity = shared.reduce((acc, ticket) => Math.max(acc, (ticket === null || ticket === void 0 ? void 0 : ticket.capacity) || 0), 0);
+  const independentAvailable = independent.reduce((acc, ticket) => acc + ((ticket === null || ticket === void 0 ? void 0 : ticket.available) || 0), 0);
+  const sharedAvailable = shared.reduce((acc, ticket) => Math.max(acc, (ticket === null || ticket === void 0 ? void 0 : ticket.available) || 0), 0);
+  const hasUnlimitedSeriesPasses = Boolean(unlimited.length);
+  const seriesPostId = Object(series_relationship["b" /* getSeriesPostIdFromSelection */])();
+  const seriesPlainUrl = Object(external_wp_i18n_["sprintf"])(series_update_ftStore.getSeriesHeaderLinkTemplate(), seriesPostId);
+  setSeriesData(isInSeries, {
+    title: Object(series_relationship["f" /* getSeriesTitleFromSelection */])(),
+    editLink: Object(series_relationship["a" /* getSeriesEditLinkFromMetaBox */])(),
+    hasSeriesPasses: Boolean(independent.length || shared.length),
+    seriesPassTotalCapacity: sharedCapacity + independentCapacity,
+    seriesPassTotalAvailable: sharedAvailable + independentAvailable,
+    seriesPassSharedCapacity: sharedCapacity,
+    seriesPassIndependentCapacity: independentCapacity,
+    seriesPassIndependentCapacityItems: independent.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
+    seriesPassSharedCapacityItems: shared.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
+    seriesPassUnlimitedCapacityItems: unlimited.map(ticket => ticket === null || ticket === void 0 ? void 0 : ticket.title).join(', '),
+    hasUnlimitedSeriesPasses,
+    headerLink: seriesPlainUrl
+  });
+}
+
+// When the uneditble Tickets are updated, update the Series information.
+Object(external_wp_hooks_["addAction"])('tec.tickets.blocks.uneditableTicketsUpdated', 'tec.tickets.flexibleTickets', updateSeriesData);
+
+// When metaboxes are done updating, update the uneditable tickets fetching them from the backend.
+onMetaBoxesUpdateCompleted(function () {
+  // Tell the Event Tickets store to update the uneditable tickets.
+  // After the update this will trigger the `tec.tickets.blocks.uneditableTicketsUpdated` action.
+  external_tribe_common_store_["store"].dispatch(Object(ticket_actions["updateUneditableTickets"])());
+});
+// CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/block-editor/index.js
+/**
+ * The main bundle for the Flexible Tickets feature in Block Editor context.
+ */
+
+
+
+
+
+
+/***/ }),
+
+/***/ "dJ32":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CAPACITY_TYPE_OPTIONS", function() { return CAPACITY_TYPE_OPTIONS; });
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("l3Sj");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("DOwB");
+/**
+ * External dependencies
+ */
+
+
+/**
+ * Internal dependencies
+ */
+
+const CAPACITY_TYPE_OPTIONS = [{
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Share capacity with other tickets', 'event-tickets'),
+  value: _constants__WEBPACK_IMPORTED_MODULE_1__["TICKET_TYPES"][_constants__WEBPACK_IMPORTED_MODULE_1__["SHARED"]]
+}, {
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Set capacity for this ticket only', 'event-tickets'),
+  value: _constants__WEBPACK_IMPORTED_MODULE_1__["TICKET_TYPES"][_constants__WEBPACK_IMPORTED_MODULE_1__["INDEPENDENT"]]
+}, {
+  label: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__["__"])('Unlimited', 'event-tickets'),
+  value: _constants__WEBPACK_IMPORTED_MODULE_1__["TICKET_TYPES"][_constants__WEBPACK_IMPORTED_MODULE_1__["UNLIMITED"]]
+}];
 
 /***/ }),
 
@@ -7518,7 +7610,7 @@ InactiveBlock.propTypes = {
 
 /* harmony default export */ var inactive_block = (inactive_block_element);
 
-// EXTERNAL MODULE: ./src/modules/icons/index.js + 18 modules
+// EXTERNAL MODULE: ./src/modules/icons/index.js + 19 modules
 var icons = __webpack_require__("NxMS");
 
 // EXTERNAL MODULE: ./src/modules/elements/settings-dashboard/style.pcss
