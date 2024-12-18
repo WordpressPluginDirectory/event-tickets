@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		9: 0
+/******/ 		11: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -201,6 +201,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, "bootstrapIframe", function() { return /* binding */ bootstrapIframe; });
 __webpack_require__.d(__webpack_exports__, "cancelReservations", function() { return /* binding */ cancelReservations; });
 __webpack_require__.d(__webpack_exports__, "closeModal", function() { return /* binding */ closeModal; });
+__webpack_require__.d(__webpack_exports__, "setExpireDate", function() { return /* binding */ setExpireDate; });
 __webpack_require__.d(__webpack_exports__, "addModalEventListeners", function() { return /* binding */ addModalEventListeners; });
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
@@ -286,6 +287,7 @@ var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$te
  * @property {string}                ajaxNonce                  The AJAX nonce.
  * @property {string}                ACTION_POST_RESERVATIONS   The AJAX action to post the reservations to the backend.
  * @property {string}                ACTION_CLEAR_RESERVATIONS  The AJAX action to clear the reservations from the backend.
+ * @property {number}                sessionTimeout             The session timeout in ms.
  */
 
 /**
@@ -432,7 +434,8 @@ const {
   ajaxUrl,
   ajaxNonce,
   ACTION_POST_RESERVATIONS,
-  ACTION_CLEAR_RESERVATIONS
+  ACTION_CLEAR_RESERVATIONS,
+  sessionTimeout
 } = localizedData;
 
 /**
@@ -477,6 +480,7 @@ const confirmSelector = '.tec-tickets-seating__modal .tec-tickets-seating__sideb
  * @property {string} name        The ticket name.
  * @property {number} price       The ticket price.
  * @property {string} description The ticket description.
+ * @property {number} maxLimit    The maximum number of tickets that can be selected.
  */
 
 /**
@@ -819,7 +823,13 @@ function _bootstrapIframe() {
 
     // Register the actions before initializing the iframe to avoid race conditions.
     registerActions(iframe);
-    yield Object(external_tec_tickets_seating_service_iframe_["initServiceIframe"])(iframe);
+    try {
+      yield Object(external_tec_tickets_seating_service_iframe_["initServiceIframe"])(iframe);
+    } catch (err) {
+      // Reload the page: the server will render a tickets block explaining what is happening.
+      window.location.reload();
+      return false;
+    }
     toggleMobileSidebarOpen(dom);
     setupMobileTicketsDrawer(dom);
     totalPriceElement = dom.querySelector('.tec-tickets-seating__total-price');
@@ -995,7 +1005,10 @@ function setExpireDate(dialogElement) {
   if (!iframe) {
     return;
   }
-  iframe.src = iframe.src + '&expireDate=' + new Date().getTime();
+
+  // If the session timeout is not set then use the default value of 15 minutes.
+  const sessionTimeoutInSeconds = sessionTimeout ? Number(sessionTimeout) : 15 * 60;
+  iframe.src = iframe.src + '&expireDate=' + (Date.now() + sessionTimeoutInSeconds * 1000);
 }
 
 /**

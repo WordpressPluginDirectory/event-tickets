@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		18: 0
+/******/ 		20: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -3480,6 +3480,16 @@ function* fetchTicket(action) {
         saleEndDateMoment
       };
       yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, totals.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, totals.stock)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencySymbol"](clientId, cost_details.currency_symbol)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencyPosition"](clientId, cost_details.currency_position)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, provider)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasAttendeeInfoFields"](clientId, supports_attendee_information)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true))]);
+
+      /**
+       * Fires after the ticket has been fetched.
+       *
+       * @since 5.18.0
+       * @param {string} clientId The ticket's client ID.
+       * @param {Object} ticket The ticket object.
+       * @param {Object} details The ticket details.
+       */
+      yield Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.fetchTicket', clientId, ticket, details);
     }
   } catch (e) {
     console.error(e);
@@ -7114,7 +7124,8 @@ const LabelWithTooltip = _ref => {
     tooltipDisabled,
     tooltipLabel,
     tooltipPosition,
-    tooltipText
+    tooltipText,
+    delay
   } = _ref;
   return wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
     className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
@@ -7123,7 +7134,8 @@ const LabelWithTooltip = _ref => {
     label: label
   }, wp.element.createElement(external_wp_components_["Tooltip"], {
     text: tooltipText,
-    position: tooltipPosition
+    placement: tooltipPosition,
+    delay: delay
   }, wp.element.createElement("button", {
     "aria-label": tooltipText,
     className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
@@ -7134,7 +7146,8 @@ const LabelWithTooltip = _ref => {
 
 LabelWithTooltip.defaultProps = {
   label: '',
-  tooltipPosition: 'top right'
+  tooltipPosition: 'top right',
+  delay: 200
 };
 LabelWithTooltip.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
@@ -7144,7 +7157,8 @@ LabelWithTooltip.propTypes = {
   tooltipDisabled: external_tribe_modules_propTypes_default.a.bool,
   tooltipLabel: external_tribe_modules_propTypes_default.a.node,
   tooltipPosition: external_tribe_modules_propTypes_default.a.oneOf(['top left', 'top center', 'top right', 'bottom left', 'bottom center', 'bottom right']),
-  tooltipText: external_tribe_modules_propTypes_default.a.string
+  tooltipText: external_tribe_modules_propTypes_default.a.string,
+  delay: external_tribe_modules_propTypes_default.a.number
 };
 /* harmony default export */ var label_with_tooltip_element = (LabelWithTooltip);
 // CONCATENATED MODULE: ./src/modules/elements/label-with-tooltip/index.js

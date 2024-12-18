@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		6: 0
+/******/ 		8: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -3359,6 +3359,16 @@ function* fetchTicket(action) {
         saleEndDateMoment
       };
       yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, totals.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, totals.stock)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencySymbol"](clientId, cost_details.currency_symbol)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencyPosition"](clientId, cost_details.currency_position)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, provider)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasAttendeeInfoFields"](clientId, supports_attendee_information)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true))]);
+
+      /**
+       * Fires after the ticket has been fetched.
+       *
+       * @since 5.18.0
+       * @param {string} clientId The ticket's client ID.
+       * @param {Object} ticket The ticket object.
+       * @param {Object} details The ticket details.
+       */
+      yield Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.fetchTicket', clientId, ticket, details);
     }
   } catch (e) {
     console.error(e);
@@ -6415,7 +6425,8 @@ const LabelWithTooltip = _ref => {
     tooltipDisabled,
     tooltipLabel,
     tooltipPosition,
-    tooltipText
+    tooltipText,
+    delay
   } = _ref;
   return wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
     className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
@@ -6424,7 +6435,8 @@ const LabelWithTooltip = _ref => {
     label: label
   }, wp.element.createElement(external_wp_components_["Tooltip"], {
     text: tooltipText,
-    position: tooltipPosition
+    placement: tooltipPosition,
+    delay: delay
   }, wp.element.createElement("button", {
     "aria-label": tooltipText,
     className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
@@ -6435,7 +6447,8 @@ const LabelWithTooltip = _ref => {
 
 LabelWithTooltip.defaultProps = {
   label: '',
-  tooltipPosition: 'top right'
+  tooltipPosition: 'top right',
+  delay: 200
 };
 LabelWithTooltip.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
@@ -6445,7 +6458,8 @@ LabelWithTooltip.propTypes = {
   tooltipDisabled: external_tribe_modules_propTypes_default.a.bool,
   tooltipLabel: external_tribe_modules_propTypes_default.a.node,
   tooltipPosition: external_tribe_modules_propTypes_default.a.oneOf(['top left', 'top center', 'top right', 'bottom left', 'bottom center', 'bottom right']),
-  tooltipText: external_tribe_modules_propTypes_default.a.string
+  tooltipText: external_tribe_modules_propTypes_default.a.string,
+  delay: external_tribe_modules_propTypes_default.a.number
 };
 /* harmony default export */ var label_with_tooltip_element = (LabelWithTooltip);
 // CONCATENATED MODULE: ./src/modules/elements/label-with-tooltip/index.js
@@ -9163,6 +9177,7 @@ var external_tribe_common_elements_ = __webpack_require__("6Ugf");
 
 // EXTERNAL MODULE: external "React"
 var external_React_ = __webpack_require__("cDcd");
+var external_React_default = /*#__PURE__*/__webpack_require__.n(external_React_);
 
 // EXTERNAL MODULE: external "tec.tickets.seating.utils"
 var external_tec_tickets_seating_utils_ = __webpack_require__("MsaN");
@@ -9300,7 +9315,6 @@ const getMessage = (serviceStatus, serviceConnectUrl) => {
         rel: "noreferrer noopener"
       }, Object(external_wp_i18n_["_x"])('You need to connect your site to use assigned seating.', 'Connect to the Seating Builder link label', 'event-tickets')));
     case 'expired-license':
-    case 'invalid-license':
       return wp.element.createElement("span", {
         style: style
       }, Object(external_wp_i18n_["__"])('Your license for Seating has expired.', 'event-tickets'), ' ', wp.element.createElement("a", {
@@ -9309,6 +9323,20 @@ const getMessage = (serviceStatus, serviceConnectUrl) => {
         target: "_blank",
         rel: "noreferrer noopener"
       }, Object(external_wp_i18n_["_x"])('Renew your license to continue using Seating for Event Tickets.', 'link label for renewing the license', 'event-tickets')));
+    case 'invalid-license':
+      return wp.element.createElement("span", {
+        style: style
+      }, Object(external_wp_i18n_["__"])('Your license for Seating is invalid.', 'event-tickets'), ' ', wp.element.createElement("a", {
+        style: anchorStyle,
+        href: "https://evnt.is/1bdu",
+        target: "_blank",
+        rel: "noreferrer noopener"
+      }, Object(external_wp_i18n_["_x"])('Check your license key settings', 'link label for checking the license', 'event-tickets')), ' ', Object(external_wp_i18n_["__"])('or', 'event-tickets'), ' ', wp.element.createElement("a", {
+        style: anchorStyle,
+        href: "https://evnt.is/1be1",
+        target: "_blank",
+        rel: "noreferrer noopener"
+      }, Object(external_wp_i18n_["_x"])('log into your account.', 'link label for account login', 'event-tickets')));
     case 'no-license':
     default:
       return '';
@@ -9591,9 +9619,149 @@ const SeatType = _ref => {
   }, name);
 };
 /* harmony default export */ var seat_type = (SeatType);
+// EXTERNAL MODULE: external "tribe.common.utils"
+var external_tribe_common_utils_ = __webpack_require__("B8vQ");
+
 // EXTERNAL MODULE: ./src/Tickets/Seating/app/blockEditor/settings/style.pcss
 var settings_style = __webpack_require__("s4cZ");
 
+// CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/settings/removeLayout.js
+
+
+
+
+
+
+
+/**
+ * The Remove Layout link component.
+ *
+ * @since 5.18.0
+ */
+const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(_ref => {
+  let {
+    postId
+  } = _ref;
+  const [isChecked, setChecked] = Object(external_React_["useState"])(false);
+  const [isOpen, setIsOpen] = Object(external_React_["useState"])(false);
+  const [isLoading, setIsLoading] = Object(external_React_["useState"])(false);
+  const exportUrl = external_tribe_common_utils_["globals"].adminUrl() + `edit.php?post_type=tribe_events&page=tickets-attendees&event_id=${postId}`;
+  const textUnderline = {
+    textDecoration: 'underline'
+  };
+
+  /**
+   * Close the modal.
+   *
+   * @since 5.18.0
+   *
+   * @return {void}
+   */
+  const closeModal = () => {
+    setIsOpen(false);
+    setChecked(false);
+    setIsLoading(false);
+  };
+
+  /**
+   * Handle the removal of the layout.
+   *
+   * @since 5.18.0
+   *
+   * @return {Promise<void>}
+   */
+  const handleRemoveLayout = /*#__PURE__*/function () {
+    var _ref2 = asyncToGenerator_default()(function* () {
+      setIsLoading(true);
+      if (yield removeLayout()) {
+        setIsLoading(false);
+        setIsOpen(false);
+        window.location.reload();
+      }
+    });
+    return function handleRemoveLayout() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  /**
+   * Remove the layout.
+   *
+   * @since 5.18.0
+   *
+   * @return {Promise<boolean>}
+   */
+  function removeLayout() {
+    return _removeLayout.apply(this, arguments);
+  }
+  /**
+   * The content of the modal.
+   *
+   * @since 5.18.0
+   *
+   * @return {JSX.Element}
+   */
+  function _removeLayout() {
+    _removeLayout = asyncToGenerator_default()(function* () {
+      const url = new URL(external_tec_tickets_seating_ajax_["ajaxUrl"]);
+      url.searchParams.set('_ajax_nonce', external_tec_tickets_seating_ajax_["ajaxNonce"]);
+      url.searchParams.set('postId', postId);
+      url.searchParams.set('action', external_tec_tickets_seating_ajax_["ACTION_REMOVE_EVENT_LAYOUT"]);
+      const response = yield fetch(url.toString(), {
+        method: 'POST'
+      });
+      return response.status === 200;
+    });
+    return _removeLayout.apply(this, arguments);
+  }
+  function ModalContent() {
+    if (isLoading) {
+      return wp.element.createElement(external_wp_components_["Spinner"], null);
+    }
+    return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement("div", {
+      className: "tec-tickets-seating__settings-intro"
+    }, wp.element.createElement(external_wp_components_["Dashicon"], {
+      icon: "warning"
+    }), wp.element.createElement("span", {
+      className: "icon-text"
+    }, Object(external_wp_i18n_["__"])('Caution', 'event-tickets')), wp.element.createElement("p", {
+      className: "warning-text"
+    }, Object(external_wp_i18n_["__"])('All attendees will lose their seat assignments. All seated tickets will switch to 1 capacity.', 'event-tickets'), ' ', wp.element.createElement("span", {
+      style: textUnderline
+    }, Object(external_wp_i18n_["__"])('This action cannot be undone.', 'event-tickets')))), wp.element.createElement(external_wp_components_["CheckboxControl"], {
+      className: "tec-tickets-seating__settings--checkbox",
+      label: "I Understand",
+      checked: isChecked,
+      onChange: setChecked,
+      name: "tec-tickets-seating__settings--switched-layout"
+    }), wp.element.createElement("p", null, Object(external_wp_i18n_["__"])('You may want to', 'event-tickets'), ' ', wp.element.createElement("a", {
+      href: exportUrl,
+      target: "_blank",
+      rel: "noopener noreferrer"
+    }, Object(external_wp_i18n_["__"])('export attendee', 'event-tickets')), ' ', Object(external_wp_i18n_["__"])('data first as a record of current seat assignments.', 'event-tickets')), wp.element.createElement("div", {
+      className: "tec-tickets-seating__settings--actions"
+    }, wp.element.createElement(external_wp_components_["Button"], {
+      onClick: handleRemoveLayout,
+      disabled: !isChecked,
+      isPrimary: isChecked
+    }, Object(external_wp_i18n_["__"])('Remove Seat Layout', 'event-tickets')), wp.element.createElement(external_wp_components_["Button"], {
+      onClick: closeModal,
+      isSecondary: true
+    }, Object(external_wp_i18n_["__"])('Cancel', 'event-tickets'))));
+  }
+  return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement("a", {
+    href: "#",
+    className: "tec-tickets-seating__settings_layout--remove",
+    onClick: () => setIsOpen(true)
+  }, Object(external_wp_i18n_["__"])('Remove Seat Layout', 'event-tickets')), isOpen && wp.element.createElement(external_wp_components_["Modal"], {
+    className: "tec-tickets-seating__settings--layout-modal",
+    title: Object(external_wp_i18n_["__"])('Confirm Seat Layout removal', 'event-tickets'),
+    isDismissible: true,
+    onRequestClose: closeModal,
+    size: "medium"
+  }, wp.element.createElement(ModalContent, null)));
+});
+/* harmony default export */ var settings_removeLayout = (RemoveLayout);
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/settings/layoutSelect.js
 
 
@@ -9604,16 +9772,7 @@ var settings_style = __webpack_require__("s4cZ");
 
 
 
-/**
- * Returns the string from the settings localization.
- *
- * @since 5.16.0
- *
- * @param {string} key The key to get the string for.
- *
- * @return {string}
- */
-const layoutSelect_getString = key => Object(external_tec_tickets_seating_utils_["getLocalizedString"])(key, 'settings');
+
 
 /**
  * The layout select component.
@@ -9654,6 +9813,7 @@ const LayoutSelect = _ref => {
   const [newLayout, setNewLayout] = Object(external_React_["useState"])(null);
   const [isChecked, setChecked] = Object(external_React_["useState"])(false);
   const [isLoading, setIsLoading] = Object(external_React_["useState"])(false);
+  const exportUrl = external_tribe_common_utils_["globals"].adminUrl() + `edit.php?post_type=tribe_events&page=tickets-attendees&event_id=${postId}`;
 
   /**
    * Handles the layout change.
@@ -9734,7 +9894,7 @@ const LayoutSelect = _ref => {
     if (currentLayout === null || currentLayout.length === 0 || layouts.length === 0) {
       return wp.element.createElement("span", {
         className: "tec-tickets-seating__settings_layout--description"
-      }, "The event is not using assigned seating.");
+      }, Object(external_wp_i18n_["__"])('The event is not using assigned seating.', 'event-tickets'));
     }
   }
 
@@ -9749,21 +9909,26 @@ const LayoutSelect = _ref => {
     if (currentLayout === null || currentLayout.length === 0 || layouts.length === 0) {
       return null;
     }
-    return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(external_tribe_common_elements_["Select"], {
+    return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement("div", {
+      className: "tec-tickets-seating__settings_layout--select-container"
+    }, wp.element.createElement(external_tribe_common_elements_["Select"], {
       id: "tec-tickets-seating__settings_layout-select",
       className: "tec-tickets-seating__settings_layout--select",
       value: activeLayout,
       options: layouts,
       onChange: handleLayoutChange
-    }), wp.element.createElement("span", {
+    }), wp.element.createElement(settings_removeLayout, {
+      postId: postId
+    })), wp.element.createElement("span", {
       className: "tec-tickets-seating__settings_layout--description"
-    }, "Changing the event\u2019s layout will impact all existing tickets. Attendees will lose their seat assignments."));
+    }, Object(external_wp_i18n_["__"])('Changing the event’s layout will impact all existing tickets. Attendees will lose their seat assignments.', 'event-tickets')));
   }
+  const MemoizedRenderSelect = /*#__PURE__*/external_React_default.a.memo(RenderSelect);
   return wp.element.createElement("div", {
     className: "tec-tickets-seating__settings_layout--wrapper"
   }, wp.element.createElement("span", {
     className: "tec-tickets-seating__settings_layout--title"
-  }, "Seat Layout"), wp.element.createElement(NoLayouts, null), wp.element.createElement(RenderSelect, null), isModalOpen && wp.element.createElement(external_wp_components_["Modal"], {
+  }, Object(external_wp_i18n_["__"])('Seat Layout', 'event-tickets')), wp.element.createElement(NoLayouts, null), wp.element.createElement(MemoizedRenderSelect, null), isModalOpen && wp.element.createElement(external_wp_components_["Modal"], {
     className: "tec-tickets-seating__settings--layout-modal",
     title: "Confirm Seat Layout Change",
     isDismissible: true,
@@ -9775,24 +9940,32 @@ const LayoutSelect = _ref => {
     icon: "warning"
   }), wp.element.createElement("span", {
     className: "icon-text"
-  }, "Caution"), wp.element.createElement("p", {
+  }, Object(external_wp_i18n_["__"])('Caution', 'event-tickets')), wp.element.createElement("p", {
     className: "warning-text"
-  }, "All attendees will lose their seat assignments. All existing tickets will be assigned to a default seat type. This action cannot be undone.")), wp.element.createElement(external_wp_components_["CheckboxControl"], {
+  }, Object(external_wp_i18n_["__"])('All attendees will lose their seat assignments. All existing tickets will be assigned to a default seat type.', 'event-tickets'), ' ', wp.element.createElement("span", {
+    style: {
+      textDecoration: 'underline'
+    }
+  }, Object(external_wp_i18n_["__"])('This action cannot be undone.', 'event-tickets')))), wp.element.createElement(external_wp_components_["CheckboxControl"], {
     className: "tec-tickets-seating__settings--checkbox",
     label: "I Understand",
     checked: isChecked,
     onChange: setChecked,
     name: "tec-tickets-seating__settings--switched-layout"
-  }), wp.element.createElement("p", null, "You may want to export attendee data first as a record of current seat assignments."), wp.element.createElement("div", {
+  }), wp.element.createElement("p", null, Object(external_wp_i18n_["__"])('You may want to', 'event-tickets'), ' ', wp.element.createElement("a", {
+    href: exportUrl,
+    target: "_blank",
+    rel: "noopener noreferrer"
+  }, Object(external_wp_i18n_["__"])('export attendee', 'event-tickets')), ' ', Object(external_wp_i18n_["__"])('data first as a record of current seat assignments.', 'event-tickets')), wp.element.createElement("div", {
     className: "tec-tickets-seating__settings--actions"
   }, wp.element.createElement(external_wp_components_["Button"], {
     onClick: handleModalConfirm,
     disabled: !isChecked,
     isPrimary: isChecked
-  }, "Change Seat Layout"), wp.element.createElement(external_wp_components_["Button"], {
+  }, Object(external_wp_i18n_["__"])('Change Seat Layout', 'event-tickets')), wp.element.createElement(external_wp_components_["Button"], {
     onClick: closeModal,
     isSecondary: true
-  }, "Cancel"))), isLoading && wp.element.createElement(external_wp_components_["Spinner"], null)));
+  }, Object(external_wp_i18n_["__"])('Cancel', 'event-tickets')))), isLoading && wp.element.createElement(external_wp_components_["Spinner"], null)));
 };
 /* harmony default export */ var layoutSelect = (LayoutSelect);
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/settings/upsell.js

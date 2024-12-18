@@ -1452,6 +1452,33 @@ p.description {
 				width: 100px;
 			}
 
+#ticket_order_modifier_ticket_fees {
+	width: 70%;
+}
+
+#ticket_order_modifier_ticket_fees .ticket_form_right {
+		max-width: 324px;
+	}
+
+#ticket_order_modifier_ticket_fees .automatic-fees,
+	#ticket_order_modifier_ticket_fees .selectable-fees {
+		margin-bottom: var(--tec-spacer-1);
+	}
+
+#ticket_order_modifier_ticket_fees .automatic-fees strong, #ticket_order_modifier_ticket_fees .selectable-fees strong {
+			display: inline-block;
+			margin-bottom: var(--tec-spacer-1);
+		}
+
+#ticket_order_modifier_ticket_fees .automatic-fees .tribe-dropdown .select2-selection--multiple .select2-selection__rendered, #ticket_order_modifier_ticket_fees .selectable-fees .tribe-dropdown .select2-selection--multiple .select2-selection__rendered {
+			border: 0;
+		}
+
+#ticket_order_modifier_ticket_fees .automatic-fees .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple, #ticket_order_modifier_ticket_fees .selectable-fees .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+
 .tec-tickets-price ins {
 		text-decoration: none;
 	}

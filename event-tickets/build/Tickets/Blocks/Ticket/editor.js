@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		17: 0
+/******/ 		19: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -2401,6 +2401,7 @@ var container_content_style = __webpack_require__("DoMS");
 
 
 
+
 /**
  * Internal dependencies
  */
@@ -2414,31 +2415,89 @@ var container_content_style = __webpack_require__("DoMS");
 
 
 
+
+/**
+ * Get the ticket container items.
+ *
+ * @since 5.18.0
+ *
+ * @param {string} clientId       The client ID.
+ * @param {bool}   hasTicketsPlus Whether the site has Tickets Plus.
+ * @param {bool}   hasIacVars     Whether the site has IAC vars.
+ * @return {*}
+ */
+const getTicketContainerItems = (clientId, hasTicketsPlus, hasIacVars) => {
+  let items = [{
+    item: wp.element.createElement(container, {
+      clientId: clientId
+    }),
+    key: 'title'
+  }, {
+    item: wp.element.createElement(container_content_description_container, {
+      clientId: clientId
+    }),
+    key: 'description'
+  }, {
+    item: wp.element.createElement(container_content_price_container, {
+      clientId: clientId
+    }),
+    key: 'price'
+  }, {
+    item: wp.element.createElement(type_container, {
+      clientId: clientId
+    }),
+    key: 'type'
+  }, {
+    item: wp.element.createElement(capacity_container, {
+      clientId: clientId
+    }),
+    key: 'capacity'
+  }, {
+    item: wp.element.createElement(duration_container, {
+      clientId: clientId
+    }),
+    key: 'duration'
+  }, {
+    item: wp.element.createElement(advanced_options_container, {
+      clientId: clientId
+    }),
+    key: 'advancedOptions'
+  }];
+  if (hasTicketsPlus && hasIacVars) {
+    items.push({
+      item: wp.element.createElement(attendee_collection_container, {
+        clientId: clientId
+      }),
+      key: 'attendeeCollection'
+    });
+  }
+  if (hasTicketsPlus) {
+    items.push({
+      item: wp.element.createElement(attendees_registration_container, {
+        clientId: clientId
+      }),
+      key: 'attendeesRegistration'
+    });
+  }
+
+  /**
+   * Filters the ticket container items.
+   *
+   * @since 5.18.0
+   *
+   * @param {object[]} items    The ticket container items.
+   * @param {string}   clientId The client ID.
+   */
+  items = Object(external_wp_hooks_["applyFilters"])('tec.ticket.container.items', items, clientId);
+  return items;
+};
 const TicketContainerContent = _ref => {
   let {
     clientId,
     hasTicketsPlus,
     hasIacVars
   } = _ref;
-  return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(container, {
-    clientId: clientId
-  }), wp.element.createElement(container_content_description_container, {
-    clientId: clientId
-  }), wp.element.createElement(container_content_price_container, {
-    clientId: clientId
-  }), wp.element.createElement(type_container, {
-    clientId: clientId
-  }), wp.element.createElement(capacity_container, {
-    clientId: clientId
-  }), wp.element.createElement(duration_container, {
-    clientId: clientId
-  }), wp.element.createElement(advanced_options_container, {
-    clientId: clientId
-  }), hasTicketsPlus && hasIacVars && wp.element.createElement(attendee_collection_container, {
-    clientId: clientId
-  }), hasTicketsPlus && wp.element.createElement(attendees_registration_container, {
-    clientId: clientId
-  }));
+  return wp.element.createElement(external_React_["Fragment"], null, getTicketContainerItems(clientId, hasTicketsPlus, hasIacVars).map(item => item.item));
 };
 TicketContainerContent.propTypes = {
   clientId: external_tribe_modules_propTypes_default.a.string.isRequired,
@@ -6443,6 +6502,16 @@ function* fetchTicket(action) {
         saleEndDateMoment
       };
       yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempDetails"](clientId, details)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, totals.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, totals.stock)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencySymbol"](clientId, cost_details.currency_symbol)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCurrencyPosition"](clientId, cost_details.currency_position)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, provider)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasAttendeeInfoFields"](clientId, supports_attendee_information)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true))]);
+
+      /**
+       * Fires after the ticket has been fetched.
+       *
+       * @since 5.18.0
+       * @param {string} clientId The ticket's client ID.
+       * @param {Object} ticket The ticket object.
+       * @param {Object} details The ticket details.
+       */
+      yield Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.fetchTicket', clientId, ticket, details);
     }
   } catch (e) {
     console.error(e);
@@ -10128,7 +10197,8 @@ const LabelWithTooltip = _ref => {
     tooltipDisabled,
     tooltipLabel,
     tooltipPosition,
-    tooltipText
+    tooltipText,
+    delay
   } = _ref;
   return wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
     className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
@@ -10137,7 +10207,8 @@ const LabelWithTooltip = _ref => {
     label: label
   }, wp.element.createElement(external_wp_components_["Tooltip"], {
     text: tooltipText,
-    position: tooltipPosition
+    placement: tooltipPosition,
+    delay: delay
   }, wp.element.createElement("button", {
     "aria-label": tooltipText,
     className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
@@ -10148,7 +10219,8 @@ const LabelWithTooltip = _ref => {
 
 LabelWithTooltip.defaultProps = {
   label: '',
-  tooltipPosition: 'top right'
+  tooltipPosition: 'top right',
+  delay: 200
 };
 LabelWithTooltip.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
@@ -10158,7 +10230,8 @@ LabelWithTooltip.propTypes = {
   tooltipDisabled: external_tribe_modules_propTypes_default.a.bool,
   tooltipLabel: external_tribe_modules_propTypes_default.a.node,
   tooltipPosition: external_tribe_modules_propTypes_default.a.oneOf(['top left', 'top center', 'top right', 'bottom left', 'bottom center', 'bottom right']),
-  tooltipText: external_tribe_modules_propTypes_default.a.string
+  tooltipText: external_tribe_modules_propTypes_default.a.string,
+  delay: external_tribe_modules_propTypes_default.a.number
 };
 /* harmony default export */ var label_with_tooltip_element = (LabelWithTooltip);
 // CONCATENATED MODULE: ./src/modules/elements/label-with-tooltip/index.js

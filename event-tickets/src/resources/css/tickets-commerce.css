@@ -916,21 +916,48 @@
 		align-items: baseline;
 		border-top: 1px solid var(--tec-color-border-secondary);
 		display: flex;
-		flex-flow: row nowrap;
+		flex-direction: row;
+		flex-wrap: wrap;
 		justify-content: flex-end;
 		padding: var(--tec-spacer-4) 0;
+	}
+
+.tribe-common .tribe-tickets__commerce-checkout-cart-footer > div:first-child, .event-tickets .tribe-tickets__commerce-checkout-cart-footer > div:first-child {
+		flex: 0 1 100%;
+	}
+
+.tribe-common .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees, .event-tickets .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees {
+		text-align: right;
 	}
 
 .tribe-common .tribe-tickets__commerce-checkout-cart-footer-total,
 	.tribe-common .tribe-tickets__commerce-checkout-cart-footer-quantity,
 	.event-tickets .tribe-tickets__commerce-checkout-cart-footer-total,
 	.event-tickets .tribe-tickets__commerce-checkout-cart-footer-quantity {
-		color: var(--tec-color-text-primary-light);
+		flex: 0 1 auto;
+		margin-top: var(--tec-spacer-1);
 		text-align: center;
+	}
+
+.tribe-common .tribe-tickets__commerce-checkout-cart-footer-total,
+	.tribe-common .tribe-tickets__commerce-checkout-cart-footer-quantity,
+	.tribe-common .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees,
+	.event-tickets .tribe-tickets__commerce-checkout-cart-footer-total,
+	.event-tickets .tribe-tickets__commerce-checkout-cart-footer-quantity,
+	.event-tickets .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees {
+		color: var(--tec-color-text-primary-light);
 	}
 
 .tribe-common .tribe-tickets__commerce-checkout-cart-footer-total, .event-tickets .tribe-tickets__commerce-checkout-cart-footer-total {
 		margin-left: var(--tec-spacer-1);
+	}
+
+.tribe-common .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees ul li, .event-tickets .tribe-tickets__commerce-checkout-cart-footer-order-modifier-fees ul li {
+		margin-top: var(--tec-spacer-0);
+	}
+
+.tribe-common .tribe-tickets__commerce-checkout-cart-footer-quantity-label, .event-tickets .tribe-tickets__commerce-checkout-cart-footer-quantity-label {
+		margin-right: var(--tec-spacer-2);
 	}
 
 .tribe-common .tribe-tickets__commerce-checkout-cart-footer-total-wrap,

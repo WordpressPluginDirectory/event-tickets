@@ -9,12 +9,13 @@
 
 namespace TEC\Tickets\Seating;
 
-use TEC\Common\StellarWP\Assets\Asset;
+use TEC\Common\Asset;
 use TEC\Common\StellarWP\Assets\Assets;
 use TEC\Tickets\Seating\Service\Service;
 use Tribe__Tickets__Main as Tickets;
 use TEC\Tickets\Commerce\Ticket;
 use Tribe__Tickets__Tickets as Tribe_Tickets;
+use WP_Post;
 use WP_REST_Request;
 
 /**
@@ -25,8 +26,6 @@ use WP_REST_Request;
  * @package TEC\Controller;
  */
 class Editor extends \TEC\Common\Contracts\Provider\Controller {
-	use Built_Assets;
-
 	/**
 	 * Unregisters the Controller by unsubscribing from WordPress hooks.
 	 *
@@ -59,7 +58,7 @@ class Editor extends \TEC\Common\Contracts\Provider\Controller {
 	 */
 	public function get_store_data(): array {
 		if ( tribe_context()->is_new_post() ) {
-			// New posts will always use assigned seating.
+			// New posts will always use assigned seating as long as license exists.
 			$is_using_assigned_seating = true;
 			$layout_id                 = null;
 			$seat_types_by_post_id     = [];
@@ -87,7 +86,8 @@ class Editor extends \TEC\Common\Contracts\Provider\Controller {
 		$service_status = $service->get_status();
 
 		return [
-			'isUsingAssignedSeating' => $is_using_assigned_seating,
+			// isUsingAssignedSeating should never be true when there is no license. The ASC controls are hidden when no license is there.
+			'isUsingAssignedSeating' => ! $service_status->has_no_license() && $is_using_assigned_seating,
 			'layouts'                => $service->get_layouts_in_option_format(),
 			'seatTypes'              => $layout_id ? $service->get_seat_types_by_layout( $layout_id ) : [],
 			'currentLayoutId'        => $layout_id,
@@ -208,9 +208,11 @@ class Editor extends \TEC\Common\Contracts\Provider\Controller {
 	private function register_block_editor_assets(): void {
 		Asset::add(
 			'tec-tickets-seating-block-editor',
-			$this->built_asset_url( 'blockEditor.js' ),
+			'blockEditor.js',
 			Tickets::VERSION
 		)
+			->add_to_group_path( 'tec-seating' )
+			->set_condition( [ $this, 'should_enqueue_assets' ] )
 			->set_dependencies(
 				'wp-hooks',
 				'react',
@@ -235,13 +237,39 @@ class Editor extends \TEC\Common\Contracts\Provider\Controller {
 
 		Asset::add(
 			'tec-tickets-seating-block-editor-style',
-			$this->built_asset_url( 'blockEditor.css' ),
+			'blockEditor.css',
 			Tickets::VERSION
 		)
+			->add_to_group_path( 'tec-seating' )
+			->set_condition( [ $this, 'should_enqueue_assets' ] )
 			->enqueue_on( 'enqueue_block_editor_assets' )
 			->add_to_group( 'tec-tickets-seating-editor' )
 			->add_to_group( 'tec-tickets-seating' )
 			->register();
+	}
+
+	/**
+	 * Checks if the current context is the Block Editor and the post type is ticket-enabled.
+	 *
+	 * @since 5.17.0
+	 *
+	 * @return bool Whether the assets should be enqueued or not.
+	 */
+	public function should_enqueue_assets() {
+		$ticketable_post_types = (array) tribe_get_option( 'ticket-enabled-post-types', [] );
+
+		if ( empty( $ticketable_post_types ) ) {
+			return false;
+		}
+
+		$post = get_post();
+
+		if ( ! $post instanceof WP_Post ) {
+			return false;
+		}
+
+		return is_admin()
+				&& in_array( $post->post_type, $ticketable_post_types, true );
 	}
 
 	/**

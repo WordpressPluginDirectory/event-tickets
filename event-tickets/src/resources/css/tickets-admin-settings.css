@@ -1589,6 +1589,29 @@ body.tickets_page_tec-tickets-settings .event-tickets div.tribe-dialog, body.tic
 		display: inline-block;
 	}
 
+.tec-settings-order_modifier {
+	width: 100%;
+}
+
+.tec-settings-order_modifier label {
+		font-weight: bold;
+	}
+
+.tec-settings-order_modifier input[type="number"],
+	.tec-settings-order_modifier input[type="text"],
+	.tec-settings-order_modifier select {
+		max-width: 95%;
+		width: 25em;
+	}
+
+.tec-settings-order_modifier input.tec_order_modifier_amount_field {
+		width: 7em;
+	}
+
+/* Tablet view (between 768px and 1024px) */
+
+/* Phone view (less than 768px) */
+
 .tec-tickets__admin-settings-back-link-wrapper {
 	padding: var(--tec-spacer-4) 0;
 }
@@ -1750,6 +1773,10 @@ body.tickets_page_tec-tickets-settings .event-tickets div.tribe-dialog, body.tic
 .event-tickets .tribe-dialog__wrapper.tribe-modal__wrapper--emails-preview .tribe-modal__close-button, .tribe-common .tribe-dialog__wrapper.tribe-modal__wrapper--emails-preview .tribe-modal__close-button {
 				top: var(--tec-spacer-4)
 		}
+
+.tec-settings-order_modifier {
+		width: 50%
+}
 		}
 
 @media (min-width: 960px) {
@@ -1774,5 +1801,12 @@ body.tickets_page_tec-tickets-settings .event-tickets div.tribe-dialog, body.tic
 
 .tec-tickets__admin-after-pay-promo-icon-container {
 		display: block
+}
+	}
+
+@media (min-width: 1024px) {
+
+.tec-settings-order_modifier {
+		width: 30%
 }
 	}

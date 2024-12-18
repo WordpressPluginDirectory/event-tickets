@@ -57,7 +57,7 @@
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		8: 0
+/******/ 		10: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -174,6 +174,7 @@ __webpack_require__.d(__webpack_exports__, "syncWithBackend", function() { retur
 __webpack_require__.d(__webpack_exports__, "start", function() { return /* binding */ start; });
 __webpack_require__.d(__webpack_exports__, "reset", function() { return /* binding */ session_reset; });
 __webpack_require__.d(__webpack_exports__, "pause", function() { return /* binding */ pause; });
+__webpack_require__.d(__webpack_exports__, "pauseToCheckout", function() { return /* binding */ pauseToCheckout; });
 __webpack_require__.d(__webpack_exports__, "resume", function() { return /* binding */ resume; });
 __webpack_require__.d(__webpack_exports__, "setTargetDom", function() { return /* binding */ setTargetDom; });
 __webpack_require__.d(__webpack_exports__, "syncOnLoad", function() { return /* binding */ syncOnLoad; });
@@ -197,9 +198,11 @@ var asyncToGenerator_default = /*#__PURE__*/__webpack_require__.n(asyncToGenerat
  * @typedef {Object} LocalizedTimerData
  * @property {string} ajaxUrl                   The URL to the service iframe.
  * @property {string} ajaxNonce                 The AJAX nonce.
+ * @property {number} checkoutGraceTime         The grace time, in seconds, given to a user to complete the checkout.
  * @property {string} ACTION_START              The action to start the timer.
  * @property {string} ACTION_SYNC               The action to sync the timer with the backend.
  * @property {string} ACTION_INTERRUPT_GET_DATA The action to get the data required to render the redirection modal.
+ * @property {string} ACTION_PAUSE_TO_CHECKOUT  The action to signal the backend we're pausing the timer to checkout.
  * @property {string} TICKETS_BLOCK_DIALOG_NAME The name of the dialog element used to render the seat selection modal.
  */
 
@@ -277,9 +280,11 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 const {
   ajaxUrl,
   ajaxNonce,
+  checkoutGraceTime,
   ACTION_START,
   ACTION_SYNC,
-  ACTION_INTERRUPT_GET_DATA
+  ACTION_INTERRUPT_GET_DATA,
+  ACTION_PAUSE_TO_CHECKOUT
 } = localizedData;
 
 /**
@@ -825,7 +830,7 @@ function _requestToBackend() {
     if (timerData === null) {
       return false;
     }
-    if ([ACTION_START, ACTION_SYNC].indexOf(action) === -1) {
+    if ([ACTION_START, ACTION_SYNC, ACTION_PAUSE_TO_CHECKOUT].indexOf(action) === -1) {
       return false;
     }
     const requestUrl = new URL(ajaxUrl);
@@ -925,10 +930,15 @@ function session_reset() {
  * Postpones the healthcheck that will sync with the backend resetting its timer.
  *
  * @since 5.16.0
+ * @since 5.17.0 Added the `resumeInSeconds` parameter.
+ *
+ * @param {number} resumeInSeconds The amount of seconds after which the timer should resume. `0` to not resume.
  *
  * @return {void}
  */
-function pause() {
+function pause(resumeInSeconds) {
+  // By default, do not resume.
+  resumeInSeconds = resumeInSeconds || 0;
   setIsInterruptable(false);
   if (healthCheckTimeoutId) {
     // Pause the healthcheck loop.
@@ -940,9 +950,24 @@ function pause() {
     clearTimeout(countdownTimeoutId);
     countdownTimeoutId = null;
   }
+  if (!resumeInSeconds) {
+    return;
+  }
 
-  // Postpone the healthcheck for 30 seconds.
-  resumeTimeoutId = setTimeout(resume, 30000);
+  // Postpone the healthcheck for 60 seconds.
+  resumeTimeoutId = setTimeout(resume, resumeInSeconds * 1000);
+}
+
+/**
+ * Postpones the healthcheck that will sync with the backend resetting its timer for the purpose of
+ * giving the user time to checkout.
+ *
+ * @since 5.17.0
+ *
+ * @return {Promise<void>} A promise that will resolve when the backend received the signal and the timer paused.
+ */
+function pauseToCheckout() {
+  return _pauseToCheckout.apply(this, arguments);
 }
 
 /**
@@ -952,6 +977,17 @@ function pause() {
  *
  * @return {void} The timer is resumed.
  */
+function _pauseToCheckout() {
+  _pauseToCheckout = asyncToGenerator_default()(function* () {
+    const secondsLeft = yield requestToBackend(ACTION_PAUSE_TO_CHECKOUT);
+    if (secondsLeft <= 0) {
+      interrupt();
+      return;
+    }
+    pause(checkoutGraceTime);
+  });
+  return _pauseToCheckout.apply(this, arguments);
+}
 function resume() {
   return _resume.apply(this, arguments);
 }
@@ -1026,8 +1062,8 @@ function watchCheckoutControls() {
   const checkoutControlElements = targetDom.querySelectorAll(filteredCheckoutControls);
   checkoutControlElements.forEach(checkoutControlElement => {
     watchedCheckoutControls.push(checkoutControlElement);
-    checkoutControlElement.addEventListener('click', pause);
-    checkoutControlElement.addEventListener('submit', pause);
+    checkoutControlElement.addEventListener('click', pauseToCheckout);
+    checkoutControlElement.addEventListener('submit', pauseToCheckout);
   });
 }
 
@@ -1040,8 +1076,8 @@ function watchCheckoutControls() {
  */
 function stopWatchingCheckoutControls() {
   watchedCheckoutControls.forEach(checkoutControlElement => {
-    checkoutControlElement.removeEventListener('click', pause);
-    checkoutControlElement.removeEventListener('submit', pause);
+    checkoutControlElement.removeEventListener('click', pauseToCheckout);
+    checkoutControlElement.removeEventListener('submit', pauseToCheckout);
   });
   watchedCheckoutControls = [];
 }
