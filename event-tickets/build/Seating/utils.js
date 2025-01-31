@@ -169,8 +169,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("lSNA");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Returns a link pulled from the scoped window object.
  *
@@ -179,8 +179,8 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  * @return {string} The link URL, or an empty string if it does not exist.
  */
 function getLink(link) {
-  var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$tec$tickets$s2, _window$tec$tickets$s3;
-  return ((_window = window) === null || _window === void 0 ? void 0 : (_window$tec = _window.tec) === null || _window$tec === void 0 ? void 0 : (_window$tec$tickets = _window$tec.tickets) === null || _window$tec$tickets === void 0 ? void 0 : (_window$tec$tickets$s = _window$tec$tickets.seating) === null || _window$tec$tickets$s === void 0 ? void 0 : (_window$tec$tickets$s2 = _window$tec$tickets$s.utils) === null || _window$tec$tickets$s2 === void 0 ? void 0 : (_window$tec$tickets$s3 = _window$tec$tickets$s2.links) === null || _window$tec$tickets$s3 === void 0 ? void 0 : _window$tec$tickets$s3[link]) || '';
+  var _window;
+  return ((_window = window) === null || _window === void 0 || (_window = _window.tec) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 || (_window = _window.seating) === null || _window === void 0 || (_window = _window.utils) === null || _window === void 0 || (_window = _window.links) === null || _window === void 0 ? void 0 : _window[link]) || '';
 }
 
 /**
@@ -192,12 +192,12 @@ function getLink(link) {
  * @return {string} The localized string, or an empty string if it does not exist.
  */
 function getLocalizedString(slug, group) {
-  var _window3, _window3$tec, _window3$tec$tickets, _window3$tec$tickets$, _window3$tec$tickets$2, _window3$tec$tickets$3;
+  var _window3;
   if (group) {
-    var _window2, _window2$tec, _window2$tec$tickets, _window2$tec$tickets$, _window2$tec$tickets$2, _window2$tec$tickets$3, _window2$tec$tickets$4;
-    return ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$tec = _window2.tec) === null || _window2$tec === void 0 ? void 0 : (_window2$tec$tickets = _window2$tec.tickets) === null || _window2$tec$tickets === void 0 ? void 0 : (_window2$tec$tickets$ = _window2$tec$tickets.seating) === null || _window2$tec$tickets$ === void 0 ? void 0 : (_window2$tec$tickets$2 = _window2$tec$tickets$.utils) === null || _window2$tec$tickets$2 === void 0 ? void 0 : (_window2$tec$tickets$3 = _window2$tec$tickets$2.localizedStrings) === null || _window2$tec$tickets$3 === void 0 ? void 0 : (_window2$tec$tickets$4 = _window2$tec$tickets$3[group]) === null || _window2$tec$tickets$4 === void 0 ? void 0 : _window2$tec$tickets$4[slug]) || '';
+    var _window2;
+    return ((_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.tec) === null || _window2 === void 0 || (_window2 = _window2.tickets) === null || _window2 === void 0 || (_window2 = _window2.seating) === null || _window2 === void 0 || (_window2 = _window2.utils) === null || _window2 === void 0 || (_window2 = _window2.localizedStrings) === null || _window2 === void 0 || (_window2 = _window2[group]) === null || _window2 === void 0 ? void 0 : _window2[slug]) || '';
   }
-  return ((_window3 = window) === null || _window3 === void 0 ? void 0 : (_window3$tec = _window3.tec) === null || _window3$tec === void 0 ? void 0 : (_window3$tec$tickets = _window3$tec.tickets) === null || _window3$tec$tickets === void 0 ? void 0 : (_window3$tec$tickets$ = _window3$tec$tickets.seating) === null || _window3$tec$tickets$ === void 0 ? void 0 : (_window3$tec$tickets$2 = _window3$tec$tickets$.utils) === null || _window3$tec$tickets$2 === void 0 ? void 0 : (_window3$tec$tickets$3 = _window3$tec$tickets$2.localizedStrings) === null || _window3$tec$tickets$3 === void 0 ? void 0 : _window3$tec$tickets$3[slug]) || '';
+  return ((_window3 = window) === null || _window3 === void 0 || (_window3 = _window3.tec) === null || _window3 === void 0 || (_window3 = _window3.tickets) === null || _window3 === void 0 || (_window3 = _window3.seating) === null || _window3 === void 0 || (_window3 = _window3.utils) === null || _window3 === void 0 || (_window3 = _window3.localizedStrings) === null || _window3 === void 0 ? void 0 : _window3[slug]) || '';
 }
 
 /**
@@ -269,8 +269,7 @@ const onReady = domReadyCallback => {
  *
  * @return {void}
  */
-function redirectTo(url) {
-  let newTab = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+function redirectTo(url, newTab = false) {
   if (newTab) {
     window.open(url, '_blank', 'noopener,noreferrer');
   } else {

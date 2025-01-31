@@ -278,7 +278,7 @@ class template_Title extends external_React_["PureComponent"] {
       isLabel: true
       // eslint-disable-next-line no-undef
       ,
-      label: sprintf( /* Translators: %s - the singular label for a ticket. */
+      label: sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('%s name', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular)
     }), wp.element.createElement(external_tribe_common_elements_["Input"], {
       className: "tribe-editor__ticket__title-input",
@@ -490,19 +490,17 @@ var external_wp_hooks_ = __webpack_require__("g56x");
 
 
 
-const TicketContainerHeader = _ref => {
-  let {
-    clientId,
-    isSelected,
-    isOnSale
-  } = _ref;
+const TicketContainerHeader = ({
+  clientId,
+  isSelected,
+  isOnSale
+}) => {
   if (isSelected) {
     return null;
   }
-  function OnSaleLabel(_ref2) {
-    let {
-      isOnSale
-    } = _ref2;
+  function OnSaleLabel({
+    isOnSale
+  }) {
     if (!isOnSale) {
       return null;
     }
@@ -670,7 +668,7 @@ class template_Capacity extends external_React_["PureComponent"] {
           className: external_tribe_modules_classnames_default()('tribe-editor__ticket__capacity-input-row', 'tribe-editor__ticket__capacity-input-row--shared-capacity'),
           id: this.ids.sharedCapacity,
           label: Object(external_wp_i18n_["__"])('Set shared capacity:', 'event-tickets'),
-          value: tempSharedCapacity,
+          value: tempSharedCapacity !== null && tempSharedCapacity !== void 0 ? tempSharedCapacity : '',
           onChange: handleTempSharedCapacityChange,
           disabled: isDisabled,
           min: 0,
@@ -691,16 +689,16 @@ class template_Capacity extends external_React_["PureComponent"] {
         }
         extraProps.label = tempCapacityType === TICKET_TYPES[SHARED] ?
         // eslint-disable-next-line no-undef
-        sprintf( /* Translators: %s - the singular, lowercase label for a ticket. */
+        sprintf(/* Translators: %s - the singular, lowercase label for a ticket. */
         Object(external_wp_i18n_["__"])('Limit sales of this %s to:', 'event-tickets'), TICKET_LABELS.ticket.singularLowercase) :
         // eslint-disable-next-line no-undef
-        sprintf( /* Translators: %s - the plural, lowercase label for a ticket. */
+        sprintf(/* Translators: %s - the plural, lowercase label for a ticket. */
         Object(external_wp_i18n_["__"])('Number of %s available', 'event-tickets'), TICKET_LABELS.ticket.pluralLowercase);
         inputs.push(wp.element.createElement(LabeledNumberInput, extends_default()({
           key: "capacity",
           className: external_tribe_modules_classnames_default()('tribe-editor__ticket__capacity-input-row', 'tribe-editor__ticket__capacity-input-row--capacity', `tribe-editor__ticket__capacity-input-row--capacity-${ticketType}`),
           id: this.ids.capacity,
-          value: tempCapacity,
+          value: tempCapacity !== null && tempCapacity !== void 0 ? tempCapacity : '',
           onChange: e => handleTempCapacityChange(e, extraProps === null || extraProps === void 0 ? void 0 : extraProps.max),
           disabled: isDisabled,
           min: 0
@@ -734,7 +732,7 @@ class template_Capacity extends external_React_["PureComponent"] {
       return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(external_tribe_common_elements_["NumberInput"], {
         className: "tribe-editor__ticket__capacity-input",
         id: this.ids.capacity,
-        value: tempCapacity,
+        value: tempCapacity !== null && tempCapacity !== void 0 ? tempCapacity : '',
         onChange: onTempCapacityNoPlusChange,
         disabled: isDisabled,
         min: 0
@@ -774,7 +772,7 @@ class template_Capacity extends external_React_["PureComponent"] {
       isLabel: true
       // eslint-disable-next-line no-undef
       ,
-      label: sprintf( /* Translators: %s - the singular label for a ticket. */
+      label: sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('%s Capacity', 'event-tickets'), TICKET_LABELS.ticket.singular)
     }), wp.element.createElement("div", {
       className: "tribe-editor__ticket__capacity-form"
@@ -784,16 +782,20 @@ class template_Capacity extends external_React_["PureComponent"] {
 defineProperty_default()(template_Capacity, "propTypes", {
   hasTicketsPlus: external_tribe_modules_propTypes_default.a.bool,
   isDisabled: external_tribe_modules_propTypes_default.a.bool,
-  sharedCapacity: external_tribe_modules_propTypes_default.a.string,
-  tempCapacity: external_tribe_modules_propTypes_default.a.string,
+  sharedCapacity: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.string, external_tribe_modules_propTypes_default.a.number]),
+  tempCapacity: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.string, external_tribe_modules_propTypes_default.a.number]),
   tempCapacityType: external_tribe_modules_propTypes_default.a.string,
-  tempCapacityTypeOption: external_tribe_common_data_plugins_proptypes_["ReactSelectOption"],
+  // Default value, when the Ticket has just been created is an empty object: take that into account.
+  tempCapacityTypeOption: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_common_data_plugins_proptypes_["ReactSelectOption"], external_tribe_modules_propTypes_default.a.object]),
   tempSharedCapacity: external_tribe_modules_propTypes_default.a.string,
   onTempCapacityChange: external_tribe_modules_propTypes_default.a.func,
   onTempCapacityNoPlusChange: external_tribe_modules_propTypes_default.a.func,
   onTempCapacityTypeChange: external_tribe_modules_propTypes_default.a.func,
   onTempSharedCapacityChange: external_tribe_modules_propTypes_default.a.func,
   ticketProvider: external_tribe_modules_propTypes_default.a.string
+});
+defineProperty_default()(template_Capacity, "defaultProps", {
+  tempCapacityTypeOption: []
 });
 /* harmony default export */ var capacity_template = (template_Capacity);
 // EXTERNAL MODULE: external "tribe.common.data"
@@ -934,8 +936,8 @@ var external_tribe_common_utils_ = __webpack_require__("B8vQ");
 
 const container_excluded = ["state"],
   _excluded2 = ["dispatch"];
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -1079,11 +1081,11 @@ class template_SKU extends external_React_["PureComponent"] {
       isLabel: true
       // eslint-disable-next-line no-undef
       ,
-      label: sprintf( /* Translators: %s - the singular label for a ticket. */
+      label: sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('%s SKU', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular)
       // eslint-disable-next-line no-undef
       ,
-      tooltipText: sprintf( /* Translators: %s - the singular, lowercase label for a ticket. */
+      tooltipText: sprintf(/* Translators: %s - the singular, lowercase label for a ticket. */
       Object(external_wp_i18n_["__"])("A unique identifying code for each %s type you're selling", 'event-tickets'), constants["TICKET_LABELS"].ticket.singularLowercase),
       tooltipLabel: wp.element.createElement(external_wp_components_["Dashicon"], {
         className: "tribe-editor__ticket__tooltip-label",
@@ -1093,7 +1095,7 @@ class template_SKU extends external_React_["PureComponent"] {
       className: "tribe-editor__ticket__sku-input",
       id: this.id,
       type: "text",
-      value: sku,
+      value: sku !== null && sku !== void 0 ? sku : '',
       onChange: onChange,
       disabled: isDisabled
     }));
@@ -1163,28 +1165,26 @@ const {
 const EDIT_TICKET = 'edit-ticket';
 const REPORT = 'report';
 const LINK_TYPES = [EDIT_TICKET, REPORT];
-const EcommerceOptions = _ref => {
-  let {
-    editTicketLink,
-    isDisabled,
-    provider,
-    reportLink,
-    showEcommerceOptions
-  } = _ref;
+const EcommerceOptions = ({
+  editTicketLink,
+  isDisabled,
+  provider,
+  reportLink,
+  showEcommerceOptions
+}) => {
   const getEditTicketLinkLabel = ticketProvider => {
     let label = '';
     if (ticketProvider === EDD) {
       // eslint-disable-next-line no-undef
-      label = sprintf( /* Translators: %s - the singular label for a ticket. */
+      label = sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('Edit %s in Easy Digital Downloads', 'event-tickets'), template_TICKET_LABELS.ticket.singular // eslint-disable-line camelcase, no-undef
       );
     } else if (ticketProvider === WOO) {
       // eslint-disable-next-line no-undef
-      label = sprintf( /* Translators: %s - the singular label for a ticket. */
+      label = sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('Edit %s in WooCommerce', 'event-tickets'), template_TICKET_LABELS.ticket.singular // eslint-disable-line camelcase, no-undef
       );
     }
-
     return label;
   };
   const getLink = linkType => {
@@ -1212,7 +1212,8 @@ const EcommerceOptions = _ref => {
 EcommerceOptions.propTypes = {
   editTicketLink: external_tribe_modules_propTypes_default.a.string,
   isDisabled: external_tribe_modules_propTypes_default.a.bool,
-  provider: external_tribe_modules_propTypes_default.a.oneOf([...PROVIDER_TYPES, '']),
+  // Add the `tc` provider, short for Tickets Commerce and coming from some legacy blocks.
+  provider: external_tribe_modules_propTypes_default.a.oneOf([...PROVIDER_TYPES, '', 'tc']),
   reportLink: external_tribe_modules_propTypes_default.a.string,
   showEcommerceOptions: external_tribe_modules_propTypes_default.a.bool
 };
@@ -1257,7 +1258,6 @@ const getReportLink = (state, ownProps, provider) => {
     } else if (provider === container_WOO) {
       path = `admin.php?page=wc-reports&tab=orders&report=sales_by_product&product_ids=${ticketId}`; // eslint-disable-line max-len
     }
-
     reportLink = `${adminURL}${path}`;
   }
   return reportLink;
@@ -1391,7 +1391,7 @@ class template_IACSetting extends external_React_["PureComponent"] {
       className: "tribe-editor__ticket__content-row--iac-setting-description"
     },
     // eslint-disable-next-line no-undef
-    sprintf( /* Translators: %1$s - the plural, lowercase label for a ticket;  %2$s - the singular, lowercase label for a ticket. */
+    sprintf(/* Translators: %1$s - the plural, lowercase label for a ticket;  %2$s - the singular, lowercase label for a ticket. */
     Object(external_wp_i18n_["__"])('Select the default way to sell %1$s. Enabling Individual Attendee Collection will allow purchasers to enter a name and email for each %2$s.',
     // eslint-disable-line max-len
     'event-tickets'), constants["TICKET_LABELS"].ticket.pluralLowercase, constants["TICKET_LABELS"].ticket.singularLowercase)), wp.element.createElement("div", {
@@ -1548,22 +1548,22 @@ var attendees_registration_style = __webpack_require__("1uGs");
 
 const linkTextAdd = Object(external_wp_i18n_["__"])('+ Add', 'event-tickets');
 const linkTextEdit = Object(external_wp_i18n_["__"])('Edit', 'event-tickets');
-const AttendeesRegistration = _ref => {
-  let {
-    attendeeRegistrationURL,
-    hasAttendeeInfoFields,
-    isCreated,
-    isDisabled,
-    isModalOpen,
-    onClick,
-    onClose,
-    onIframeLoad
-  } = _ref;
+const noop = () => {};
+const AttendeesRegistration = ({
+  attendeeRegistrationURL,
+  hasAttendeeInfoFields = false,
+  isCreated = false,
+  isDisabled = false,
+  isModalOpen = false,
+  onClick = noop,
+  onClose = noop,
+  onIframeLoad = noop
+}) => {
   const linkText = hasAttendeeInfoFields ? linkTextEdit : linkTextAdd;
   return wp.element.createElement(modules_elements["AttendeesRegistration"]
   // eslint-disable-next-line no-undef
   , {
-    helperText: sprintf( /* Translators: %s - the singular, lowercase label for a ticket. */
+    helperText: sprintf(/* Translators: %s - the singular, lowercase label for a ticket. */
     Object(external_wp_i18n_["__"])('Save your %s to enable attendee information fields', 'event-tickets'), constants["TICKET_LABELS"].ticket.singularLowercase),
     iframeURL: attendeeRegistrationURL,
     isDisabled: isDisabled,
@@ -1582,13 +1582,13 @@ const AttendeesRegistration = _ref => {
 };
 AttendeesRegistration.propTypes = {
   attendeeRegistrationURL: external_tribe_modules_propTypes_default.a.string.isRequired,
-  hasAttendeeInfoFields: external_tribe_modules_propTypes_default.a.bool.isRequired,
-  isCreated: external_tribe_modules_propTypes_default.a.bool.isRequired,
-  isDisabled: external_tribe_modules_propTypes_default.a.bool.isRequired,
-  isModalOpen: external_tribe_modules_propTypes_default.a.bool.isRequired,
-  onClick: external_tribe_modules_propTypes_default.a.func.isRequired,
-  onClose: external_tribe_modules_propTypes_default.a.func.isRequired,
-  onIframeLoad: external_tribe_modules_propTypes_default.a.func.isRequired
+  hasAttendeeInfoFields: external_tribe_modules_propTypes_default.a.bool,
+  isCreated: external_tribe_modules_propTypes_default.a.bool,
+  isDisabled: external_tribe_modules_propTypes_default.a.bool,
+  isModalOpen: external_tribe_modules_propTypes_default.a.bool,
+  onClick: external_tribe_modules_propTypes_default.a.func,
+  onClose: external_tribe_modules_propTypes_default.a.func,
+  onIframeLoad: external_tribe_modules_propTypes_default.a.func
 };
 /* harmony default export */ var attendees_registration_template = (AttendeesRegistration);
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/attendees-registration/container.js
@@ -1616,7 +1616,6 @@ const getAttendeeRegistrationUrl = (state, ownProps) => {
   const ticketId = ticket["f" /* selectors */].getTicketId(state, ownProps);
   return `${adminURL}edit.php?post_type=${postType}&page=attendee-registration&ticket_id=${ticketId}&tribe_events_modal=1`; // eslint-disable-line max-len
 };
-
 const attendees_registration_container_mapStateToProps = (state, ownProps) => {
   const isCreated = ticket["f" /* selectors */].getTicketHasBeenCreated(state, ownProps);
   return {
@@ -1735,6 +1734,11 @@ class template_Description extends external_React_["PureComponent"] {
     }));
   }
 }
+defineProperty_default()(template_Description, "defaultProps", {
+  isDisabled: false,
+  onTempDescriptionChange: () => {},
+  tempDescription: ''
+});
 defineProperty_default()(template_Description, "propTypes", {
   isDisabled: external_tribe_modules_propTypes_default.a.bool,
   onTempDescriptionChange: external_tribe_modules_propTypes_default.a.func.isRequired,
@@ -1774,20 +1778,28 @@ var react_number_format_es = __webpack_require__("aZ9c");
 // EXTERNAL MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/price/style.pcss
 var price_style = __webpack_require__("3VdD");
 
+// EXTERNAL MODULE: external "lodash.isString"
+var external_lodash_isString_ = __webpack_require__("5vqK");
+var external_lodash_isString_default = /*#__PURE__*/__webpack_require__.n(external_lodash_isString_);
+
+// EXTERNAL MODULE: ./node_modules/date-fns/format.js + 10 modules
+var format = __webpack_require__("U4kA");
+
+// EXTERNAL MODULE: ./node_modules/date-fns/parse.js + 44 modules
+var parse = __webpack_require__("t3m+");
+
 // EXTERNAL MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/sale-price/style.pcss
 var sale_price_style = __webpack_require__("EEha");
-
-// EXTERNAL MODULE: ./node_modules/react-day-picker/moment/index.js
-var moment = __webpack_require__("1rrs");
 
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/sale-price/template.js
 
 
-function template_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function template_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? template_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : template_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function template_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function template_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? template_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : template_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
+
 
 
 
@@ -1827,7 +1839,7 @@ class template_SalePrice extends external_React_["PureComponent"] {
       minDefaultPrice,
       tempPrice,
       toggleSalePrice,
-      salePriceChecked,
+      salePriceChecked = false,
       salePrice,
       updateSalePrice,
       dateFormat,
@@ -1872,8 +1884,8 @@ class template_SalePrice extends external_React_["PureComponent"] {
     const FromDateProps = {
       value: fromDateInput,
       format: dateFormat,
-      formatDate: moment["formatDate"],
-      parseDate: moment["parseDate"],
+      formatDate: format["a" /* formatDate */],
+      parseDate: parse["a" /* parse */],
       placeholder: dateFormat,
       dayPickerProps: {
         selectedDays: [fromDate, {
@@ -1901,8 +1913,8 @@ class template_SalePrice extends external_React_["PureComponent"] {
     const ToDateProps = {
       value: toDateInput,
       format: dateFormat,
-      formatDate: moment["formatDate"],
-      parseDate: moment["parseDate"],
+      formatDate: format["a" /* formatDate */],
+      parseDate: parse["a" /* parse */],
       placeholder: dateFormat,
       dayPickerProps: {
         selectedDays: [fromDate, {
@@ -1937,7 +1949,7 @@ class template_SalePrice extends external_React_["PureComponent"] {
       "aria-label": constants["SALE_PRICE_LABELS"].add_sale_price,
       checked: salePriceChecked,
       onChange: toggleSalePrice,
-      value: salePriceChecked,
+      value: salePriceChecked ? '1' : '0',
       disabled: isDisabled
     }), salePriceChecked && wp.element.createElement("div", {
       className: "tribe-editor__ticket__sale-price--fields"
@@ -1979,15 +1991,15 @@ defineProperty_default()(template_SalePrice, "propTypes", {
   currencyPosition: external_tribe_modules_propTypes_default.a.string,
   currencySymbol: external_tribe_modules_propTypes_default.a.string,
   currencyThousandsSep: external_tribe_modules_propTypes_default.a.string,
-  minDefaultPrice: external_tribe_modules_propTypes_default.a.string,
+  minDefaultPrice: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.string, external_tribe_modules_propTypes_default.a.number]),
   tempPrice: external_tribe_modules_propTypes_default.a.string,
   toggleSalePrice: external_tribe_modules_propTypes_default.a.func,
   salePriceChecked: external_tribe_modules_propTypes_default.a.bool,
   salePrice: external_tribe_modules_propTypes_default.a.string,
   updateSalePrice: external_tribe_modules_propTypes_default.a.func,
   dateFormat: external_tribe_modules_propTypes_default.a.string,
-  fromDate: external_tribe_modules_propTypes_default.a.instanceOf(Date),
-  toDate: external_tribe_modules_propTypes_default.a.instanceOf(Date),
+  fromDate: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.instanceOf(Date), external_tribe_modules_propTypes_default.a.oneOf([''])]),
+  toDate: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.instanceOf(Date), external_tribe_modules_propTypes_default.a.oneOf([''])]),
   fromDateInput: external_tribe_modules_propTypes_default.a.string,
   toDateInput: external_tribe_modules_propTypes_default.a.string,
   onFromDateChange: external_tribe_modules_propTypes_default.a.func,
@@ -1996,10 +2008,10 @@ defineProperty_default()(template_SalePrice, "propTypes", {
 });
 /* harmony default export */ var sale_price_template = (template_SalePrice);
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/sale-price/container.js
+
 /**
  * External dependencies
  */
-
 
 
 /**
@@ -2024,7 +2036,7 @@ const sale_price_container_onFromDateChange = (dispatch, ownProps) => (date, mod
   const {
     clientId
   } = ownProps;
-  if (dayPickerInput.input.value === '') {
+  if (external_lodash_isString_default()(dayPickerInput) && dayPickerInput === '' || !external_lodash_isString_default()(dayPickerInput) && dayPickerInput.input.value === '') {
     dispatch(ticket["a" /* actions */].setTicketTempSaleStartDate(clientId, ''));
     dispatch(ticket["a" /* actions */].setTicketTempSaleStartDateMoment(clientId, ''));
     dispatch(ticket["a" /* actions */].setTicketTempSaleStartDateInput(clientId, ''));
@@ -2048,7 +2060,7 @@ const sale_price_container_onToDateChange = (dispatch, ownProps) => (date, modif
   const {
     clientId
   } = ownProps;
-  if (dayPickerInput.input.value === '') {
+  if (external_lodash_isString_default()(dayPickerInput) && dayPickerInput === '' || !external_lodash_isString_default()(dayPickerInput) && dayPickerInput.input.value === '') {
     dispatch(ticket["a" /* actions */].setTicketTempSaleEndDate(clientId, ''));
     dispatch(ticket["a" /* actions */].setTicketTempSaleEndDateMoment(clientId, ''));
     dispatch(ticket["a" /* actions */].setTicketTempSaleEndDateInput(clientId, ''));
@@ -2132,8 +2144,8 @@ const sale_price_container_mapDispatchToProps = (dispatch, ownProps) => ({
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-content/price/template.js
 
 
-function price_template_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function price_template_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? price_template_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : price_template_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function price_template_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function price_template_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? price_template_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : price_template_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2194,7 +2206,7 @@ class template_Price extends external_React_["PureComponent"] {
       isLabel: true
       // eslint-disable-next-line no-undef
       ,
-      label: sprintf( /* Translators: %s - the singular label for a ticket. */
+      label: sprintf(/* Translators: %s - the singular label for a ticket. */
       Object(external_wp_i18n_["__"])('%s price', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular)
     }), wp.element.createElement(react_number_format_es["a" /* NumericFormat */], extends_default()({
       allowNegative: false,
@@ -2220,9 +2232,9 @@ defineProperty_default()(template_Price, "propTypes", {
   currencySymbol: external_tribe_modules_propTypes_default.a.string,
   currencyThousandsSep: external_tribe_modules_propTypes_default.a.string,
   isDisabled: external_tribe_modules_propTypes_default.a.bool,
-  minDefaultPrice: external_tribe_modules_propTypes_default.a.string,
+  minDefaultPrice: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.string, external_tribe_modules_propTypes_default.a.number]),
   onTempPriceChange: external_tribe_modules_propTypes_default.a.func.isRequired,
-  tempPrice: external_tribe_modules_propTypes_default.a.string,
+  tempPrice: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.string, external_tribe_modules_propTypes_default.a.number]),
   showSalePrice: external_tribe_modules_propTypes_default.a.bool,
   clientId: external_tribe_modules_propTypes_default.a.string
 });
@@ -2286,13 +2298,12 @@ var type_styles = __webpack_require__("H+Mp");
 
 
 
-const Type = _ref => {
-  let {
-    typeName,
-    typeDescription,
-    upsellMessage,
-    typeIcon
-  } = _ref;
+const Type = ({
+  typeName,
+  typeDescription,
+  upsellMessage,
+  typeIcon
+}) => {
   // This is sanitized in the PHP section, furthermore this description will not go to the backend.
   const htmlTypeUpsellDescription = {
     __html: upsellMessage || ''
@@ -2305,7 +2316,7 @@ const Type = _ref => {
     isLabel: true
     // eslint-disable-next-line no-undef
     ,
-    label: sprintf( /* Translators: %s - the singular label for a ticket. */
+    label: sprintf(/* Translators: %s - the singular label for a ticket. */
     Object(external_wp_i18n_["_x"])('%s type', 'Block Editor Ticket type label', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular),
     tooltipText: typeDescription,
     tooltipLabel: wp.element.createElement(external_wp_components_["Dashicon"], {
@@ -2354,7 +2365,7 @@ Type.propTypes = {
 const type_container_mapStateToProps = (state, ownProps) => {
   const postTypeLabel = ticket["f" /* selectors */].getCurrentPostTypeLabel('singular_name').toLowerCase();
   const ticketDetails = ticket["f" /* selectors */].getTicketDetails(state, ownProps);
-  const typeName = Object(external_wp_i18n_["sprintf"])( /* Translators: %s - the singular label for a ticket. */
+  const typeName = Object(external_wp_i18n_["sprintf"])(/* Translators: %s - the singular label for a ticket. */
   Object(external_wp_i18n_["_x"])('Standard %s', 'Default ticket type label.', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular);
   const typeDescription = Object(external_wp_i18n_["sprintf"])(
   // translators: %s is the post type name in human readable form.
@@ -2363,7 +2374,7 @@ const type_container_mapStateToProps = (state, ownProps) => {
   const currentPostIsEvent = ticket["f" /* selectors */].currentPostIsEvent();
 
   // Show an ECP related upsell message if on an Event and the user doesn't have ECP activated.
-  const upsellMessage = !hasEventsPro && currentPostIsEvent ? Object(external_wp_i18n_["sprintf"])( /* Translators: %s - the singular label for a ticket. */
+  const upsellMessage = !hasEventsPro && currentPostIsEvent ? Object(external_wp_i18n_["sprintf"])(/* Translators: %s - the singular label for a ticket. */
   Object(external_wp_i18n_["_x"])('For more %s types, <a href="https://evnt.is/tt-ecp" target="_blank" rel="noopener noreferrer">upgrade</a> to Events Calendar Pro', 'Default ticket type upsell description.', 'event-tickets'), constants["TICKET_LABELS"].ticket.singularLowercase) : null;
   const typeIcon = wp.element.createElement(icons["Ticket"], null);
   let mappedProps = {
@@ -2491,13 +2502,14 @@ const getTicketContainerItems = (clientId, hasTicketsPlus, hasIacVars) => {
   items = Object(external_wp_hooks_["applyFilters"])('tec.ticket.container.items', items, clientId);
   return items;
 };
-const TicketContainerContent = _ref => {
-  let {
-    clientId,
-    hasTicketsPlus,
-    hasIacVars
-  } = _ref;
-  return wp.element.createElement(external_React_["Fragment"], null, getTicketContainerItems(clientId, hasTicketsPlus, hasIacVars).map(item => item.item));
+const TicketContainerContent = ({
+  clientId,
+  hasTicketsPlus,
+  hasIacVars
+}) => {
+  return wp.element.createElement(external_React_["Fragment"], null, getTicketContainerItems(clientId, hasTicketsPlus, hasIacVars).map(item => wp.element.createElement(external_React_["Fragment"], {
+    key: item.key
+  }, item.item)));
 };
 TicketContainerContent.propTypes = {
   clientId: external_tribe_modules_propTypes_default.a.string.isRequired,
@@ -2543,70 +2555,58 @@ var container_panel = __webpack_require__("2LK8");
 
 
 
-const ClockIcon = _ref => {
-  let {
-    isDisabled
-  } = _ref;
-  return isDisabled ? wp.element.createElement(icons["ClockInactive"], null) : wp.element.createElement(icons["ClockActive"], null);
-};
+const ClockIcon = ({
+  isDisabled
+}) => isDisabled ? wp.element.createElement(icons["ClockInactive"], null) : wp.element.createElement(icons["ClockActive"], null);
 ClockIcon.propTypes = {
   isDisabled: external_tribe_modules_propTypes_default.a.bool.isRequired
 };
-const TicketIcon = _ref2 => {
-  let {
-    isDisabled
-  } = _ref2;
-  return isDisabled ? wp.element.createElement(icons["TicketInactive"], null) : wp.element.createElement(icons["TicketActive"], null);
-};
+const TicketIcon = ({
+  isDisabled
+}) => isDisabled ? wp.element.createElement(icons["TicketInactive"], null) : wp.element.createElement(icons["TicketActive"], null);
 TicketIcon.propTypes = {
   isDisabled: external_tribe_modules_propTypes_default.a.bool.isRequired
 };
-const TicketContainerIcon = _ref3 => {
-  let {
-    isDisabled,
-    isFuture,
-    isPast
-  } = _ref3;
-  return isFuture || isPast ? wp.element.createElement(ClockIcon, {
-    isDisabled: isDisabled
-  }) : wp.element.createElement(TicketIcon, {
-    isDisabled: isDisabled
-  });
-};
+const TicketContainerIcon = ({
+  isDisabled,
+  isFuture,
+  isPast
+}) => isFuture || isPast ? wp.element.createElement(ClockIcon, {
+  isDisabled: isDisabled
+}) : wp.element.createElement(TicketIcon, {
+  isDisabled: isDisabled
+});
 TicketContainerIcon.propTypes = {
   isDisabled: external_tribe_modules_propTypes_default.a.bool.isRequired,
   isFuture: external_tribe_modules_propTypes_default.a.bool,
   isPast: external_tribe_modules_propTypes_default.a.bool
 };
-const TicketContainer = _ref4 => {
-  let {
-    clientId,
-    isDisabled,
-    isFuture,
-    isPast,
-    isSelected,
-    isOnSale
-  } = _ref4;
-  return wp.element.createElement(modules_elements["ContainerPanel"], {
-    className: external_tribe_modules_classnames_default()('tribe-editor__ticket__container', {
-      'tribe-editor__ticket-on-sale': isOnSale
-    }),
-    layout: container_panel["a" /* LAYOUT */].ticket,
-    icon: wp.element.createElement(TicketContainerIcon, {
-      isDisabled: isDisabled,
-      isFuture: isFuture,
-      isPast: isPast
-    }),
-    header: wp.element.createElement(container_header_template, {
-      clientId: clientId,
-      isSelected: isSelected,
-      isOnSale: isOnSale
-    }),
-    content: wp.element.createElement(container_content_container, {
-      clientId: clientId
-    })
-  });
-};
+const TicketContainer = ({
+  clientId,
+  isDisabled,
+  isFuture,
+  isPast,
+  isSelected,
+  isOnSale
+}) => wp.element.createElement(modules_elements["ContainerPanel"], {
+  className: external_tribe_modules_classnames_default()('tribe-editor__ticket__container', {
+    'tribe-editor__ticket-on-sale': isOnSale
+  }),
+  layout: container_panel["a" /* LAYOUT */].ticket,
+  icon: wp.element.createElement(TicketContainerIcon, {
+    isDisabled: isDisabled,
+    isFuture: isFuture,
+    isPast: isPast
+  }),
+  header: wp.element.createElement(container_header_template, {
+    clientId: clientId,
+    isSelected: isSelected,
+    isOnSale: isOnSale
+  }),
+  content: wp.element.createElement(container_content_container, {
+    clientId: clientId
+  })
+});
 TicketContainer.propTypes = {
   clientId: external_tribe_modules_propTypes_default.a.string.isRequired,
   isDisabled: external_tribe_modules_propTypes_default.a.bool,
@@ -2650,38 +2650,31 @@ var move_delete_style = __webpack_require__("+jqo");
 
 
 
-const RemoveTicketButton = _ref => {
-  let {
-    onClick,
-    isDisabled
-  } = _ref;
-  return wp.element.createElement(external_tribe_common_elements_["Button"], {
-    type: "button",
-    onClick: onClick,
-    disabled: isDisabled
-  }, sprintf( /* Translators: %s - the singular label for a ticket. */
-  Object(external_wp_i18n_["__"])('Remove %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular));
-};
-const MoveTicketButton = _ref2 => {
-  let {
-    onClick,
-    isDisabled
-  } = _ref2;
-  return wp.element.createElement(external_tribe_common_elements_["Button"], {
-    type: "button",
-    onClick: onClick,
-    disabled: isDisabled
-  }, sprintf( /* Translators: %s - the singular label for a ticket. */
-  Object(external_wp_i18n_["__"])('Move %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular));
-};
-const MoveDelete = _ref3 => {
-  let {
-    ticketIsSelected,
-    moveTicket,
-    removeTicket,
-    isDisabled,
-    clientId
-  } = _ref3;
+const RemoveTicketButton = ({
+  onClick,
+  isDisabled
+}) => wp.element.createElement(external_tribe_common_elements_["Button"], {
+  type: "button",
+  onClick: onClick,
+  disabled: isDisabled
+}, sprintf(/* Translators: %s - the singular label for a ticket. */
+Object(external_wp_i18n_["__"])('Remove %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular));
+const MoveTicketButton = ({
+  onClick,
+  isDisabled
+}) => wp.element.createElement(external_tribe_common_elements_["Button"], {
+  type: "button",
+  onClick: onClick,
+  disabled: isDisabled
+}, sprintf(/* Translators: %s - the singular label for a ticket. */
+Object(external_wp_i18n_["__"])('Move %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular));
+const MoveDelete = ({
+  ticketIsSelected,
+  moveTicket,
+  removeTicket,
+  isDisabled,
+  clientId
+}) => {
   if (!ticketIsSelected) {
     return null;
   }
@@ -2726,8 +2719,8 @@ var move_actions = __webpack_require__("U/eK");
 
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/dashboard/move-delete/container.js
 
-function container_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function container_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? container_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : container_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function container_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function container_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? container_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : container_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2781,34 +2774,31 @@ var dashboard_style = __webpack_require__("DCmc");
 const confirmLabel = hasBeenCreated => {
   return hasBeenCreated ?
   // eslint-disable-next-line no-undef
-  sprintf( /* Translators: %s - the singular label for a ticket. */
+  sprintf(/* Translators: %s - the singular label for a ticket. */
   Object(external_wp_i18n_["__"])('Update %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular) :
   // eslint-disable-next-line no-undef
-  sprintf( /* Translators: %s - the singular label for a ticket. */
+  sprintf(/* Translators: %s - the singular label for a ticket. */
   Object(external_wp_i18n_["__"])('Create %s', 'event-tickets'), constants["TICKET_LABELS"].ticket.singular);
 };
 const cancelLabel = Object(external_wp_i18n_["__"])('Cancel', 'event-tickets');
-const TicketDashboard = _ref => {
-  let {
-    clientId,
-    hasBeenCreated,
-    isCancelDisabled,
-    isConfirmDisabled,
-    onCancelClick,
-    onConfirmClick
-  } = _ref;
-  return wp.element.createElement(external_React_["Fragment"], null, hasBeenCreated && wp.element.createElement(move_delete_container, {
-    clientId: clientId
-  }), wp.element.createElement(modules_elements["ActionDashboard"], {
-    className: "tribe-editor__ticket__dashboard tribe-common",
-    cancelLabel: cancelLabel,
-    confirmLabel: confirmLabel(hasBeenCreated),
-    isCancelDisabled: isCancelDisabled,
-    isConfirmDisabled: isConfirmDisabled,
-    onCancelClick: onCancelClick,
-    onConfirmClick: onConfirmClick
-  }));
-};
+const TicketDashboard = ({
+  clientId,
+  hasBeenCreated,
+  isCancelDisabled,
+  isConfirmDisabled,
+  onCancelClick,
+  onConfirmClick
+}) => wp.element.createElement(external_React_["Fragment"], null, hasBeenCreated && wp.element.createElement(move_delete_container, {
+  clientId: clientId
+}), wp.element.createElement(modules_elements["ActionDashboard"], {
+  className: "tribe-editor__ticket__dashboard tribe-common",
+  cancelLabel: cancelLabel,
+  confirmLabel: confirmLabel(hasBeenCreated),
+  isCancelDisabled: isCancelDisabled,
+  isConfirmDisabled: isConfirmDisabled,
+  onCancelClick: onCancelClick,
+  onConfirmClick: onConfirmClick
+}));
 TicketDashboard.propTypes = {
   clientId: external_tribe_modules_propTypes_default.a.string,
   hasBeenCreated: external_tribe_modules_propTypes_default.a.bool,
@@ -2822,8 +2812,8 @@ TicketDashboard.propTypes = {
 
 
 const dashboard_container_excluded = ["state"];
-function dashboard_container_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function dashboard_container_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? dashboard_container_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : dashboard_container_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function dashboard_container_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function dashboard_container_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? dashboard_container_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : dashboard_container_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2900,9 +2890,9 @@ const container_onCancelClick = (state, dispatch, ownProps) => () => {
     dispatch(ticket["a" /* actions */].setTicketHasChanges(ownProps.clientId, false));
   } else {
     dispatch(ticket["a" /* actions */].removeTicketBlock(ownProps.clientId));
-    Object(external_wp_data_["dispatch"])('core/editor').removeBlocks(ownProps.clientId);
+    Object(external_wp_data_["dispatch"])('core/block-editor').removeBlocks(ownProps.clientId);
   }
-  Object(external_wp_data_["dispatch"])('core/editor').clearSelectedBlock();
+  Object(external_wp_data_["dispatch"])('core/block-editor').clearSelectedBlock();
 };
 const container_onConfirmClick = (state, dispatch, ownProps) => () => ticket["f" /* selectors */].getTicketHasBeenCreated(state, ownProps) ? dispatch(ticket["a" /* actions */].updateTicket(ownProps.clientId)) : dispatch(ticket["a" /* actions */].createNewTicket(ownProps.clientId));
 const dashboard_container_mapStateToProps = (state, ownProps) => ({
@@ -3017,45 +3007,10 @@ var with_save_data = __webpack_require__("fIBd");
 // EXTERNAL MODULE: ./src/modules/data/shared/move/selectors.js
 var selectors = __webpack_require__("ihba");
 
-// EXTERNAL MODULE: external "tribe.common.store"
-var external_tribe_common_store_ = __webpack_require__("g8L8");
-
-// EXTERNAL MODULE: external "tribe.common.utils.globals"
-var external_tribe_common_utils_globals_ = __webpack_require__("kczL");
-
-// CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/hooks.js
-
-
-
-const filterBlockEdit = BlockEdit => props => {
-  const {
-    dispatch
-  } = external_tribe_common_store_["store"];
-  wp.element.useEffect(() => {
-    const {
-      name,
-      clientId
-    } = props;
-    return () => {
-      if (name === 'tribe/tickets-item') {
-        dispatch(ticket["a" /* actions */].deleteTicket(clientId, false));
-      }
-    };
-  }, []);
-  return wp.element.createElement(wp.element.Fragment, null, wp.element.createElement(BlockEdit, props));
-};
-
-/**
- * Filter to determine if a block was deleted using the delete block option,
- * also validates if its a ticket block, then call deleteTicket on unmount
- */
-const initHook = () => {
-  external_tribe_common_utils_globals_["wpHooks"].addFilter('editor.BlockEdit', 'event-tickets', filterBlockEdit);
-};
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container.js
 
-function editor_container_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function editor_container_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? editor_container_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : editor_container_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function editor_container_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function editor_container_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? editor_container_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : editor_container_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -3071,8 +3026,6 @@ function editor_container_objectSpread(target) { for (var i = 1; i < arguments.l
 
 
 
-
-initHook();
 const getShowTicket = (state, ownProps) => ticket["f" /* selectors */].getTicketsIsSelected(state) || ticket["f" /* selectors */].hasATicketSelected(state) || ticket["f" /* selectors */].isTicketOnSale(state, ownProps);
 const editor_container_mapStateToProps = (state, ownProps) => {
   return {
@@ -3192,7 +3145,7 @@ module.exports = tribe.modules.reduxSaga;
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("rf6O");
 /* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_textarea_autosize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("o5PN");
+/* harmony import */ var react_textarea_autosize__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("z430");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("l3Sj");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _style_pcss__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__("vZfT");
@@ -3213,24 +3166,21 @@ module.exports = tribe.modules.reduxSaga;
  * Internal dependencies
  */
 
-const TicketContainerHeaderDescription = _ref => {
-  let {
-    isDisabled,
-    isSelected,
-    onTempDescriptionChange,
-    tempDescription,
-    description
-  } = _ref;
-  return isSelected ? wp.element.createElement(react_textarea_autosize__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"], {
-    className: "tribe-editor__ticket__container-header-description-input",
-    value: tempDescription,
-    placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Description', 'event-tickets'),
-    onChange: onTempDescriptionChange,
-    disabled: isDisabled
-  }) : wp.element.createElement("span", {
-    className: "tribe-editor__ticket__container-header-description"
-  }, description);
-};
+const TicketContainerHeaderDescription = ({
+  isDisabled,
+  isSelected,
+  onTempDescriptionChange,
+  tempDescription,
+  description
+}) => isSelected ? wp.element.createElement(react_textarea_autosize__WEBPACK_IMPORTED_MODULE_2__[/* default */ "a"], {
+  className: "tribe-editor__ticket__container-header-description-input",
+  value: tempDescription,
+  placeholder: Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__["__"])('Description', 'event-tickets'),
+  onChange: onTempDescriptionChange,
+  disabled: isDisabled
+}) : wp.element.createElement("span", {
+  className: "tribe-editor__ticket__container-header-description"
+}, description);
 TicketContainerHeaderDescription.propTypes = {
   isDisabled: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
   isSelected: prop_types__WEBPACK_IMPORTED_MODULE_1___default.a.bool,
@@ -3280,13 +3230,12 @@ const LAYOUT = {
   rsvp: 'rsvp',
   ticket: 'ticket'
 };
-const ContainerPanel = _ref => {
-  let {
-    className,
-    content,
-    header,
-    layout
-  } = _ref;
+const ContainerPanel = ({
+  className,
+  content,
+  header,
+  layout
+}) => {
   const headerAndContent = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement("div", {
     className: "tribe-editor__container-panel__header"
   }, header), content && wp.element.createElement("div", {
@@ -3421,9 +3370,7 @@ const DEFAULT_STATE = {
   src: '',
   alt: ''
 };
-/* harmony default export */ __webpack_exports__["b"] = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ __webpack_exports__["b"] = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case _moderntribe_tickets_data_blocks_rsvp__WEBPACK_IMPORTED_MODULE_0__[/* types */ "f"].SET_RSVP_HEADER_IMAGE:
       return {
@@ -3435,6 +3382,13 @@ const DEFAULT_STATE = {
       return state;
   }
 });
+
+/***/ }),
+
+/***/ "5vqK":
+/***/ (function(module, exports) {
+
+module.exports = lodash.isString;
 
 /***/ }),
 
@@ -3584,7 +3538,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TICKET_LABELS", function() { return TICKET_LABELS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SALE_PRICE_LABELS", function() { return SALE_PRICE_LABELS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_FREE_TC_TICKET_ALLOWED", function() { return IS_FREE_TC_TICKET_ALLOWED; });
-var _window, _window$tribe_editor_, _window$tribe_editor_2, _window2, _window2$tribe_editor, _window2$tribe_editor2, _window3, _window3$tribe_editor, _window3$tribe_editor2, _window3$tribe_editor3;
+var _window, _window2, _window3;
 const TC = 'tribe-commerce';
 const EDD = 'edd';
 const WOO = 'woo';
@@ -3627,11 +3581,11 @@ const SUFFIX = 'postfix';
 const PRICE_POSITIONS = [PREFIX, SUFFIX];
 
 // eslint-disable-next-line no-undef
-const TICKET_LABELS = (_window = window) === null || _window === void 0 ? void 0 : (_window$tribe_editor_ = _window.tribe_editor_config) === null || _window$tribe_editor_ === void 0 ? void 0 : (_window$tribe_editor_2 = _window$tribe_editor_.tickets) === null || _window$tribe_editor_2 === void 0 ? void 0 : _window$tribe_editor_2.ticketLabels;
-const SALE_PRICE_LABELS = (_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$tribe_editor = _window2.tribe_editor_config) === null || _window2$tribe_editor === void 0 ? void 0 : (_window2$tribe_editor2 = _window2$tribe_editor.tickets) === null || _window2$tribe_editor2 === void 0 ? void 0 : _window2$tribe_editor2.salePrice;
+const TICKET_LABELS = (_window = window) === null || _window === void 0 || (_window = _window.tribe_editor_config) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 ? void 0 : _window.ticketLabels;
+const SALE_PRICE_LABELS = (_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.tribe_editor_config) === null || _window2 === void 0 || (_window2 = _window2.tickets) === null || _window2 === void 0 ? void 0 : _window2.salePrice;
 
 // eslint-disable-next-line max-len
-const IS_FREE_TC_TICKET_ALLOWED = (_window3 = window) === null || _window3 === void 0 ? void 0 : (_window3$tribe_editor = _window3.tribe_editor_config) === null || _window3$tribe_editor === void 0 ? void 0 : (_window3$tribe_editor2 = _window3$tribe_editor.tickets) === null || _window3$tribe_editor2 === void 0 ? void 0 : (_window3$tribe_editor3 = _window3$tribe_editor2.commerce) === null || _window3$tribe_editor3 === void 0 ? void 0 : _window3$tribe_editor3.isFreeTicketAllowed;
+const IS_FREE_TC_TICKET_ALLOWED = (_window3 = window) === null || _window3 === void 0 || (_window3 = _window3.tribe_editor_config) === null || _window3 === void 0 || (_window3 = _window3.tickets) === null || _window3 === void 0 || (_window3 = _window3.commerce) === null || _window3 === void 0 ? void 0 : _window3.isFreeTicketAllowed;
 
 /***/ }),
 
@@ -4155,11 +4109,10 @@ const hasValidTicketProvider = () => {
 const hasMultipleTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 1);
 const hasTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 0);
 const canCreateTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([hasTicketProviders, hasValidTicketProvider], (providers, validDefaultProvider) => providers && validDefaultProvider);
-const getCurrentPostTypeLabel = function () {
+const getCurrentPostTypeLabel = (key = 'singular_name') => {
   var _post$labels;
-  let key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'singular_name';
   const post = postConfig();
-  return (post === null || post === void 0 ? void 0 : (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
+  return (post === null || post === void 0 || (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
 };
 const currentPostIsEvent = () => {
   const post = postConfig();
@@ -5280,8 +5233,8 @@ var constants = __webpack_require__("DOwB");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket/details.js
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -5331,9 +5284,7 @@ const DEFAULT_STATE = {
   saleEndDateInput: '',
   saleEndDateMoment: ''
 };
-/* harmony default export */ var ticket_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var ticket_details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_TITLE"]:
       return _objectSpread(_objectSpread({}, state), {}, {
@@ -5453,8 +5404,8 @@ const DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket/temp-details.js
 
-function temp_details_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function temp_details_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? temp_details_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : temp_details_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function temp_details_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function temp_details_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? temp_details_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : temp_details_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -5501,9 +5452,7 @@ const temp_details_DEFAULT_STATE = {
   saleEndDateInput: '',
   saleEndDateMoment: ''
 };
-/* harmony default export */ var temp_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : temp_details_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var temp_details = ((state = temp_details_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_TEMP_TITLE"]:
       return temp_details_objectSpread(temp_details_objectSpread({}, state), {}, {
@@ -5611,8 +5560,8 @@ const temp_details_DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket.js
 
-function ticket_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function ticket_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ticket_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ticket_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ticket_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function ticket_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ticket_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ticket_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -5640,9 +5589,7 @@ const ticket_DEFAULT_STATE = {
   hasDurationError: false,
   isSelected: false
 };
-/* harmony default export */ var tickets_ticket = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ticket_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var tickets_ticket = ((state = ticket_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_ATTENDEE_INFO_FIELDS"]:
     case types["SET_TICKET_TITLE"]:
@@ -5764,8 +5711,8 @@ const ticket_DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets.js
 
-function tickets_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function tickets_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? tickets_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : tickets_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function tickets_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function tickets_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? tickets_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : tickets_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -5777,9 +5724,7 @@ function tickets_objectSpread(target) { for (var i = 1; i < arguments.length; i+
  */
 
 
-const byClientId = function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+const byClientId = (state = {}, action) => {
   switch (action.type) {
     case types["SET_TICKET_TITLE"]:
     case types["SET_TICKET_DESCRIPTION"]:
@@ -5862,9 +5807,7 @@ const byClientId = function () {
       return state;
   }
 };
-const allClientIds = function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+const allClientIds = (state = [], action) => {
   switch (action.type) {
     case types["REGISTER_TICKET_BLOCK"]:
       return [...state, action.payload.clientId];
@@ -5885,8 +5828,8 @@ var header_image = __webpack_require__("YEbw");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducer.js
 
-function reducer_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function reducer_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? reducer_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : reducer_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function reducer_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function reducer_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? reducer_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : reducer_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -5903,9 +5846,7 @@ const reducer_DEFAULT_STATE = {
   tempSharedCapacity: '',
   tickets: reducers_tickets(undefined, {})
 };
-/* harmony default export */ var reducer = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : reducer_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var reducer = ((state = reducer_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKETS_HEADER_IMAGE"]:
       return reducer_objectSpread(reducer_objectSpread({}, state), {}, {
@@ -6075,8 +6016,8 @@ var sagas = __webpack_require__("ghtj");
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/sagas.js
 
 
-function sagas_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function sagas_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? sagas_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : sagas_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function sagas_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function sagas_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? sagas_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : sagas_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External Dependencies
  */
@@ -6129,12 +6070,11 @@ function* createMissingTicketBlocks(tickets) {
   const {
     getBlockCount,
     getBlocks
-  } = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_wp_data_["select"], 'core/editor');
+  } = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_wp_data_["select"], 'core/block-editor');
   const ticketsBlocks = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([getBlocks(), 'filter'], block => block.name === 'tribe/tickets');
-  ticketsBlocks.forEach(_ref => {
-    let {
-      clientId
-    } = _ref;
+  ticketsBlocks.forEach(({
+    clientId
+  }) => {
     // Since we're not using the store provided by WordPress, we need to update the block list
     // settings for the Tickets block here to allow the tickets-item block to be inserted.
     // If the WP store did not initialize yet when the `insertBlock` function is called, the
@@ -6155,10 +6095,10 @@ function* createMissingTicketBlocks(tickets) {
 }
 function formatTicketFromRestToAttributeFormat(ticket) {
   var _ticket$capacity_deta, _ticket$capacity_deta2, _ticket$capacity_deta3, _ticket$capacity_deta4, _ticket$cost_details, _ticket$cost_details2, _ticket$cost_details3, _ticket$cost_details4;
-  const capacity = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta = ticket.capacity_details) === null || _ticket$capacity_deta === void 0 ? void 0 : _ticket$capacity_deta.max) || 0;
-  const available = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta2 = ticket.capacity_details) === null || _ticket$capacity_deta2 === void 0 ? void 0 : _ticket$capacity_deta2.available) || 0;
-  const capacityType = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta3 = ticket.capacity_details) === null || _ticket$capacity_deta3 === void 0 ? void 0 : _ticket$capacity_deta3.global_stock_mode) || constants["UNLIMITED"];
-  const sold = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta4 = ticket.capacity_details) === null || _ticket$capacity_deta4 === void 0 ? void 0 : _ticket$capacity_deta4.sold) || 0;
+  const capacity = (ticket === null || ticket === void 0 || (_ticket$capacity_deta = ticket.capacity_details) === null || _ticket$capacity_deta === void 0 ? void 0 : _ticket$capacity_deta.max) || 0;
+  const available = (ticket === null || ticket === void 0 || (_ticket$capacity_deta2 = ticket.capacity_details) === null || _ticket$capacity_deta2 === void 0 ? void 0 : _ticket$capacity_deta2.available) || 0;
+  const capacityType = (ticket === null || ticket === void 0 || (_ticket$capacity_deta3 = ticket.capacity_details) === null || _ticket$capacity_deta3 === void 0 ? void 0 : _ticket$capacity_deta3.global_stock_mode) || constants["UNLIMITED"];
+  const sold = (ticket === null || ticket === void 0 || (_ticket$capacity_deta4 = ticket.capacity_details) === null || _ticket$capacity_deta4 === void 0 ? void 0 : _ticket$capacity_deta4.sold) || 0;
   const isShared = capacityType === constants["SHARED"] || capacityType === constants["CAPPED"] || capacityType === constants["GLOBAL"];
   return {
     id: ticket.id,
@@ -6173,11 +6113,11 @@ function formatTicketFromRestToAttributeFormat(ticket) {
     sold: sold,
     shareSold: sold,
     isShared: isShared,
-    currencyDecimalPoint: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details = ticket.cost_details) === null || _ticket$cost_details === void 0 ? void 0 : _ticket$cost_details.currency_decimal_separator) || '.',
-    currencyNumberOfDecimals: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details2 = ticket.cost_details) === null || _ticket$cost_details2 === void 0 ? void 0 : _ticket$cost_details2.currency_decimal_numbers) || 2,
-    currencyPosition: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details3 = ticket.cost_details) === null || _ticket$cost_details3 === void 0 ? void 0 : _ticket$cost_details3.currency_position) || 'prefix',
+    currencyDecimalPoint: (ticket === null || ticket === void 0 || (_ticket$cost_details = ticket.cost_details) === null || _ticket$cost_details === void 0 ? void 0 : _ticket$cost_details.currency_decimal_separator) || '.',
+    currencyNumberOfDecimals: (ticket === null || ticket === void 0 || (_ticket$cost_details2 = ticket.cost_details) === null || _ticket$cost_details2 === void 0 ? void 0 : _ticket$cost_details2.currency_decimal_numbers) || 2,
+    currencyPosition: (ticket === null || ticket === void 0 || (_ticket$cost_details3 = ticket.cost_details) === null || _ticket$cost_details3 === void 0 ? void 0 : _ticket$cost_details3.currency_position) || 'prefix',
     currencySymbol: (ticket === null || ticket === void 0 ? void 0 : ticket.cost_details.currency_symbol) || '$',
-    currencyThousandsSep: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details4 = ticket.cost_details) === null || _ticket$cost_details4 === void 0 ? void 0 : _ticket$cost_details4.currency_thousand_separator) || ','
+    currencyThousandsSep: (ticket === null || ticket === void 0 || (_ticket$cost_details4 = ticket.cost_details) === null || _ticket$cost_details4 === void 0 ? void 0 : _ticket$cost_details4.currency_thousand_separator) || ','
   };
 }
 function* updateUneditableTickets() {
@@ -6322,7 +6262,6 @@ function* setTicketInitialState(action) {
       // ¯\_(ツ)_/¯
     }
   }
-
   const hasTicketsPlus = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(external_tribe_common_data_["plugins"].selectors.hasPlugin, external_tribe_common_data_["plugins"].constants.TICKETS_PLUS);
   if (hasTicketsPlus) {
     yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]]))]);
@@ -6347,7 +6286,7 @@ function* setBodyDetails(clientId) {
   const props = {
     clientId
   };
-  const rootClientId = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockRootClientId'], clientId);
+  const rootClientId = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/block-editor'), 'getBlockRootClientId'], clientId);
   const ticketProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketProvider"], props);
   const ticketsProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsProvider"]);
   body.append('post_id', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getCurrentPostId']));
@@ -6361,7 +6300,7 @@ function* setBodyDetails(clientId) {
   body.append('end_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props));
   body.append('sku', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props));
   body.append('iac', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props));
-  body.append('menu_order', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockIndex'], clientId, rootClientId));
+  body.append('menu_order', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/block-editor'), 'getBlockIndex'], clientId, rootClientId));
   const capacityType = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props);
   const capacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props);
   const isUnlimited = capacityType === TICKET_TYPES[UNLIMITED];
@@ -6519,7 +6458,6 @@ function* fetchTicket(action) {
      * @todo handle error scenario
      */
   }
-
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsLoading"](clientId, false));
 }
 function* createNewTicket(action) {
@@ -6723,8 +6661,8 @@ function* deleteTicket(action) {
     const hasBeenCreated = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketHasBeenCreated"], props);
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](clientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](clientId));
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'clearSelectedBlock']);
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [clientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'clearSelectedBlock']);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [clientId]);
     if (hasBeenCreated) {
       const {
         remove_ticket_nonce = ''
@@ -6737,7 +6675,6 @@ function* deleteTicket(action) {
        */
       const body = [`${encodeURIComponent('post_id')}=${encodeURIComponent(postId)}`, `${encodeURIComponent('remove_ticket_nonce')}=${encodeURIComponent(remove_ticket_nonce)}` // eslint-disable-line max-len
       ];
-
       try {
         yield Object(external_tribe_modules_reduxSaga_effects_["call"])(wpREST, {
           path: `tickets/${ticketId}`,
@@ -7156,7 +7093,7 @@ function* handleTicketStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDate"](clientId, startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateMoment"](clientId, startDateMoment));
 }
 function* handleTicketEndDate(action) {
@@ -7168,7 +7105,7 @@ function* handleTicketEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDate"](clientId, endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateMoment"](clientId, endDateMoment));
 }
 function* handleTicketSaleStartDate(action) {
@@ -7180,7 +7117,7 @@ function* handleTicketSaleStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDate"](clientId, startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateMoment"](clientId, startDateMoment));
 }
 function* handleTicketSaleEndDate(action) {
@@ -7192,7 +7129,7 @@ function* handleTicketSaleEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDate"](clientId, endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateMoment"](clientId, endDateMoment));
 }
 function* handleTicketStartTime(action) {
@@ -7237,7 +7174,7 @@ function* handleTicketMove() {
   if (ticketClientIds.includes(modalClientId)) {
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](modalClientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](modalClientId));
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [modalClientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [modalClientId]);
   }
 }
 function* handler(action) {
@@ -7378,13 +7315,12 @@ var external_tribe_common_utils_ = __webpack_require__("B8vQ");
  * Internal dependencies
  */
 
-const Bar = _ref => {
-  let {
-    children,
-    className,
-    value,
-    total
-  } = _ref;
+const Bar = ({
+  children,
+  className = null,
+  value = 0,
+  total = 0
+}) => {
   if (value === 0 || total === 0) {
     return null;
   }
@@ -7411,11 +7347,6 @@ Bar.propTypes = {
   value: external_tribe_modules_propTypes_default.a.number,
   total: external_tribe_modules_propTypes_default.a.number
 };
-Bar.defaultProps = {
-  className: null,
-  value: 0,
-  total: 0
-};
 /* harmony default export */ var bar = (Bar);
 // CONCATENATED MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-header/quantity/quantity-bar/element.js
 /**
@@ -7430,16 +7361,13 @@ Bar.defaultProps = {
  */
 
 
-
-// todo: add tooltip into the capacity bar
-const QuantityBar = _ref => {
-  let {
-    sharedSold,
-    sold,
-    capacity,
-    total,
-    isDisabled
-  } = _ref;
+const QuantityBar = ({
+  sharedSold = 0,
+  sold = 0,
+  capacity = 0,
+  total = 0,
+  isDisabled = false
+}) => {
   return wp.element.createElement("div", {
     className: "tribe-editor__quantity-bar"
   }, !isDisabled && wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(bar, {
@@ -7465,13 +7393,6 @@ QuantityBar.propTypes = {
   total: external_tribe_modules_propTypes_default.a.number,
   isDisabled: external_tribe_modules_propTypes_default.a.bool
 };
-QuantityBar.defaultProps = {
-  sharedSold: 0,
-  capacity: 0,
-  sold: 0,
-  total: 0,
-  isDisabled: false
-};
 /* harmony default export */ var quantity_bar_element = (QuantityBar);
 // EXTERNAL MODULE: ./src/Tickets/Blocks/Ticket/app/editor/container-header/quantity/style.pcss
 var quantity_style = __webpack_require__("ldxU");
@@ -7494,17 +7415,16 @@ var quantity_style = __webpack_require__("ldxU");
 
 
 
-const TicketContainerHeaderDescription = _ref => {
-  let {
-    isDisabled,
-    isSelected,
-    isShared,
-    isUnlimited,
-    sold,
-    capacity,
-    sharedSold,
-    sharedCapacity
-  } = _ref;
+const TicketContainerHeaderDescription = ({
+  isDisabled,
+  isSelected,
+  isShared,
+  isUnlimited,
+  sold = 0,
+  capacity = 0,
+  sharedSold,
+  sharedCapacity = 0
+}) => {
   const total = isShared ? sharedCapacity : capacity;
   const getLabel = () => Object(external_wp_i18n_["sprintf"])(Object(external_wp_i18n_["__"])('%d sold', 'event-tickets'), sold);
 
@@ -7541,11 +7461,6 @@ TicketContainerHeaderDescription.propTypes = {
   capacity: external_tribe_modules_propTypes_default.a.number,
   sharedSold: external_tribe_modules_propTypes_default.a.number,
   sharedCapacity: external_tribe_modules_propTypes_default.a.number
-};
-TicketContainerHeaderDescription.defaultProps = {
-  sold: 0,
-  sharedCapacity: 0,
-  capacity: 0
 };
 /* harmony default export */ var template = __webpack_exports__["a"] = (TicketContainerHeaderDescription);
 
@@ -7622,9 +7537,7 @@ const DEFAULT_STATE = {
   src: '',
   alt: ''
 };
-/* harmony default export */ __webpack_exports__["b"] = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ __webpack_exports__["b"] = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case _moderntribe_tickets_data_blocks_ticket_types__WEBPACK_IMPORTED_MODULE_0__["SET_TICKETS_HEADER_IMAGE"]:
       return {
@@ -7666,8 +7579,8 @@ module.exports = tribe.common.data;
 /* harmony import */ var _style_pcss__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_style_pcss__WEBPACK_IMPORTED_MODULE_7__);
 
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_1___default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -7685,20 +7598,19 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  */
 
 
-const TicketContainerHeaderPriceLabel = _ref => {
-  let {
-    available,
-    currencyDecimalPoint,
-    currencyNumberOfDecimals,
-    currencyThousandsSep,
-    currencyPosition,
-    currencySymbol,
-    isUnlimited,
-    price,
-    showSalePrice,
-    salePrice,
-    onSale
-  } = _ref;
+const TicketContainerHeaderPriceLabel = ({
+  available,
+  currencyDecimalPoint,
+  currencyNumberOfDecimals,
+  currencyThousandsSep,
+  currencyPosition,
+  currencySymbol,
+  isUnlimited,
+  price,
+  showSalePrice,
+  salePrice,
+  onSale
+}) => {
   const getAvailableLabel = () => isUnlimited ? Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('unlimited', 'event-tickets') : wp.element.createElement(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, wp.element.createElement("span", {
     className: "tribe-editor__ticket__container-header-label__available"
   }, available), Object(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__["__"])('available', 'event-tickets'));
@@ -7754,36 +7666,33 @@ TicketContainerHeaderPriceLabel.propTypes = {
   salePrice: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.string,
   onSale: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.bool
 };
-const TicketContainerHeaderPrice = _ref2 => {
-  let {
-    available,
-    currencyDecimalPoint,
-    currencyNumberOfDecimals,
-    currencyPosition,
-    currencySymbol,
-    currencyThousandsSep,
-    isUnlimited,
-    price,
-    showSalePrice,
-    salePrice,
-    onSale
-  } = _ref2;
-  return wp.element.createElement("div", {
-    className: "tribe-editor__ticket__container-header-price"
-  }, wp.element.createElement(TicketContainerHeaderPriceLabel, {
-    available: available,
-    currencyDecimalPoint: currencyDecimalPoint,
-    currencyNumberOfDecimals: currencyNumberOfDecimals,
-    currencyPosition: currencyPosition,
-    currencySymbol: currencySymbol,
-    currencyThousandsSep: currencyThousandsSep,
-    isUnlimited: isUnlimited,
-    price: price,
-    showSalePrice: showSalePrice,
-    salePrice: salePrice,
-    onSale: onSale
-  }));
-};
+const TicketContainerHeaderPrice = ({
+  available,
+  currencyDecimalPoint,
+  currencyNumberOfDecimals,
+  currencyPosition,
+  currencySymbol,
+  currencyThousandsSep,
+  isUnlimited,
+  price,
+  showSalePrice,
+  salePrice,
+  onSale
+}) => wp.element.createElement("div", {
+  className: "tribe-editor__ticket__container-header-price"
+}, wp.element.createElement(TicketContainerHeaderPriceLabel, {
+  available: available,
+  currencyDecimalPoint: currencyDecimalPoint,
+  currencyNumberOfDecimals: currencyNumberOfDecimals,
+  currencyPosition: currencyPosition,
+  currencySymbol: currencySymbol,
+  currencyThousandsSep: currencyThousandsSep,
+  isUnlimited: isUnlimited,
+  price: price,
+  showSalePrice: showSalePrice,
+  salePrice: salePrice,
+  onSale: onSale
+}));
 TicketContainerHeaderPrice.propTypes = {
   available: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.number,
   currencyDecimalPoint: prop_types__WEBPACK_IMPORTED_MODULE_3___default.a.string,
@@ -8147,8 +8056,8 @@ const SET_TICKET_INITIAL_STATE = `${_moderntribe_tickets_data_utils__WEBPACK_IMP
 
 
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * @todo: This is just a holder for ET blocks until the block editor UX work.
  *        The `withSaveData()` HOC needs to be removed from common. Until the
@@ -8174,125 +8083,122 @@ const blockRegister = {};
  * @param {Object} selectedAttributes Set of attributes to only update fallback to this.props.attributes
  * @returns {Function} Return a new HOC
  */
-/* harmony default export */ __webpack_exports__["a"] = (function () {
-  let selectedAttributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-  return WrappedComponent => {
-    class WithSaveData extends react__WEBPACK_IMPORTED_MODULE_6__["Component"] {
-      constructor(props) {
-        super(props);
-        _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(this, "keys", []);
-        _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(this, "saving", null);
-        this.keys = this.generateKeys();
-      }
-      generateKeys() {
-        if (lodash_isArray__WEBPACK_IMPORTED_MODULE_3___default()(this.attrs)) {
-          return this.attrs;
-        }
-        if (lodash_isObject__WEBPACK_IMPORTED_MODULE_2___default()(this.attrs)) {
-          return lodash_keys__WEBPACK_IMPORTED_MODULE_1___default()(this.attrs);
-        }
-        console.warn('Make sure attributes is from a valid type: Array or Object');
-        return [];
-      }
-
-      // At this point attributes has been set so no need to be set the initial state into the store here.
-      componentDidMount() {
-        const {
-          setInitialState,
-          attributes = {},
-          isolated,
-          onBlockCreated
-        } = this.props;
-        onBlockCreated(this.props);
-        this.registerBlock();
-
-        // Prevent to set the initial state for blocks that are copies from others
-        // overwrite this with the isolated property of the block to `true`
-        if (this.blockCount() > 1 && !isolated) {
-          return;
-        }
-        setInitialState(_objectSpread(_objectSpread({}, this.props), {}, {
-          get(key, defaultValue) {
-            return key in attributes ? attributes[key] : defaultValue;
-          }
-        }));
-      }
-      componentWillUnmount() {
-        const {
-          onBlockRemoved
-        } = this.props;
-        this.unregisterBlock();
-        onBlockRemoved(this.props);
-      }
-      registerBlock() {
-        const {
-          name
-        } = this.props;
-        blockRegister[name] = name in blockRegister ? blockRegister[name] + 1 : 1;
-      }
-      unregisterBlock() {
-        const {
-          name
-        } = this.props;
-        blockRegister[name] -= 1;
-      }
-      blockCount() {
-        const {
-          name
-        } = this.props;
-        return blockRegister[name];
-      }
-      componentDidUpdate() {
-        const diff = this.calculateDiff();
-        if (_wordpress_is_shallow_equal__WEBPACK_IMPORTED_MODULE_8___default()(this.saving, diff)) {
-          return;
-        }
-        this.saving = diff;
-        if (lodash_isEmpty__WEBPACK_IMPORTED_MODULE_4___default()(diff)) {
-          return;
-        }
-        this.props.setAttributes(diff);
-      }
-      calculateDiff() {
-        const attributes = this.attrs;
-        return this.keys.reduce((diff, key) => {
-          if (key in this.props && !_wordpress_is_shallow_equal__WEBPACK_IMPORTED_MODULE_8___default()(attributes[key], this.props[key])) {
-            diff[key] = this.props[key];
-          }
-          return diff;
-        }, {});
-      }
-      get attrs() {
-        return selectedAttributes || this.props.attributes || {};
-      }
-      render() {
-        return wp.element.createElement(WrappedComponent, this.props);
-      }
+/* harmony default export */ __webpack_exports__["a"] = ((selectedAttributes = null) => WrappedComponent => {
+  class WithSaveData extends react__WEBPACK_IMPORTED_MODULE_6__["Component"] {
+    constructor(props) {
+      super(props);
+      _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(this, "keys", []);
+      _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(this, "saving", null);
+      this.keys = this.generateKeys();
     }
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(WithSaveData, "defaultProps", {
-      attributes: {},
-      setInitialState: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
-      setAttributes: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
-      name: '',
-      isolated: false,
-      onBlockCreated: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
-      onBlockRemoved: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a
-    });
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(WithSaveData, "propTypes", {
-      setAttributes: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-      setInitialState: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-      attributes: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.object,
-      name: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.string,
-      isolated: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.bool,
-      increaseRegister: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-      decreaseRegister: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-      onBlockCreated: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
-      onBlockRemoved: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func
-    });
-    WithSaveData.displayName = `WithSaveData( ${WrappedComponent.displayName || WrappedComponent.name || 'Component '}`; // eslint-disable-line max-len
+    generateKeys() {
+      if (lodash_isArray__WEBPACK_IMPORTED_MODULE_3___default()(this.attrs)) {
+        return this.attrs;
+      }
+      if (lodash_isObject__WEBPACK_IMPORTED_MODULE_2___default()(this.attrs)) {
+        return lodash_keys__WEBPACK_IMPORTED_MODULE_1___default()(this.attrs);
+      }
+      console.warn('Make sure attributes is from a valid type: Array or Object');
+      return [];
+    }
 
-    return WithSaveData;
-  };
+    // At this point attributes has been set so no need to be set the initial state into the store here.
+    componentDidMount() {
+      const {
+        setInitialState,
+        attributes = {},
+        isolated,
+        onBlockCreated
+      } = this.props;
+      onBlockCreated(this.props);
+      this.registerBlock();
+
+      // Prevent to set the initial state for blocks that are copies from others
+      // overwrite this with the isolated property of the block to `true`
+      if (this.blockCount() > 1 && !isolated) {
+        return;
+      }
+      setInitialState(_objectSpread(_objectSpread({}, this.props), {}, {
+        get(key, defaultValue) {
+          return key in attributes ? attributes[key] : defaultValue;
+        }
+      }));
+    }
+    componentWillUnmount() {
+      const {
+        onBlockRemoved
+      } = this.props;
+      this.unregisterBlock();
+      onBlockRemoved(this.props);
+    }
+    registerBlock() {
+      const {
+        name
+      } = this.props;
+      blockRegister[name] = name in blockRegister ? blockRegister[name] + 1 : 1;
+    }
+    unregisterBlock() {
+      const {
+        name
+      } = this.props;
+      blockRegister[name] -= 1;
+    }
+    blockCount() {
+      const {
+        name
+      } = this.props;
+      return blockRegister[name];
+    }
+    componentDidUpdate() {
+      const diff = this.calculateDiff();
+      if (_wordpress_is_shallow_equal__WEBPACK_IMPORTED_MODULE_8___default()(this.saving, diff)) {
+        return;
+      }
+      this.saving = diff;
+      if (lodash_isEmpty__WEBPACK_IMPORTED_MODULE_4___default()(diff)) {
+        return;
+      }
+      this.props.setAttributes(diff);
+    }
+    calculateDiff() {
+      const attributes = this.attrs;
+      return this.keys.reduce((diff, key) => {
+        if (key in this.props && !_wordpress_is_shallow_equal__WEBPACK_IMPORTED_MODULE_8___default()(attributes[key], this.props[key])) {
+          diff[key] = this.props[key];
+        }
+        return diff;
+      }, {});
+    }
+    get attrs() {
+      return selectedAttributes || this.props.attributes || {};
+    }
+    render() {
+      return wp.element.createElement(WrappedComponent, this.props);
+    }
+  }
+  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(WithSaveData, "defaultProps", {
+    attributes: {},
+    setInitialState: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
+    setAttributes: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
+    name: '',
+    isolated: false,
+    onBlockCreated: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a,
+    onBlockRemoved: lodash_noop__WEBPACK_IMPORTED_MODULE_5___default.a
+  });
+  _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(WithSaveData, "propTypes", {
+    setAttributes: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
+    setInitialState: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
+    attributes: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.object,
+    name: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.string,
+    isolated: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.bool,
+    increaseRegister: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
+    decreaseRegister: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
+    onBlockCreated: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func,
+    onBlockRemoved: prop_types__WEBPACK_IMPORTED_MODULE_7___default.a.func
+  });
+  WithSaveData.displayName = `WithSaveData( ${WrappedComponent.displayName || WrappedComponent.name || 'Component '}`; // eslint-disable-line max-len
+
+  return WithSaveData;
 });
 
 /***/ }),
@@ -9535,8 +9441,8 @@ var style = __webpack_require__("unXf");
 
 
 const _excluded = ["asLink", "children", "className", "disabled", "href", "icon", "onClick", "position", "target"];
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -9553,25 +9459,20 @@ const positions = {
   right: 'right',
   left: 'left'
 };
-const components = {
-  button: external_tribe_common_elements_["Button"],
-  link: external_tribe_common_elements_["Link"]
-};
 const ActionButton = _ref => {
   let {
-      asLink,
+      asLink = false,
       children,
       className,
       disabled,
-      href,
+      href = '#',
       icon,
       onClick,
-      position,
+      position = positions.left,
       target
     } = _ref,
     props = objectWithoutProperties_default()(_ref, _excluded);
   const containerClass = external_tribe_modules_classnames_default()('tribe-editor__action-button', `tribe-editor__action-button--icon-${position}`, className);
-  const Element = asLink && !disabled ? components.link : components.button;
   const getProps = () => {
     const elemProps = _objectSpread({}, props);
     if (asLink && !disabled) {
@@ -9584,7 +9485,16 @@ const ActionButton = _ref => {
     }
     return elemProps;
   };
-  return wp.element.createElement(Element, extends_default()({
+  if (asLink && !disabled) {
+    return wp.element.createElement(external_tribe_common_elements_["Link"], extends_default()({
+      className: containerClass
+    }, _objectSpread({
+      href: '#'
+    }, getProps())), icon, wp.element.createElement("span", {
+      className: "tribe-editor__action-button__label"
+    }, children));
+  }
+  return wp.element.createElement(external_tribe_common_elements_["Button"], extends_default()({
     className: containerClass
   }, getProps()), icon, wp.element.createElement("span", {
     className: "tribe-editor__action-button__label"
@@ -9600,10 +9510,6 @@ ActionButton.propTypes = {
   onClick: external_tribe_modules_propTypes_default.a.func,
   position: external_tribe_modules_propTypes_default.a.oneOf(Object.keys(positions)),
   target: external_tribe_modules_propTypes_default.a.string
-};
-ActionButton.defaultProps = {
-  asLink: false,
-  position: positions.left
 };
 /* harmony default export */ var action_button_element = (ActionButton);
 // CONCATENATED MODULE: ./src/modules/elements/action-button/index.js
@@ -9632,19 +9538,18 @@ var action_dashboard_style = __webpack_require__("P9XJ");
  */
 
 
-const ActionDashboard = _ref => {
-  let {
-    actions,
-    cancelLabel,
-    className,
-    confirmLabel,
-    isCancelDisabled,
-    isConfirmDisabled,
-    onCancelClick,
-    onConfirmClick,
-    showCancel,
-    showConfirm
-  } = _ref;
+const ActionDashboard = ({
+  actions,
+  cancelLabel,
+  className,
+  confirmLabel,
+  isCancelDisabled,
+  isConfirmDisabled,
+  onCancelClick = external_lodash_noop_default.a,
+  onConfirmClick = external_lodash_noop_default.a,
+  showCancel = true,
+  showConfirm = true
+}) => {
   const actionsList = actions && !!actions.length && wp.element.createElement("div", {
     className: "tribe-editor__action-dashboard__group-left"
   }, actions.map((action, index) => wp.element.createElement("span", {
@@ -9673,12 +9578,6 @@ const ActionDashboard = _ref => {
       'tribe-editor__action-dashboard__no-top-bottom-paddings': !actionsList && !groupRight
     }, className)
   }, actionsList, groupRight);
-};
-ActionDashboard.defaultProps = {
-  showCancel: true,
-  showConfirm: true,
-  onCancelClick: external_lodash_noop_default.a,
-  onConfirmClick: external_lodash_noop_default.a
 };
 ActionDashboard.propTypes = {
   actions: external_tribe_modules_propTypes_default.a.arrayOf(external_tribe_modules_propTypes_default.a.node),
@@ -9829,13 +9728,12 @@ const getHeaderElement = (header, description) => {
     className: "tickets-heading__description"
   }, description));
 };
-const Card = _ref => {
-  let {
-    className,
-    children,
-    header,
-    description
-  } = _ref;
+const Card = ({
+  className,
+  children,
+  header,
+  description
+}) => {
   return wp.element.createElement("div", {
     className: external_tribe_modules_classnames_default()('tribe-editor__card', className)
   }, header && getHeaderElement(header, description), children);
@@ -9867,11 +9765,10 @@ var split_container_style = __webpack_require__("9mgW");
  * Internal dependencies
  */
 
-const SplitContainer = _ref => {
-  let {
-    leftColumn,
-    rightColumn
-  } = _ref;
+const SplitContainer = ({
+  leftColumn,
+  rightColumn
+}) => {
   return wp.element.createElement(external_React_default.a.Fragment, null, wp.element.createElement("div", {
     className: "tribe-editor__rsvp-details-wrapper"
   }, wp.element.createElement("div", {
@@ -9900,8 +9797,11 @@ SplitContainer.propTypes = {
 // EXTERNAL MODULE: ./src/modules/elements/container-panel/index.js + 1 modules
 var container_panel = __webpack_require__("2LK8");
 
-// EXTERNAL MODULE: ./node_modules/react-day-picker/moment/index.js
-var moment = __webpack_require__("1rrs");
+// EXTERNAL MODULE: ./node_modules/date-fns/format.js + 10 modules
+var format = __webpack_require__("U4kA");
+
+// EXTERNAL MODULE: ./node_modules/date-fns/parse.js + 44 modules
+var parse = __webpack_require__("t3m+");
 
 // EXTERNAL MODULE: external "tribe.common.utils"
 var external_tribe_common_utils_ = __webpack_require__("B8vQ");
@@ -9942,8 +9842,8 @@ class element_DateTimeRangePicker extends external_React_["Component"] {
       const props = {
         value: fromDateInput,
         format: fromDateFormat,
-        formatDate: moment["formatDate"],
-        parseDate: moment["parseDate"],
+        formatDate: format["a" /* formatDate */],
+        parseDate: parse["a" /* parse */],
         dayPickerProps: {
           selectedDays: [fromDate, {
             from: fromDate,
@@ -9986,8 +9886,8 @@ class element_DateTimeRangePicker extends external_React_["Component"] {
       const props = {
         value: toDateInput,
         format: toDateFormat,
-        formatDate: moment["formatDate"],
-        parseDate: moment["parseDate"],
+        formatDate: format["a" /* formatDate */],
+        parseDate: parse["a" /* parse */],
         dayPickerProps: {
           selectedDays: [fromDate, {
             from: fromDate,
@@ -10139,22 +10039,17 @@ defineProperty_default()(element_DateTimeRangePicker, "propTypes", {
  * Internal dependencies
  */
 
-const IconWithTooltip = _ref => {
-  let {
-    description,
-    icon,
-    position,
-    propertyName
-  } = _ref;
+const IconWithTooltip = ({
+  description = '',
+  icon,
+  position = 'top right',
+  propertyName
+}) => {
   const text = wp.element.createElement("div", null, propertyName, description && ': ', description && wp.element.createElement("em", null, description));
   return wp.element.createElement(external_wp_components_["Tooltip"], {
     text: text,
-    position: position
+    placement: position
   }, wp.element.createElement("span", null, icon));
-};
-IconWithTooltip.defaultProps = {
-  description: '',
-  position: 'top right'
 };
 IconWithTooltip.propTypes = {
   description: external_tribe_modules_propTypes_default.a.string,
@@ -10188,40 +10083,32 @@ var label_with_tooltip_style = __webpack_require__("s3Q2");
 
 
 /* eslint-disable max-len */
-const LabelWithTooltip = _ref => {
-  let {
-    className,
-    forId,
-    isLabel,
-    label,
-    tooltipDisabled,
-    tooltipLabel,
-    tooltipPosition,
-    tooltipText,
-    delay
-  } = _ref;
-  return wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
-    className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
-    forId: forId,
-    isLabel: isLabel,
-    label: label
-  }, wp.element.createElement(external_wp_components_["Tooltip"], {
-    text: tooltipText,
-    placement: tooltipPosition,
-    delay: delay
-  }, wp.element.createElement("button", {
-    "aria-label": tooltipText,
-    className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
-    disabled: tooltipDisabled
-  }, tooltipLabel)));
-};
+const LabelWithTooltip = ({
+  className,
+  forId,
+  isLabel,
+  label = '',
+  tooltipDisabled,
+  tooltipLabel,
+  tooltipPosition = 'top right',
+  tooltipText,
+  delay
+}) => wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
+  className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
+  forId: forId,
+  isLabel: isLabel,
+  label: label
+}, wp.element.createElement(external_wp_components_["Tooltip"], {
+  text: tooltipText,
+  placement: tooltipPosition,
+  delay: delay
+}, wp.element.createElement("button", {
+  "aria-label": tooltipText,
+  className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
+  disabled: tooltipDisabled
+}, tooltipLabel)));
 /* eslint-enable max-len */
 
-LabelWithTooltip.defaultProps = {
-  label: '',
-  tooltipPosition: 'top right',
-  delay: 200
-};
 LabelWithTooltip.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   forId: external_tribe_modules_propTypes_default.a.string,
@@ -10268,16 +10155,15 @@ LabelWithTooltip.propTypes = {
  * @param {boolean} props.useFallback If true, fallback is used.
  * @returns {*} return fallback if count is zero or negative otherwise singular or plural
  */
-const NumericLabel = _ref => {
-  let {
-    className,
-    count,
-    includeZero,
-    singular,
-    plural,
-    fallback,
-    useFallback
-  } = _ref;
+const NumericLabel = ({
+  className = '',
+  count = 0,
+  includeZero = false,
+  singular = '',
+  plural = '',
+  fallback = null,
+  useFallback = true
+}) => {
   if (useFallback && (includeZero && !(count >= 0) || !includeZero && !(count > 0))) {
     return fallback;
   }
@@ -10301,15 +10187,6 @@ NumericLabel.propTypes = {
   plural: external_tribe_modules_propTypes_default.a.string,
   useFallback: external_tribe_modules_propTypes_default.a.any,
   fallback: external_tribe_modules_propTypes_default.a.any
-};
-NumericLabel.defaultProps = {
-  count: 0,
-  includeZero: false,
-  singular: '',
-  plural: '',
-  className: '',
-  fallback: null,
-  useFallback: true
 };
 /* harmony default export */ var numeric_label_element = (NumericLabel);
 // CONCATENATED MODULE: ./src/modules/elements/numeric-label/index.js
@@ -10337,26 +10214,23 @@ const LAYOUT = {
   rsvp: 'rsvp',
   ticket: 'ticket'
 };
-const InactiveBlock = _ref => {
-  let {
-    className,
-    description,
-    icon,
-    layout,
-    title
-  } = _ref;
-  return wp.element.createElement("section", {
-    className: external_tribe_modules_classnames_default()('tribe-editor__inactive-block', `tribe-editor__inactive-block--${layout}`, className)
-  }, wp.element.createElement("div", {
-    className: "tribe-editor__inactive-block__icon"
-  }, icon), (title || description) && wp.element.createElement("div", {
-    className: "tribe-editor__inactive-block__content"
-  }, title && wp.element.createElement("h2", {
-    className: "tribe-editor__inactive-block__title"
-  }, title), description && wp.element.createElement("p", {
-    className: "tribe-editor__inactive-block__description"
-  }, description)));
-};
+const InactiveBlock = ({
+  className,
+  description,
+  icon,
+  layout,
+  title
+}) => wp.element.createElement("section", {
+  className: external_tribe_modules_classnames_default()('tribe-editor__inactive-block', `tribe-editor__inactive-block--${layout}`, className)
+}, wp.element.createElement("div", {
+  className: "tribe-editor__inactive-block__icon"
+}, icon), (title || description) && wp.element.createElement("div", {
+  className: "tribe-editor__inactive-block__content"
+}, title && wp.element.createElement("h2", {
+  className: "tribe-editor__inactive-block__title"
+}, title), description && wp.element.createElement("p", {
+  className: "tribe-editor__inactive-block__description"
+}, description)));
 InactiveBlock.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   description: external_tribe_modules_propTypes_default.a.string,
@@ -10398,38 +10272,30 @@ var settings_dashboard_style = __webpack_require__("oe2g");
 
 
 
-const SettingsDashboard = _ref => {
-  let {
-    className,
-    closeButtonDisabled,
-    closeButtonLabel,
-    content,
-    headerLeft,
-    onCloseClick
-  } = _ref;
-  return wp.element.createElement(card, {
-    className: external_tribe_modules_classnames_default()('tribe-editor__settings-dashboard', className)
-  }, wp.element.createElement("header", {
-    className: "tribe-editor__settings-dashboard__header"
-  }, wp.element.createElement("span", {
-    className: "tribe-editor__settings-dashboard__header-left"
-  }, headerLeft), wp.element.createElement(external_tribe_common_elements_["Button"], {
-    className: "tribe-editor__settings-dashboard__close-button",
-    onClick: onCloseClick,
-    disabled: closeButtonDisabled
-  }, closeButtonLabel)), wp.element.createElement("div", {
-    className: "tribe-editor__settings-dashboard__content"
-  }, content));
-};
-SettingsDashboard.defaultProps = {
-  closeButtonLabel: wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Close"], null), wp.element.createElement("span", {
+const SettingsDashboard = ({
+  className,
+  closeButtonDisabled,
+  closeButtonLabel = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Close"], null), wp.element.createElement("span", {
     className: "tribe-editor__settings-dashboard__close-button-text"
   }, Object(external_wp_i18n_["__"])('close', 'event-tickets'))),
-  headerLeft: wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Settings"], null), wp.element.createElement("span", {
+  content,
+  headerLeft = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Settings"], null), wp.element.createElement("span", {
     className: "tribe-editor__settings-dashboard__header-left-text"
   }, Object(external_wp_i18n_["__"])('Ticket Settings', 'event-tickets'))),
-  onCloseClick: external_lodash_noop_default.a
-};
+  onCloseClick = external_lodash_noop_default.a
+}) => wp.element.createElement(card, {
+  className: external_tribe_modules_classnames_default()('tribe-editor__settings-dashboard', className)
+}, wp.element.createElement("header", {
+  className: "tribe-editor__settings-dashboard__header"
+}, wp.element.createElement("span", {
+  className: "tribe-editor__settings-dashboard__header-left"
+}, headerLeft), wp.element.createElement(external_tribe_common_elements_["Button"], {
+  className: "tribe-editor__settings-dashboard__close-button",
+  onClick: onCloseClick,
+  disabled: closeButtonDisabled
+}, closeButtonLabel)), wp.element.createElement("div", {
+  className: "tribe-editor__settings-dashboard__content"
+}, content));
 SettingsDashboard.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   closeButtonDisabled: external_tribe_modules_propTypes_default.a.bool,
@@ -10512,10 +10378,9 @@ var notice_style = __webpack_require__("t/7v");
  */
 
 
-const Notice = _ref => {
-  let {
-    description
-  } = _ref;
+const Notice = ({
+  description
+}) => {
   return wp.element.createElement("div", {
     className: "tribe-editor__notice"
   }, wp.element.createElement(icons["Bulb"], null), description);
@@ -10592,15 +10457,14 @@ var style = __webpack_require__("eJjn");
 
 
 
-const AttendeeRegistrationIcons = _ref => {
-  let {
-    attendeeInfoFieldsLabel,
-    hasAttendeeInfoFields,
-    isBlockSelected,
-    fromDate,
-    saleWindowLabel,
-    toDate
-  } = _ref;
+const AttendeeRegistrationIcons = ({
+  attendeeInfoFieldsLabel,
+  hasAttendeeInfoFields,
+  isBlockSelected,
+  fromDate,
+  saleWindowLabel,
+  toDate
+}) => {
   if (!isBlockSelected) {
     return null;
   }
@@ -10620,12 +10484,12 @@ const AttendeeRegistrationIcons = _ref => {
 AttendeeRegistrationIcons.propTypes = {
   attendeeInfoFieldsLabel: external_tribe_modules_propTypes_default.a.string,
   clientId: external_tribe_modules_propTypes_default.a.string,
-  fromDate: external_tribe_modules_propTypes_default.a.instanceOf(Date),
+  fromDate: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.instanceOf(Date), external_tribe_modules_propTypes_default.a.string]).isRequired,
   hasAttendeeInfoFields: external_tribe_modules_propTypes_default.a.bool,
   isBlockSelected: external_tribe_modules_propTypes_default.a.bool,
   isSelected: external_tribe_modules_propTypes_default.a.bool,
   saleWindowLabel: external_tribe_modules_propTypes_default.a.string,
-  toDate: external_tribe_modules_propTypes_default.a.instanceOf(Date)
+  toDate: external_tribe_modules_propTypes_default.a.oneOfType([external_tribe_modules_propTypes_default.a.instanceOf(Date), external_tribe_modules_propTypes_default.a.string]).isRequired
 };
 /* harmony default export */ var template = (AttendeeRegistrationIcons);
 // EXTERNAL MODULE: external "tribe.common.hoc"
@@ -10720,7 +10584,7 @@ const mapStateToProps = (state, ownProps) => {
   const endDateMoment = ticket["f" /* selectors */].getTicketTempEndDateMoment(state, ownProps);
   const fromDate = startDateMoment && startDateMoment.format(dateFormat);
   const toDate = endDateMoment && endDateMoment.format(dateFormat);
-  const selectedBlock = container_select('core/editor').getSelectedBlock();
+  const selectedBlock = container_select('core/block-editor').getSelectedBlock();
   return {
     attendeeInfoFieldsLabel,
     hasAttendeeInfoFields,
@@ -10746,12 +10610,11 @@ var title_style = __webpack_require__("IUfw");
  */
 
 
-const TicketContainerHeaderTitle = _ref => {
-  let {
-    clientId,
-    showAttendeeRegistrationIcons = true,
-    title
-  } = _ref;
+const TicketContainerHeaderTitle = ({
+  clientId,
+  showAttendeeRegistrationIcons = true,
+  title
+}) => {
   return wp.element.createElement("div", {
     className: "tribe-editor__ticket__container-header-title"
   }, wp.element.createElement("h3", {
@@ -10769,13 +10632,6 @@ TicketContainerHeaderTitle.propTypes = {
   title: external_tribe_modules_propTypes_default.a.string
 };
 /* harmony default export */ var title_template = __webpack_exports__["a"] = (TicketContainerHeaderTitle);
-
-/***/ }),
-
-/***/ "kczL":
-/***/ (function(module, exports) {
-
-module.exports = tribe.common.utils.globals;
 
 /***/ }),
 
@@ -10861,8 +10717,8 @@ var style = __webpack_require__("aAk0");
 
 
 class template_MoveModal extends external_React_["PureComponent"] {
-  constructor() {
-    super(...arguments);
+  constructor(...args) {
+    super(...args);
     defineProperty_default()(this, "renderPostTypes", () => {
       if (this.props.isFetchingPosts) {
         return wp.element.createElement(external_wp_components_["Spinner"], null);
@@ -11361,10 +11217,9 @@ const createOrUpdateRSVP = method => payload => dispatch => {
     },
     actions: {
       start: () => dispatch(actions["setRSVPIsLoading"](true)),
-      success: _ref => {
-        let {
-          body
-        } = _ref;
+      success: ({
+        body
+      }) => {
         if (method === METHODS.POST) {
           dispatch(actions["createRSVP"]());
           dispatch(actions["setRSVPId"](body.id));
@@ -11390,96 +11245,91 @@ const deleteRSVP = id => dispatch => {
   };
   dispatch(wpRequestActions.wpRequest(options));
 };
-const getRSVP = function (postId) {
-  let page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  return dispatch => {
-    const path = `${utils["o" /* RSVP_POST_TYPE */]}?per_page=100&page=${page}&context=edit`;
-    const options = {
-      path,
-      params: {
-        method: METHODS.GET
+const getRSVP = (postId, page = 1) => dispatch => {
+  const path = `${utils["o" /* RSVP_POST_TYPE */]}?per_page=100&page=${page}&context=edit`;
+  const options = {
+    path,
+    params: {
+      method: METHODS.GET
+    },
+    actions: {
+      start: () => dispatch(actions["setRSVPIsLoading"](true)),
+      success: ({
+        body,
+        headers
+      }) => {
+        const filteredRSVPs = body.filter(rsvp => rsvp.meta[utils["b" /* KEY_RSVP_FOR_EVENT */]] == postId // eslint-disable-line eqeqeq
+        );
+        const totalPages = headers.get('x-wp-totalpages');
+        if (filteredRSVPs.length) {
+          /* If RSVP for event exists in fetched data */
+          /**
+           * @todo We are currently only fetching the first RSVP.
+           *       If an event has more than 1 RSVP set up from
+           *       the classic editor, only one will be displayed.
+           *       The strategy to handle this is is being worked on.
+           */
+          const datePickerFormat = external_tribe_common_utils_["globals"].tecDateSettings().datepickerFormat;
+          const rsvp = filteredRSVPs[0];
+          const {
+            meta = {}
+          } = rsvp;
+          const startMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["m" /* KEY_TICKET_START_DATE */]]);
+          const endMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["f" /* KEY_TICKET_END_DATE */]]);
+          const startDateInput = datePickerFormat ? startMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(startMoment);
+          const endDateInput = datePickerFormat ? endMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(endMoment);
+          const capacity = meta[utils["d" /* KEY_TICKET_CAPACITY */]] >= 0 ? meta[utils["d" /* KEY_TICKET_CAPACITY */]] : '';
+          const notGoingResponses = meta[utils["l" /* KEY_TICKET_SHOW_NOT_GOING */]];
+          dispatch(actions["createRSVP"]());
+          dispatch(actions["setRSVPId"](rsvp.id));
+          dispatch(actions["setRSVPGoingCount"](parseInt(meta[utils["g" /* KEY_TICKET_GOING_COUNT */]], 10) || 0));
+          dispatch(actions["setRSVPNotGoingCount"](parseInt(meta[utils["j" /* KEY_TICKET_NOT_GOING_COUNT */]], 10) || 0));
+          dispatch(actions["setRSVPHasAttendeeInfoFields"](meta[utils["h" /* KEY_TICKET_HAS_ATTENDEE_INFO_FIELDS */]]));
+          dispatch(actions["setRSVPDetails"]({
+            title: rsvp.title.raw,
+            description: rsvp.excerpt.raw,
+            capacity,
+            notGoingResponses,
+            startDate: external_tribe_common_utils_["moment"].toDate(startMoment),
+            startDateInput,
+            startDateMoment: startMoment.clone().startOf('day'),
+            endDate: external_tribe_common_utils_["moment"].toDate(endMoment),
+            endDateInput,
+            endDateMoment: endMoment.clone().seconds(0),
+            startTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
+            endTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
+            startTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
+            endTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
+          }));
+          dispatch(actions["setRSVPTempDetails"]({
+            tempTitle: rsvp.title.raw,
+            tempDescription: rsvp.excerpt.raw,
+            tempCapacity: capacity,
+            tempNotGoingResponses: notGoingResponses,
+            tempStartDate: external_tribe_common_utils_["moment"].toDate(startMoment),
+            tempStartDateInput: startDateInput,
+            tempStartDateMoment: startMoment.clone().startOf('day'),
+            tempEndDate: external_tribe_common_utils_["moment"].toDate(endMoment),
+            tempEndDateInput: endDateInput,
+            tempEndDateMoment: endMoment.clone().seconds(0),
+            tempStartTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
+            tempEndTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
+            tempStartTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
+            tempEndTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
+          }));
+          dispatch(actions["setRSVPIsLoading"](false));
+        } else if (page < totalPages) {
+          /* If there are more pages */
+          dispatch(getRSVP(postId, page + 1));
+        } else {
+          /* Did not find RSVP */
+          dispatch(actions["setRSVPIsLoading"](false));
+        }
       },
-      actions: {
-        start: () => dispatch(actions["setRSVPIsLoading"](true)),
-        success: _ref2 => {
-          let {
-            body,
-            headers
-          } = _ref2;
-          const filteredRSVPs = body.filter(rsvp => rsvp.meta[utils["b" /* KEY_RSVP_FOR_EVENT */]] == postId // eslint-disable-line eqeqeq
-          );
-
-          const totalPages = headers.get('x-wp-totalpages');
-          if (filteredRSVPs.length) {
-            /* If RSVP for event exists in fetched data */
-            /**
-             * @todo We are currently only fetching the first RSVP.
-             *       If an event has more than 1 RSVP set up from
-             *       the classic editor, only one will be displayed.
-             *       The strategy to handle this is is being worked on.
-             */
-            const datePickerFormat = external_tribe_common_utils_["globals"].tecDateSettings().datepickerFormat;
-            const rsvp = filteredRSVPs[0];
-            const {
-              meta = {}
-            } = rsvp;
-            const startMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["m" /* KEY_TICKET_START_DATE */]]);
-            const endMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["f" /* KEY_TICKET_END_DATE */]]);
-            const startDateInput = datePickerFormat ? startMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(startMoment);
-            const endDateInput = datePickerFormat ? endMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(endMoment);
-            const capacity = meta[utils["d" /* KEY_TICKET_CAPACITY */]] >= 0 ? meta[utils["d" /* KEY_TICKET_CAPACITY */]] : '';
-            const notGoingResponses = meta[utils["l" /* KEY_TICKET_SHOW_NOT_GOING */]];
-            dispatch(actions["createRSVP"]());
-            dispatch(actions["setRSVPId"](rsvp.id));
-            dispatch(actions["setRSVPGoingCount"](parseInt(meta[utils["g" /* KEY_TICKET_GOING_COUNT */]], 10) || 0));
-            dispatch(actions["setRSVPNotGoingCount"](parseInt(meta[utils["j" /* KEY_TICKET_NOT_GOING_COUNT */]], 10) || 0));
-            dispatch(actions["setRSVPHasAttendeeInfoFields"](meta[utils["h" /* KEY_TICKET_HAS_ATTENDEE_INFO_FIELDS */]]));
-            dispatch(actions["setRSVPDetails"]({
-              title: rsvp.title.raw,
-              description: rsvp.excerpt.raw,
-              capacity,
-              notGoingResponses,
-              startDate: external_tribe_common_utils_["moment"].toDate(startMoment),
-              startDateInput,
-              startDateMoment: startMoment.clone().startOf('day'),
-              endDate: external_tribe_common_utils_["moment"].toDate(endMoment),
-              endDateInput,
-              endDateMoment: endMoment.clone().seconds(0),
-              startTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
-              endTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
-              startTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
-              endTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
-            }));
-            dispatch(actions["setRSVPTempDetails"]({
-              tempTitle: rsvp.title.raw,
-              tempDescription: rsvp.excerpt.raw,
-              tempCapacity: capacity,
-              tempNotGoingResponses: notGoingResponses,
-              tempStartDate: external_tribe_common_utils_["moment"].toDate(startMoment),
-              tempStartDateInput: startDateInput,
-              tempStartDateMoment: startMoment.clone().startOf('day'),
-              tempEndDate: external_tribe_common_utils_["moment"].toDate(endMoment),
-              tempEndDateInput: endDateInput,
-              tempEndDateMoment: endMoment.clone().seconds(0),
-              tempStartTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
-              tempEndTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
-              tempStartTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
-              tempEndTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
-            }));
-            dispatch(actions["setRSVPIsLoading"](false));
-          } else if (page < totalPages) {
-            /* If there are more pages */
-            dispatch(getRSVP(postId, page + 1));
-          } else {
-            /* Did not find RSVP */
-            dispatch(actions["setRSVPIsLoading"](false));
-          }
-        },
-        error: () => dispatch(actions["setRSVPIsLoading"](false))
-      }
-    };
-    dispatch(wpRequestActions.wpRequest(options));
+      error: () => dispatch(actions["setRSVPIsLoading"](false))
+    }
   };
+  dispatch(wpRequestActions.wpRequest(options));
 };
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
 var defineProperty = __webpack_require__("lSNA");
@@ -11491,8 +11341,8 @@ var external_moment_default = /*#__PURE__*/__webpack_require__.n(external_moment
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducers/details.js
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -11526,9 +11376,7 @@ const DEFAULT_STATE = {
   startTimeInput: external_tribe_common_utils_["moment"].toTime(currentMoment),
   endTimeInput: external_tribe_common_utils_["moment"].toTime(details_endMoment)
 };
-/* harmony default export */ var details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.SET_RSVP_TITLE:
       return _objectSpread(_objectSpread({}, state), {}, {
@@ -11592,16 +11440,14 @@ const DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducers/temp-details.js
 
-function temp_details_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function temp_details_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? temp_details_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : temp_details_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function temp_details_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function temp_details_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? temp_details_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : temp_details_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
 
 
-/* harmony default export */ var temp_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var temp_details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.SET_RSVP_TEMP_TITLE:
       return temp_details_objectSpread(temp_details_objectSpread({}, state), {}, {
@@ -11668,8 +11514,8 @@ var header_image = __webpack_require__("56gU");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducer.js
 
-function reducer_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function reducer_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? reducer_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : reducer_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function reducer_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function reducer_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? reducer_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : reducer_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -11693,9 +11539,7 @@ const reducer_DEFAULT_STATE = {
   tempDetails: DEFAULT_STATE,
   headerImage: header_image["a" /* DEFAULT_STATE */]
 };
-/* harmony default export */ var reducer = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : reducer_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var reducer = ((state = reducer_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.CREATE_RSVP:
       return reducer_objectSpread(reducer_objectSpread({}, state), {}, {
@@ -12099,7 +11943,7 @@ function* handleRSVPStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDate"](startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateInput"](dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateInput"](dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateMoment"](startDateMoment));
 }
 function* handleRSVPEndDate(action) {
@@ -12110,7 +11954,7 @@ function* handleRSVPEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDate"](endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateInput"](dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateInput"](dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateMoment"](endDateMoment));
 }
 function* handleRSVPStartTime(action) {
@@ -12146,7 +11990,7 @@ function* handleRSVPMove() {
   if (rsvpId === modalTicketId) {
     const clientId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["a" /* getModalClientId */]);
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["deleteRSVP"]());
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [clientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [clientId]);
   }
 }
 

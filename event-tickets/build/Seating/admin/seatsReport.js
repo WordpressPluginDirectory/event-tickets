@@ -191,7 +191,7 @@ var external_tec_tickets_seating_service_api_ = __webpack_require__("wRIV");
 var external_tec_tickets_seating_ajax_ = __webpack_require__("lL5a");
 
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/admin/seatsReport/localized-data.js
-var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$tec$tickets$s2;
+var _window;
 /**
  * @typedef {Object} SeatMapTicketEntry
  * @property {string}               ticketId              The ticket ID.
@@ -210,7 +210,7 @@ var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$te
  *
  * @type {SeatsReportLocalizedData}
  */
-const localizedData = (_window = window) === null || _window === void 0 ? void 0 : (_window$tec = _window.tec) === null || _window$tec === void 0 ? void 0 : (_window$tec$tickets = _window$tec.tickets) === null || _window$tec$tickets === void 0 ? void 0 : (_window$tec$tickets$s = _window$tec$tickets.seating) === null || _window$tec$tickets$s === void 0 ? void 0 : (_window$tec$tickets$s2 = _window$tec$tickets$s.admin) === null || _window$tec$tickets$s2 === void 0 ? void 0 : _window$tec$tickets$s2.seatsReport;
+const localizedData = (_window = window) === null || _window === void 0 || (_window = _window.tec) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 || (_window = _window.seating) === null || _window === void 0 || (_window = _window.admin) === null || _window === void 0 ? void 0 : _window.seatsReport;
 // EXTERNAL MODULE: ./src/Tickets/Seating/app/admin/action-handlers.js
 var action_handlers = __webpack_require__("liIJ");
 
@@ -292,13 +292,13 @@ function _fetchAttendees() {
     const json = yield response.json();
     if (response.status !== 200) {
       var _json$data;
-      throw new Error(`Failed to fetch attendees for post ID ${postId}. Status: ${response.status} - ${json === null || json === void 0 ? void 0 : (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.error}`);
+      throw new Error(`Failed to fetch attendees for post ID ${postId}. Status: ${response.status} - ${json === null || json === void 0 || (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.error}`);
     }
     return {
-      attendees: (json === null || json === void 0 ? void 0 : (_json$data2 = json.data) === null || _json$data2 === void 0 ? void 0 : _json$data2.attendees) || [],
-      totalBatches: (json === null || json === void 0 ? void 0 : (_json$data3 = json.data) === null || _json$data3 === void 0 ? void 0 : _json$data3.totalBatches) || 1,
-      currentBatch: (json === null || json === void 0 ? void 0 : (_json$data4 = json.data) === null || _json$data4 === void 0 ? void 0 : _json$data4.currentBatch) || 1,
-      nextBatch: (json === null || json === void 0 ? void 0 : (_json$data5 = json.data) === null || _json$data5 === void 0 ? void 0 : _json$data5.nextBatch) || false
+      attendees: (json === null || json === void 0 || (_json$data2 = json.data) === null || _json$data2 === void 0 ? void 0 : _json$data2.attendees) || [],
+      totalBatches: (json === null || json === void 0 || (_json$data3 = json.data) === null || _json$data3 === void 0 ? void 0 : _json$data3.totalBatches) || 1,
+      currentBatch: (json === null || json === void 0 || (_json$data4 = json.data) === null || _json$data4 === void 0 ? void 0 : _json$data4.currentBatch) || 1,
+      nextBatch: (json === null || json === void 0 || (_json$data5 = json.data) === null || _json$data5 === void 0 ? void 0 : _json$data5.nextBatch) || false
     };
   });
   return _fetchAttendees.apply(this, arguments);
@@ -690,7 +690,7 @@ function _handleReservationsDeleted() {
       return false;
     }
     const json = yield response.json();
-    return (json === null || json === void 0 ? void 0 : (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.numberDeleted) || 0;
+    return (json === null || json === void 0 || (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.numberDeleted) || 0;
   });
   return _handleReservationsDeleted.apply(this, arguments);
 }

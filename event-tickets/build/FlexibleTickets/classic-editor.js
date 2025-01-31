@@ -209,8 +209,7 @@ function getSeriesTitleFromSelection() {
  *
  * @return {string } The edit link of the series read from the selected option data, or an empty string if not found.
  */
-function getSeriesEditLinkFromMetaBox() {
-  let append = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '#tribetickets';
+function getSeriesEditLinkFromMetaBox(append = '#tribetickets') {
   const editLinkElement = document.querySelector(containerSelector + ' a.tec-events-pro-series__edit-link');
   const editLink = (editLinkElement === null || editLinkElement === void 0 ? void 0 : editLinkElement.getAttribute('href')) || '';
   return editLink + (append ? append : '');
@@ -409,7 +408,7 @@ function init() {
 }
 onReady(init);
 // CONCATENATED MODULE: ./src/Tickets/Flexible_Tickets/app/classic-editor/tickets-on-recurring-control.js
-var _window, _window$TECFtEditorDa, _window$TECFtEditorDa2, _window2, _window2$TECFtEditorD, _window2$TECFtEditorD2;
+var _window, _window2;
 
 
 // The selectors that will be used to interact with the DOM.
@@ -429,8 +428,8 @@ const ticketEditPanelActiveSelector = '#tribe_panel_edit[aria-hidden="false"]';
 
 // Init the control state from the localized data.
 let state = {
-  hasRecurrenceRules: ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : (_window$TECFtEditorDa2 = _window$TECFtEditorDa.event) === null || _window$TECFtEditorDa2 === void 0 ? void 0 : _window$TECFtEditorDa2.isRecurring) || false,
-  hasOwnTickets: ((_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$TECFtEditorD = _window2.TECFtEditorData) === null || _window2$TECFtEditorD === void 0 ? void 0 : (_window2$TECFtEditorD2 = _window2$TECFtEditorD.event) === null || _window2$TECFtEditorD2 === void 0 ? void 0 : _window2$TECFtEditorD2.hasOwnTickets) || false
+  hasRecurrenceRules: ((_window = window) === null || _window === void 0 || (_window = _window.TECFtEditorData) === null || _window === void 0 || (_window = _window.event) === null || _window === void 0 ? void 0 : _window.isRecurring) || false,
+  hasOwnTickets: ((_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.TECFtEditorData) === null || _window2 === void 0 || (_window2 = _window2.event) === null || _window2 === void 0 ? void 0 : _window2.hasOwnTickets) || false
 };
 
 // Clone and keep track of the previous state.

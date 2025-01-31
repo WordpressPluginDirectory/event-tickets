@@ -417,7 +417,7 @@ function _handleReservationsDeleted() {
       return false;
     }
     const json = yield response.json();
-    return (json === null || json === void 0 ? void 0 : (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.numberDeleted) || 0;
+    return (json === null || json === void 0 || (_json$data = json.data) === null || _json$data === void 0 ? void 0 : _json$data.numberDeleted) || 0;
   });
   return _handleReservationsDeleted.apply(this, arguments);
 }

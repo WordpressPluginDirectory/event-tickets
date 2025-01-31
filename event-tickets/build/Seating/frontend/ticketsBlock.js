@@ -265,7 +265,7 @@ function TicketRow(props) {
 		</div>`, props);
 }
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/frontend/ticketsBlock/localized-data.js
-var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$tec$tickets$s2;
+var _window;
 /**
  * @typedef {Object} SeatMapTicketEntry
  * @property {string}                ticketId                   The ticket ID.
@@ -294,7 +294,7 @@ var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s, _window$te
  *
  * @type {TicketBlockExternals}
  */
-const localizedData = (_window = window) === null || _window === void 0 ? void 0 : (_window$tec = _window.tec) === null || _window$tec === void 0 ? void 0 : (_window$tec$tickets = _window$tec.tickets) === null || _window$tec$tickets === void 0 ? void 0 : (_window$tec$tickets$s = _window$tec$tickets.seating) === null || _window$tec$tickets$s === void 0 ? void 0 : (_window$tec$tickets$s2 = _window$tec$tickets$s.frontend) === null || _window$tec$tickets$s2 === void 0 ? void 0 : _window$tec$tickets$s2.ticketsBlock;
+const localizedData = (_window = window) === null || _window === void 0 || (_window = _window.tec) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 || (_window = _window.seating) === null || _window === void 0 || (_window = _window.frontend) === null || _window === void 0 ? void 0 : _window.ticketsBlock;
 // EXTERNAL MODULE: external "tec.tickets.seating.currency"
 var external_tec_tickets_seating_currency_ = __webpack_require__("Almt");
 
@@ -414,8 +414,8 @@ Object(external_wp_hooks_["addFilter"])('tec.tickets.tickets-block.getTickets', 
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/frontend/ticketsBlock/index.js
 
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 
 
 
@@ -617,7 +617,7 @@ function updateTotals(parentElement) {
 function addTicketToSelection(parentElement, props) {
   var _tickets$props$ticket;
   parentElement = parentElement || document;
-  const ticketPrice = (tickets === null || tickets === void 0 ? void 0 : (_tickets$props$ticket = tickets[props.ticketId]) === null || _tickets$props$ticket === void 0 ? void 0 : _tickets$props$ticket.price) || null;
+  const ticketPrice = (tickets === null || tickets === void 0 || (_tickets$props$ticket = tickets[props.ticketId]) === null || _tickets$props$ticket === void 0 ? void 0 : _tickets$props$ticket.price) || null;
   const ticketName = (tickets === null || tickets === void 0 ? void 0 : tickets[props.ticketId].name) || null;
   if (!(ticketPrice && ticketName)) {
     return;
@@ -1001,7 +1001,7 @@ function _proceedToCheckout() {
 }
 function setExpireDate(dialogElement) {
   var _dialogElement$node;
-  const iframe = dialogElement ? dialogElement === null || dialogElement === void 0 ? void 0 : (_dialogElement$node = dialogElement.node) === null || _dialogElement$node === void 0 ? void 0 : _dialogElement$node.querySelector('.tec-tickets-seating__iframe-container iframe.tec-tickets-seating__iframe') : null;
+  const iframe = dialogElement ? dialogElement === null || dialogElement === void 0 || (_dialogElement$node = dialogElement.node) === null || _dialogElement$node === void 0 ? void 0 : _dialogElement$node.querySelector('.tec-tickets-seating__iframe-container iframe.tec-tickets-seating__iframe') : null;
   if (!iframe) {
     return;
   }
@@ -1020,8 +1020,8 @@ function setExpireDate(dialogElement) {
  */
 function addModalEventListeners() {
   var _document$querySelect, _document$querySelect2;
-  (_document$querySelect = document.querySelector('.tec-tickets-seating__modal .tec-tickets-seating__sidebar-control--cancel')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.addEventListener('click', closeModal);
-  (_document$querySelect2 = document.querySelector(confirmSelector)) === null || _document$querySelect2 === void 0 ? void 0 : _document$querySelect2.addEventListener('click', proceedToCheckout);
+  (_document$querySelect = document.querySelector('.tec-tickets-seating__modal .tec-tickets-seating__sidebar-control--cancel')) === null || _document$querySelect === void 0 || _document$querySelect.addEventListener('click', closeModal);
+  (_document$querySelect2 = document.querySelector(confirmSelector)) === null || _document$querySelect2 === void 0 || _document$querySelect2.addEventListener('click', proceedToCheckout);
   Object(external_tec_tickets_seating_frontend_session_["start"])();
   const modal = window[objectName];
   if (!modal) {

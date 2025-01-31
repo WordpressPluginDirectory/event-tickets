@@ -221,13 +221,12 @@ const LAYOUT = {
   rsvp: 'rsvp',
   ticket: 'ticket'
 };
-const ContainerPanel = _ref => {
-  let {
-    className,
-    content,
-    header,
-    layout
-  } = _ref;
+const ContainerPanel = ({
+  className,
+  content,
+  header,
+  layout
+}) => {
   const headerAndContent = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement("div", {
     className: "tribe-editor__container-panel__header"
   }, header), content && wp.element.createElement("div", {
@@ -341,9 +340,7 @@ const DEFAULT_STATE = {
   src: '',
   alt: ''
 };
-/* harmony default export */ __webpack_exports__["b"] = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ __webpack_exports__["b"] = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case _moderntribe_tickets_data_blocks_rsvp__WEBPACK_IMPORTED_MODULE_0__[/* types */ "f"].SET_RSVP_HEADER_IMAGE:
       return {
@@ -469,7 +466,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TICKET_LABELS", function() { return TICKET_LABELS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SALE_PRICE_LABELS", function() { return SALE_PRICE_LABELS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "IS_FREE_TC_TICKET_ALLOWED", function() { return IS_FREE_TC_TICKET_ALLOWED; });
-var _window, _window$tribe_editor_, _window$tribe_editor_2, _window2, _window2$tribe_editor, _window2$tribe_editor2, _window3, _window3$tribe_editor, _window3$tribe_editor2, _window3$tribe_editor3;
+var _window, _window2, _window3;
 const TC = 'tribe-commerce';
 const EDD = 'edd';
 const WOO = 'woo';
@@ -512,11 +509,11 @@ const SUFFIX = 'postfix';
 const PRICE_POSITIONS = [PREFIX, SUFFIX];
 
 // eslint-disable-next-line no-undef
-const TICKET_LABELS = (_window = window) === null || _window === void 0 ? void 0 : (_window$tribe_editor_ = _window.tribe_editor_config) === null || _window$tribe_editor_ === void 0 ? void 0 : (_window$tribe_editor_2 = _window$tribe_editor_.tickets) === null || _window$tribe_editor_2 === void 0 ? void 0 : _window$tribe_editor_2.ticketLabels;
-const SALE_PRICE_LABELS = (_window2 = window) === null || _window2 === void 0 ? void 0 : (_window2$tribe_editor = _window2.tribe_editor_config) === null || _window2$tribe_editor === void 0 ? void 0 : (_window2$tribe_editor2 = _window2$tribe_editor.tickets) === null || _window2$tribe_editor2 === void 0 ? void 0 : _window2$tribe_editor2.salePrice;
+const TICKET_LABELS = (_window = window) === null || _window === void 0 || (_window = _window.tribe_editor_config) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 ? void 0 : _window.ticketLabels;
+const SALE_PRICE_LABELS = (_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.tribe_editor_config) === null || _window2 === void 0 || (_window2 = _window2.tickets) === null || _window2 === void 0 ? void 0 : _window2.salePrice;
 
 // eslint-disable-next-line max-len
-const IS_FREE_TC_TICKET_ALLOWED = (_window3 = window) === null || _window3 === void 0 ? void 0 : (_window3$tribe_editor = _window3.tribe_editor_config) === null || _window3$tribe_editor === void 0 ? void 0 : (_window3$tribe_editor2 = _window3$tribe_editor.tickets) === null || _window3$tribe_editor2 === void 0 ? void 0 : (_window3$tribe_editor3 = _window3$tribe_editor2.commerce) === null || _window3$tribe_editor3 === void 0 ? void 0 : _window3$tribe_editor3.isFreeTicketAllowed;
+const IS_FREE_TC_TICKET_ALLOWED = (_window3 = window) === null || _window3 === void 0 || (_window3 = _window3.tribe_editor_config) === null || _window3 === void 0 || (_window3 = _window3.tickets) === null || _window3 === void 0 || (_window3 = _window3.commerce) === null || _window3 === void 0 ? void 0 : _window3.isFreeTicketAllowed;
 
 /***/ }),
 
@@ -1005,11 +1002,10 @@ const hasValidTicketProvider = () => {
 const hasMultipleTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 1);
 const hasTicketProviders = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([getTicketProviders], providers => providers.length > 0);
 const canCreateTickets = Object(reselect__WEBPACK_IMPORTED_MODULE_2__["createSelector"])([hasTicketProviders, hasValidTicketProvider], (providers, validDefaultProvider) => providers && validDefaultProvider);
-const getCurrentPostTypeLabel = function () {
+const getCurrentPostTypeLabel = (key = 'singular_name') => {
   var _post$labels;
-  let key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'singular_name';
   const post = postConfig();
-  return (post === null || post === void 0 ? void 0 : (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
+  return (post === null || post === void 0 || (_post$labels = post.labels) === null || _post$labels === void 0 ? void 0 : _post$labels[key]) || 'Post';
 };
 const currentPostIsEvent = () => {
   const post = postConfig();
@@ -2137,8 +2133,8 @@ var constants = __webpack_require__("DOwB");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket/details.js
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2188,9 +2184,7 @@ const DEFAULT_STATE = {
   saleEndDateInput: '',
   saleEndDateMoment: ''
 };
-/* harmony default export */ var ticket_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var ticket_details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_TITLE"]:
       return _objectSpread(_objectSpread({}, state), {}, {
@@ -2310,8 +2304,8 @@ const DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket/temp-details.js
 
-function temp_details_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function temp_details_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? temp_details_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : temp_details_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function temp_details_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function temp_details_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? temp_details_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : temp_details_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2358,9 +2352,7 @@ const temp_details_DEFAULT_STATE = {
   saleEndDateInput: '',
   saleEndDateMoment: ''
 };
-/* harmony default export */ var temp_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : temp_details_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var temp_details = ((state = temp_details_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_TEMP_TITLE"]:
       return temp_details_objectSpread(temp_details_objectSpread({}, state), {}, {
@@ -2468,8 +2460,8 @@ const temp_details_DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets/ticket.js
 
-function ticket_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function ticket_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ticket_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ticket_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ticket_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function ticket_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ticket_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ticket_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -2497,9 +2489,7 @@ const ticket_DEFAULT_STATE = {
   hasDurationError: false,
   isSelected: false
 };
-/* harmony default export */ var tickets_ticket = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : ticket_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var tickets_ticket = ((state = ticket_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKET_ATTENDEE_INFO_FIELDS"]:
     case types["SET_TICKET_TITLE"]:
@@ -2621,8 +2611,8 @@ const ticket_DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducers/tickets.js
 
-function tickets_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function tickets_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? tickets_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : tickets_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function tickets_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function tickets_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? tickets_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : tickets_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -2634,9 +2624,7 @@ function tickets_objectSpread(target) { for (var i = 1; i < arguments.length; i+
  */
 
 
-const byClientId = function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+const byClientId = (state = {}, action) => {
   switch (action.type) {
     case types["SET_TICKET_TITLE"]:
     case types["SET_TICKET_DESCRIPTION"]:
@@ -2719,9 +2707,7 @@ const byClientId = function () {
       return state;
   }
 };
-const allClientIds = function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+const allClientIds = (state = [], action) => {
   switch (action.type) {
     case types["REGISTER_TICKET_BLOCK"]:
       return [...state, action.payload.clientId];
@@ -2742,8 +2728,8 @@ var header_image = __webpack_require__("YEbw");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/reducer.js
 
-function reducer_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function reducer_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? reducer_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : reducer_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function reducer_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function reducer_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? reducer_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : reducer_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -2760,9 +2746,7 @@ const reducer_DEFAULT_STATE = {
   tempSharedCapacity: '',
   tickets: reducers_tickets(undefined, {})
 };
-/* harmony default export */ var reducer = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : reducer_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var reducer = ((state = reducer_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types["SET_TICKETS_HEADER_IMAGE"]:
       return reducer_objectSpread(reducer_objectSpread({}, state), {}, {
@@ -2932,8 +2916,8 @@ var sagas = __webpack_require__("ghtj");
 // CONCATENATED MODULE: ./src/modules/data/blocks/ticket/sagas.js
 
 
-function sagas_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function sagas_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? sagas_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : sagas_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function sagas_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function sagas_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? sagas_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : sagas_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External Dependencies
  */
@@ -2986,12 +2970,11 @@ function* createMissingTicketBlocks(tickets) {
   const {
     getBlockCount,
     getBlocks
-  } = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_wp_data_["select"], 'core/editor');
+  } = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_wp_data_["select"], 'core/block-editor');
   const ticketsBlocks = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([getBlocks(), 'filter'], block => block.name === 'tribe/tickets');
-  ticketsBlocks.forEach(_ref => {
-    let {
-      clientId
-    } = _ref;
+  ticketsBlocks.forEach(({
+    clientId
+  }) => {
     // Since we're not using the store provided by WordPress, we need to update the block list
     // settings for the Tickets block here to allow the tickets-item block to be inserted.
     // If the WP store did not initialize yet when the `insertBlock` function is called, the
@@ -3012,10 +2995,10 @@ function* createMissingTicketBlocks(tickets) {
 }
 function formatTicketFromRestToAttributeFormat(ticket) {
   var _ticket$capacity_deta, _ticket$capacity_deta2, _ticket$capacity_deta3, _ticket$capacity_deta4, _ticket$cost_details, _ticket$cost_details2, _ticket$cost_details3, _ticket$cost_details4;
-  const capacity = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta = ticket.capacity_details) === null || _ticket$capacity_deta === void 0 ? void 0 : _ticket$capacity_deta.max) || 0;
-  const available = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta2 = ticket.capacity_details) === null || _ticket$capacity_deta2 === void 0 ? void 0 : _ticket$capacity_deta2.available) || 0;
-  const capacityType = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta3 = ticket.capacity_details) === null || _ticket$capacity_deta3 === void 0 ? void 0 : _ticket$capacity_deta3.global_stock_mode) || constants["UNLIMITED"];
-  const sold = (ticket === null || ticket === void 0 ? void 0 : (_ticket$capacity_deta4 = ticket.capacity_details) === null || _ticket$capacity_deta4 === void 0 ? void 0 : _ticket$capacity_deta4.sold) || 0;
+  const capacity = (ticket === null || ticket === void 0 || (_ticket$capacity_deta = ticket.capacity_details) === null || _ticket$capacity_deta === void 0 ? void 0 : _ticket$capacity_deta.max) || 0;
+  const available = (ticket === null || ticket === void 0 || (_ticket$capacity_deta2 = ticket.capacity_details) === null || _ticket$capacity_deta2 === void 0 ? void 0 : _ticket$capacity_deta2.available) || 0;
+  const capacityType = (ticket === null || ticket === void 0 || (_ticket$capacity_deta3 = ticket.capacity_details) === null || _ticket$capacity_deta3 === void 0 ? void 0 : _ticket$capacity_deta3.global_stock_mode) || constants["UNLIMITED"];
+  const sold = (ticket === null || ticket === void 0 || (_ticket$capacity_deta4 = ticket.capacity_details) === null || _ticket$capacity_deta4 === void 0 ? void 0 : _ticket$capacity_deta4.sold) || 0;
   const isShared = capacityType === constants["SHARED"] || capacityType === constants["CAPPED"] || capacityType === constants["GLOBAL"];
   return {
     id: ticket.id,
@@ -3030,11 +3013,11 @@ function formatTicketFromRestToAttributeFormat(ticket) {
     sold: sold,
     shareSold: sold,
     isShared: isShared,
-    currencyDecimalPoint: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details = ticket.cost_details) === null || _ticket$cost_details === void 0 ? void 0 : _ticket$cost_details.currency_decimal_separator) || '.',
-    currencyNumberOfDecimals: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details2 = ticket.cost_details) === null || _ticket$cost_details2 === void 0 ? void 0 : _ticket$cost_details2.currency_decimal_numbers) || 2,
-    currencyPosition: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details3 = ticket.cost_details) === null || _ticket$cost_details3 === void 0 ? void 0 : _ticket$cost_details3.currency_position) || 'prefix',
+    currencyDecimalPoint: (ticket === null || ticket === void 0 || (_ticket$cost_details = ticket.cost_details) === null || _ticket$cost_details === void 0 ? void 0 : _ticket$cost_details.currency_decimal_separator) || '.',
+    currencyNumberOfDecimals: (ticket === null || ticket === void 0 || (_ticket$cost_details2 = ticket.cost_details) === null || _ticket$cost_details2 === void 0 ? void 0 : _ticket$cost_details2.currency_decimal_numbers) || 2,
+    currencyPosition: (ticket === null || ticket === void 0 || (_ticket$cost_details3 = ticket.cost_details) === null || _ticket$cost_details3 === void 0 ? void 0 : _ticket$cost_details3.currency_position) || 'prefix',
     currencySymbol: (ticket === null || ticket === void 0 ? void 0 : ticket.cost_details.currency_symbol) || '$',
-    currencyThousandsSep: (ticket === null || ticket === void 0 ? void 0 : (_ticket$cost_details4 = ticket.cost_details) === null || _ticket$cost_details4 === void 0 ? void 0 : _ticket$cost_details4.currency_thousand_separator) || ','
+    currencyThousandsSep: (ticket === null || ticket === void 0 || (_ticket$cost_details4 = ticket.cost_details) === null || _ticket$cost_details4 === void 0 ? void 0 : _ticket$cost_details4.currency_thousand_separator) || ','
   };
 }
 function* updateUneditableTickets() {
@@ -3179,7 +3162,6 @@ function* setTicketInitialState(action) {
       // ¯\_(ツ)_/¯
     }
   }
-
   const hasTicketsPlus = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(external_tribe_common_data_["plugins"].selectors.hasPlugin, external_tribe_common_data_["plugins"].constants.TICKETS_PLUS);
   if (hasTicketsPlus) {
     yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempCapacityType"](clientId, constants["TICKET_TYPES"][constants["SHARED"]]))]);
@@ -3204,7 +3186,7 @@ function* setBodyDetails(clientId) {
   const props = {
     clientId
   };
-  const rootClientId = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockRootClientId'], clientId);
+  const rootClientId = yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/block-editor'), 'getBlockRootClientId'], clientId);
   const ticketProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketProvider"], props);
   const ticketsProvider = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketsProvider"]);
   body.append('post_id', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getCurrentPostId']));
@@ -3218,7 +3200,7 @@ function* setBodyDetails(clientId) {
   body.append('end_time', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props));
   body.append('sku', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props));
   body.append('iac', yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props));
-  body.append('menu_order', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/editor'), 'getBlockIndex'], clientId, rootClientId));
+  body.append('menu_order', yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["select"])('core/block-editor'), 'getBlockIndex'], clientId, rootClientId));
   const capacityType = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props);
   const capacity = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props);
   const isUnlimited = capacityType === TICKET_TYPES[UNLIMITED];
@@ -3376,7 +3358,6 @@ function* fetchTicket(action) {
      * @todo handle error scenario
      */
   }
-
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsLoading"](clientId, false));
 }
 function* createNewTicket(action) {
@@ -3580,8 +3561,8 @@ function* deleteTicket(action) {
     const hasBeenCreated = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketHasBeenCreated"], props);
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](clientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](clientId));
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'clearSelectedBlock']);
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [clientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'clearSelectedBlock']);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [clientId]);
     if (hasBeenCreated) {
       const {
         remove_ticket_nonce = ''
@@ -3594,7 +3575,6 @@ function* deleteTicket(action) {
        */
       const body = [`${encodeURIComponent('post_id')}=${encodeURIComponent(postId)}`, `${encodeURIComponent('remove_ticket_nonce')}=${encodeURIComponent(remove_ticket_nonce)}` // eslint-disable-line max-len
       ];
-
       try {
         yield Object(external_tribe_modules_reduxSaga_effects_["call"])(wpREST, {
           path: `tickets/${ticketId}`,
@@ -4013,7 +3993,7 @@ function* handleTicketStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDate"](clientId, startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempStartDateMoment"](clientId, startDateMoment));
 }
 function* handleTicketEndDate(action) {
@@ -4025,7 +4005,7 @@ function* handleTicketEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDate"](clientId, endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempEndDateMoment"](clientId, endDateMoment));
 }
 function* handleTicketSaleStartDate(action) {
@@ -4037,7 +4017,7 @@ function* handleTicketSaleStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDate"](clientId, startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateMoment"](clientId, startDateMoment));
 }
 function* handleTicketSaleEndDate(action) {
@@ -4049,7 +4029,7 @@ function* handleTicketSaleEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDate"](clientId, endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateMoment"](clientId, endDateMoment));
 }
 function* handleTicketStartTime(action) {
@@ -4094,7 +4074,7 @@ function* handleTicketMove() {
   if (ticketClientIds.includes(modalClientId)) {
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketIsSelected"](modalClientId, false));
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["removeTicketBlock"](modalClientId));
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [modalClientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [modalClientId]);
   }
 }
 function* handler(action) {
@@ -4236,9 +4216,7 @@ const DEFAULT_STATE = {
   src: '',
   alt: ''
 };
-/* harmony default export */ __webpack_exports__["b"] = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ __webpack_exports__["b"] = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case _moderntribe_tickets_data_blocks_ticket_types__WEBPACK_IMPORTED_MODULE_0__["SET_TICKETS_HEADER_IMAGE"]:
       return {
@@ -5763,8 +5741,8 @@ var style = __webpack_require__("unXf");
 
 
 const _excluded = ["asLink", "children", "className", "disabled", "href", "icon", "onClick", "position", "target"];
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -5781,25 +5759,20 @@ const positions = {
   right: 'right',
   left: 'left'
 };
-const components = {
-  button: external_tribe_common_elements_["Button"],
-  link: external_tribe_common_elements_["Link"]
-};
 const ActionButton = _ref => {
   let {
-      asLink,
+      asLink = false,
       children,
       className,
       disabled,
-      href,
+      href = '#',
       icon,
       onClick,
-      position,
+      position = positions.left,
       target
     } = _ref,
     props = objectWithoutProperties_default()(_ref, _excluded);
   const containerClass = external_tribe_modules_classnames_default()('tribe-editor__action-button', `tribe-editor__action-button--icon-${position}`, className);
-  const Element = asLink && !disabled ? components.link : components.button;
   const getProps = () => {
     const elemProps = _objectSpread({}, props);
     if (asLink && !disabled) {
@@ -5812,7 +5785,16 @@ const ActionButton = _ref => {
     }
     return elemProps;
   };
-  return wp.element.createElement(Element, extends_default()({
+  if (asLink && !disabled) {
+    return wp.element.createElement(external_tribe_common_elements_["Link"], extends_default()({
+      className: containerClass
+    }, _objectSpread({
+      href: '#'
+    }, getProps())), icon, wp.element.createElement("span", {
+      className: "tribe-editor__action-button__label"
+    }, children));
+  }
+  return wp.element.createElement(external_tribe_common_elements_["Button"], extends_default()({
     className: containerClass
   }, getProps()), icon, wp.element.createElement("span", {
     className: "tribe-editor__action-button__label"
@@ -5828,10 +5810,6 @@ ActionButton.propTypes = {
   onClick: external_tribe_modules_propTypes_default.a.func,
   position: external_tribe_modules_propTypes_default.a.oneOf(Object.keys(positions)),
   target: external_tribe_modules_propTypes_default.a.string
-};
-ActionButton.defaultProps = {
-  asLink: false,
-  position: positions.left
 };
 /* harmony default export */ var action_button_element = (ActionButton);
 // CONCATENATED MODULE: ./src/modules/elements/action-button/index.js
@@ -5860,19 +5838,18 @@ var action_dashboard_style = __webpack_require__("P9XJ");
  */
 
 
-const ActionDashboard = _ref => {
-  let {
-    actions,
-    cancelLabel,
-    className,
-    confirmLabel,
-    isCancelDisabled,
-    isConfirmDisabled,
-    onCancelClick,
-    onConfirmClick,
-    showCancel,
-    showConfirm
-  } = _ref;
+const ActionDashboard = ({
+  actions,
+  cancelLabel,
+  className,
+  confirmLabel,
+  isCancelDisabled,
+  isConfirmDisabled,
+  onCancelClick = external_lodash_noop_default.a,
+  onConfirmClick = external_lodash_noop_default.a,
+  showCancel = true,
+  showConfirm = true
+}) => {
   const actionsList = actions && !!actions.length && wp.element.createElement("div", {
     className: "tribe-editor__action-dashboard__group-left"
   }, actions.map((action, index) => wp.element.createElement("span", {
@@ -5901,12 +5878,6 @@ const ActionDashboard = _ref => {
       'tribe-editor__action-dashboard__no-top-bottom-paddings': !actionsList && !groupRight
     }, className)
   }, actionsList, groupRight);
-};
-ActionDashboard.defaultProps = {
-  showCancel: true,
-  showConfirm: true,
-  onCancelClick: external_lodash_noop_default.a,
-  onConfirmClick: external_lodash_noop_default.a
 };
 ActionDashboard.propTypes = {
   actions: external_tribe_modules_propTypes_default.a.arrayOf(external_tribe_modules_propTypes_default.a.node),
@@ -6057,13 +6028,12 @@ const getHeaderElement = (header, description) => {
     className: "tickets-heading__description"
   }, description));
 };
-const Card = _ref => {
-  let {
-    className,
-    children,
-    header,
-    description
-  } = _ref;
+const Card = ({
+  className,
+  children,
+  header,
+  description
+}) => {
   return wp.element.createElement("div", {
     className: external_tribe_modules_classnames_default()('tribe-editor__card', className)
   }, header && getHeaderElement(header, description), children);
@@ -6095,11 +6065,10 @@ var split_container_style = __webpack_require__("9mgW");
  * Internal dependencies
  */
 
-const SplitContainer = _ref => {
-  let {
-    leftColumn,
-    rightColumn
-  } = _ref;
+const SplitContainer = ({
+  leftColumn,
+  rightColumn
+}) => {
   return wp.element.createElement(external_React_default.a.Fragment, null, wp.element.createElement("div", {
     className: "tribe-editor__rsvp-details-wrapper"
   }, wp.element.createElement("div", {
@@ -6128,8 +6097,11 @@ SplitContainer.propTypes = {
 // EXTERNAL MODULE: ./src/modules/elements/container-panel/index.js + 1 modules
 var container_panel = __webpack_require__("2LK8");
 
-// EXTERNAL MODULE: ./node_modules/react-day-picker/moment/index.js
-var moment = __webpack_require__("1rrs");
+// EXTERNAL MODULE: ./node_modules/date-fns/format.js + 10 modules
+var format = __webpack_require__("U4kA");
+
+// EXTERNAL MODULE: ./node_modules/date-fns/parse.js + 44 modules
+var parse = __webpack_require__("t3m+");
 
 // EXTERNAL MODULE: external "tribe.common.utils"
 var external_tribe_common_utils_ = __webpack_require__("B8vQ");
@@ -6170,8 +6142,8 @@ class element_DateTimeRangePicker extends external_React_["Component"] {
       const props = {
         value: fromDateInput,
         format: fromDateFormat,
-        formatDate: moment["formatDate"],
-        parseDate: moment["parseDate"],
+        formatDate: format["a" /* formatDate */],
+        parseDate: parse["a" /* parse */],
         dayPickerProps: {
           selectedDays: [fromDate, {
             from: fromDate,
@@ -6214,8 +6186,8 @@ class element_DateTimeRangePicker extends external_React_["Component"] {
       const props = {
         value: toDateInput,
         format: toDateFormat,
-        formatDate: moment["formatDate"],
-        parseDate: moment["parseDate"],
+        formatDate: format["a" /* formatDate */],
+        parseDate: parse["a" /* parse */],
         dayPickerProps: {
           selectedDays: [fromDate, {
             from: fromDate,
@@ -6367,22 +6339,17 @@ defineProperty_default()(element_DateTimeRangePicker, "propTypes", {
  * Internal dependencies
  */
 
-const IconWithTooltip = _ref => {
-  let {
-    description,
-    icon,
-    position,
-    propertyName
-  } = _ref;
+const IconWithTooltip = ({
+  description = '',
+  icon,
+  position = 'top right',
+  propertyName
+}) => {
   const text = wp.element.createElement("div", null, propertyName, description && ': ', description && wp.element.createElement("em", null, description));
   return wp.element.createElement(external_wp_components_["Tooltip"], {
     text: text,
-    position: position
+    placement: position
   }, wp.element.createElement("span", null, icon));
-};
-IconWithTooltip.defaultProps = {
-  description: '',
-  position: 'top right'
 };
 IconWithTooltip.propTypes = {
   description: external_tribe_modules_propTypes_default.a.string,
@@ -6416,40 +6383,32 @@ var label_with_tooltip_style = __webpack_require__("s3Q2");
 
 
 /* eslint-disable max-len */
-const LabelWithTooltip = _ref => {
-  let {
-    className,
-    forId,
-    isLabel,
-    label,
-    tooltipDisabled,
-    tooltipLabel,
-    tooltipPosition,
-    tooltipText,
-    delay
-  } = _ref;
-  return wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
-    className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
-    forId: forId,
-    isLabel: isLabel,
-    label: label
-  }, wp.element.createElement(external_wp_components_["Tooltip"], {
-    text: tooltipText,
-    placement: tooltipPosition,
-    delay: delay
-  }, wp.element.createElement("button", {
-    "aria-label": tooltipText,
-    className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
-    disabled: tooltipDisabled
-  }, tooltipLabel)));
-};
+const LabelWithTooltip = ({
+  className,
+  forId,
+  isLabel,
+  label = '',
+  tooltipDisabled,
+  tooltipLabel,
+  tooltipPosition = 'top right',
+  tooltipText,
+  delay
+}) => wp.element.createElement(external_tribe_common_elements_["LabeledItem"], {
+  className: external_tribe_modules_classnames_default()('tribe-editor__label-with-tooltip', className),
+  forId: forId,
+  isLabel: isLabel,
+  label: label
+}, wp.element.createElement(external_wp_components_["Tooltip"], {
+  text: tooltipText,
+  placement: tooltipPosition,
+  delay: delay
+}, wp.element.createElement("button", {
+  "aria-label": tooltipText,
+  className: external_tribe_modules_classnames_default()('tribe-editor__tooltip-label', 'tribe-editor__label-with-tooltip__tooltip-label'),
+  disabled: tooltipDisabled
+}, tooltipLabel)));
 /* eslint-enable max-len */
 
-LabelWithTooltip.defaultProps = {
-  label: '',
-  tooltipPosition: 'top right',
-  delay: 200
-};
 LabelWithTooltip.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   forId: external_tribe_modules_propTypes_default.a.string,
@@ -6496,16 +6455,15 @@ LabelWithTooltip.propTypes = {
  * @param {boolean} props.useFallback If true, fallback is used.
  * @returns {*} return fallback if count is zero or negative otherwise singular or plural
  */
-const NumericLabel = _ref => {
-  let {
-    className,
-    count,
-    includeZero,
-    singular,
-    plural,
-    fallback,
-    useFallback
-  } = _ref;
+const NumericLabel = ({
+  className = '',
+  count = 0,
+  includeZero = false,
+  singular = '',
+  plural = '',
+  fallback = null,
+  useFallback = true
+}) => {
   if (useFallback && (includeZero && !(count >= 0) || !includeZero && !(count > 0))) {
     return fallback;
   }
@@ -6529,15 +6487,6 @@ NumericLabel.propTypes = {
   plural: external_tribe_modules_propTypes_default.a.string,
   useFallback: external_tribe_modules_propTypes_default.a.any,
   fallback: external_tribe_modules_propTypes_default.a.any
-};
-NumericLabel.defaultProps = {
-  count: 0,
-  includeZero: false,
-  singular: '',
-  plural: '',
-  className: '',
-  fallback: null,
-  useFallback: true
 };
 /* harmony default export */ var numeric_label_element = (NumericLabel);
 // CONCATENATED MODULE: ./src/modules/elements/numeric-label/index.js
@@ -6565,26 +6514,23 @@ const LAYOUT = {
   rsvp: 'rsvp',
   ticket: 'ticket'
 };
-const InactiveBlock = _ref => {
-  let {
-    className,
-    description,
-    icon,
-    layout,
-    title
-  } = _ref;
-  return wp.element.createElement("section", {
-    className: external_tribe_modules_classnames_default()('tribe-editor__inactive-block', `tribe-editor__inactive-block--${layout}`, className)
-  }, wp.element.createElement("div", {
-    className: "tribe-editor__inactive-block__icon"
-  }, icon), (title || description) && wp.element.createElement("div", {
-    className: "tribe-editor__inactive-block__content"
-  }, title && wp.element.createElement("h2", {
-    className: "tribe-editor__inactive-block__title"
-  }, title), description && wp.element.createElement("p", {
-    className: "tribe-editor__inactive-block__description"
-  }, description)));
-};
+const InactiveBlock = ({
+  className,
+  description,
+  icon,
+  layout,
+  title
+}) => wp.element.createElement("section", {
+  className: external_tribe_modules_classnames_default()('tribe-editor__inactive-block', `tribe-editor__inactive-block--${layout}`, className)
+}, wp.element.createElement("div", {
+  className: "tribe-editor__inactive-block__icon"
+}, icon), (title || description) && wp.element.createElement("div", {
+  className: "tribe-editor__inactive-block__content"
+}, title && wp.element.createElement("h2", {
+  className: "tribe-editor__inactive-block__title"
+}, title), description && wp.element.createElement("p", {
+  className: "tribe-editor__inactive-block__description"
+}, description)));
 InactiveBlock.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   description: external_tribe_modules_propTypes_default.a.string,
@@ -6626,38 +6572,30 @@ var settings_dashboard_style = __webpack_require__("oe2g");
 
 
 
-const SettingsDashboard = _ref => {
-  let {
-    className,
-    closeButtonDisabled,
-    closeButtonLabel,
-    content,
-    headerLeft,
-    onCloseClick
-  } = _ref;
-  return wp.element.createElement(card, {
-    className: external_tribe_modules_classnames_default()('tribe-editor__settings-dashboard', className)
-  }, wp.element.createElement("header", {
-    className: "tribe-editor__settings-dashboard__header"
-  }, wp.element.createElement("span", {
-    className: "tribe-editor__settings-dashboard__header-left"
-  }, headerLeft), wp.element.createElement(external_tribe_common_elements_["Button"], {
-    className: "tribe-editor__settings-dashboard__close-button",
-    onClick: onCloseClick,
-    disabled: closeButtonDisabled
-  }, closeButtonLabel)), wp.element.createElement("div", {
-    className: "tribe-editor__settings-dashboard__content"
-  }, content));
-};
-SettingsDashboard.defaultProps = {
-  closeButtonLabel: wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Close"], null), wp.element.createElement("span", {
+const SettingsDashboard = ({
+  className,
+  closeButtonDisabled,
+  closeButtonLabel = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Close"], null), wp.element.createElement("span", {
     className: "tribe-editor__settings-dashboard__close-button-text"
   }, Object(external_wp_i18n_["__"])('close', 'event-tickets'))),
-  headerLeft: wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Settings"], null), wp.element.createElement("span", {
+  content,
+  headerLeft = wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(icons["Settings"], null), wp.element.createElement("span", {
     className: "tribe-editor__settings-dashboard__header-left-text"
   }, Object(external_wp_i18n_["__"])('Ticket Settings', 'event-tickets'))),
-  onCloseClick: external_lodash_noop_default.a
-};
+  onCloseClick = external_lodash_noop_default.a
+}) => wp.element.createElement(card, {
+  className: external_tribe_modules_classnames_default()('tribe-editor__settings-dashboard', className)
+}, wp.element.createElement("header", {
+  className: "tribe-editor__settings-dashboard__header"
+}, wp.element.createElement("span", {
+  className: "tribe-editor__settings-dashboard__header-left"
+}, headerLeft), wp.element.createElement(external_tribe_common_elements_["Button"], {
+  className: "tribe-editor__settings-dashboard__close-button",
+  onClick: onCloseClick,
+  disabled: closeButtonDisabled
+}, closeButtonLabel)), wp.element.createElement("div", {
+  className: "tribe-editor__settings-dashboard__content"
+}, content));
 SettingsDashboard.propTypes = {
   className: external_tribe_modules_propTypes_default.a.string,
   closeButtonDisabled: external_tribe_modules_propTypes_default.a.bool,
@@ -6740,10 +6678,9 @@ var notice_style = __webpack_require__("t/7v");
  */
 
 
-const Notice = _ref => {
-  let {
-    description
-  } = _ref;
+const Notice = ({
+  description
+}) => {
   return wp.element.createElement("div", {
     className: "tribe-editor__notice"
   }, wp.element.createElement(icons["Bulb"], null), description);
@@ -7187,10 +7124,9 @@ const createOrUpdateRSVP = method => payload => dispatch => {
     },
     actions: {
       start: () => dispatch(actions["setRSVPIsLoading"](true)),
-      success: _ref => {
-        let {
-          body
-        } = _ref;
+      success: ({
+        body
+      }) => {
         if (method === METHODS.POST) {
           dispatch(actions["createRSVP"]());
           dispatch(actions["setRSVPId"](body.id));
@@ -7216,96 +7152,91 @@ const deleteRSVP = id => dispatch => {
   };
   dispatch(wpRequestActions.wpRequest(options));
 };
-const getRSVP = function (postId) {
-  let page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  return dispatch => {
-    const path = `${utils["o" /* RSVP_POST_TYPE */]}?per_page=100&page=${page}&context=edit`;
-    const options = {
-      path,
-      params: {
-        method: METHODS.GET
+const getRSVP = (postId, page = 1) => dispatch => {
+  const path = `${utils["o" /* RSVP_POST_TYPE */]}?per_page=100&page=${page}&context=edit`;
+  const options = {
+    path,
+    params: {
+      method: METHODS.GET
+    },
+    actions: {
+      start: () => dispatch(actions["setRSVPIsLoading"](true)),
+      success: ({
+        body,
+        headers
+      }) => {
+        const filteredRSVPs = body.filter(rsvp => rsvp.meta[utils["b" /* KEY_RSVP_FOR_EVENT */]] == postId // eslint-disable-line eqeqeq
+        );
+        const totalPages = headers.get('x-wp-totalpages');
+        if (filteredRSVPs.length) {
+          /* If RSVP for event exists in fetched data */
+          /**
+           * @todo We are currently only fetching the first RSVP.
+           *       If an event has more than 1 RSVP set up from
+           *       the classic editor, only one will be displayed.
+           *       The strategy to handle this is is being worked on.
+           */
+          const datePickerFormat = external_tribe_common_utils_["globals"].tecDateSettings().datepickerFormat;
+          const rsvp = filteredRSVPs[0];
+          const {
+            meta = {}
+          } = rsvp;
+          const startMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["m" /* KEY_TICKET_START_DATE */]]);
+          const endMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["f" /* KEY_TICKET_END_DATE */]]);
+          const startDateInput = datePickerFormat ? startMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(startMoment);
+          const endDateInput = datePickerFormat ? endMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(endMoment);
+          const capacity = meta[utils["d" /* KEY_TICKET_CAPACITY */]] >= 0 ? meta[utils["d" /* KEY_TICKET_CAPACITY */]] : '';
+          const notGoingResponses = meta[utils["l" /* KEY_TICKET_SHOW_NOT_GOING */]];
+          dispatch(actions["createRSVP"]());
+          dispatch(actions["setRSVPId"](rsvp.id));
+          dispatch(actions["setRSVPGoingCount"](parseInt(meta[utils["g" /* KEY_TICKET_GOING_COUNT */]], 10) || 0));
+          dispatch(actions["setRSVPNotGoingCount"](parseInt(meta[utils["j" /* KEY_TICKET_NOT_GOING_COUNT */]], 10) || 0));
+          dispatch(actions["setRSVPHasAttendeeInfoFields"](meta[utils["h" /* KEY_TICKET_HAS_ATTENDEE_INFO_FIELDS */]]));
+          dispatch(actions["setRSVPDetails"]({
+            title: rsvp.title.raw,
+            description: rsvp.excerpt.raw,
+            capacity,
+            notGoingResponses,
+            startDate: external_tribe_common_utils_["moment"].toDate(startMoment),
+            startDateInput,
+            startDateMoment: startMoment.clone().startOf('day'),
+            endDate: external_tribe_common_utils_["moment"].toDate(endMoment),
+            endDateInput,
+            endDateMoment: endMoment.clone().seconds(0),
+            startTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
+            endTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
+            startTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
+            endTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
+          }));
+          dispatch(actions["setRSVPTempDetails"]({
+            tempTitle: rsvp.title.raw,
+            tempDescription: rsvp.excerpt.raw,
+            tempCapacity: capacity,
+            tempNotGoingResponses: notGoingResponses,
+            tempStartDate: external_tribe_common_utils_["moment"].toDate(startMoment),
+            tempStartDateInput: startDateInput,
+            tempStartDateMoment: startMoment.clone().startOf('day'),
+            tempEndDate: external_tribe_common_utils_["moment"].toDate(endMoment),
+            tempEndDateInput: endDateInput,
+            tempEndDateMoment: endMoment.clone().seconds(0),
+            tempStartTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
+            tempEndTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
+            tempStartTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
+            tempEndTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
+          }));
+          dispatch(actions["setRSVPIsLoading"](false));
+        } else if (page < totalPages) {
+          /* If there are more pages */
+          dispatch(getRSVP(postId, page + 1));
+        } else {
+          /* Did not find RSVP */
+          dispatch(actions["setRSVPIsLoading"](false));
+        }
       },
-      actions: {
-        start: () => dispatch(actions["setRSVPIsLoading"](true)),
-        success: _ref2 => {
-          let {
-            body,
-            headers
-          } = _ref2;
-          const filteredRSVPs = body.filter(rsvp => rsvp.meta[utils["b" /* KEY_RSVP_FOR_EVENT */]] == postId // eslint-disable-line eqeqeq
-          );
-
-          const totalPages = headers.get('x-wp-totalpages');
-          if (filteredRSVPs.length) {
-            /* If RSVP for event exists in fetched data */
-            /**
-             * @todo We are currently only fetching the first RSVP.
-             *       If an event has more than 1 RSVP set up from
-             *       the classic editor, only one will be displayed.
-             *       The strategy to handle this is is being worked on.
-             */
-            const datePickerFormat = external_tribe_common_utils_["globals"].tecDateSettings().datepickerFormat;
-            const rsvp = filteredRSVPs[0];
-            const {
-              meta = {}
-            } = rsvp;
-            const startMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["m" /* KEY_TICKET_START_DATE */]]);
-            const endMoment = external_tribe_common_utils_["moment"].toMoment(meta[utils["f" /* KEY_TICKET_END_DATE */]]);
-            const startDateInput = datePickerFormat ? startMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(startMoment);
-            const endDateInput = datePickerFormat ? endMoment.format(external_tribe_common_utils_["moment"].toFormat(datePickerFormat)) : external_tribe_common_utils_["moment"].toDate(endMoment);
-            const capacity = meta[utils["d" /* KEY_TICKET_CAPACITY */]] >= 0 ? meta[utils["d" /* KEY_TICKET_CAPACITY */]] : '';
-            const notGoingResponses = meta[utils["l" /* KEY_TICKET_SHOW_NOT_GOING */]];
-            dispatch(actions["createRSVP"]());
-            dispatch(actions["setRSVPId"](rsvp.id));
-            dispatch(actions["setRSVPGoingCount"](parseInt(meta[utils["g" /* KEY_TICKET_GOING_COUNT */]], 10) || 0));
-            dispatch(actions["setRSVPNotGoingCount"](parseInt(meta[utils["j" /* KEY_TICKET_NOT_GOING_COUNT */]], 10) || 0));
-            dispatch(actions["setRSVPHasAttendeeInfoFields"](meta[utils["h" /* KEY_TICKET_HAS_ATTENDEE_INFO_FIELDS */]]));
-            dispatch(actions["setRSVPDetails"]({
-              title: rsvp.title.raw,
-              description: rsvp.excerpt.raw,
-              capacity,
-              notGoingResponses,
-              startDate: external_tribe_common_utils_["moment"].toDate(startMoment),
-              startDateInput,
-              startDateMoment: startMoment.clone().startOf('day'),
-              endDate: external_tribe_common_utils_["moment"].toDate(endMoment),
-              endDateInput,
-              endDateMoment: endMoment.clone().seconds(0),
-              startTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
-              endTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
-              startTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
-              endTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
-            }));
-            dispatch(actions["setRSVPTempDetails"]({
-              tempTitle: rsvp.title.raw,
-              tempDescription: rsvp.excerpt.raw,
-              tempCapacity: capacity,
-              tempNotGoingResponses: notGoingResponses,
-              tempStartDate: external_tribe_common_utils_["moment"].toDate(startMoment),
-              tempStartDateInput: startDateInput,
-              tempStartDateMoment: startMoment.clone().startOf('day'),
-              tempEndDate: external_tribe_common_utils_["moment"].toDate(endMoment),
-              tempEndDateInput: endDateInput,
-              tempEndDateMoment: endMoment.clone().seconds(0),
-              tempStartTime: external_tribe_common_utils_["moment"].toDatabaseTime(startMoment),
-              tempEndTime: external_tribe_common_utils_["moment"].toDatabaseTime(endMoment),
-              tempStartTimeInput: external_tribe_common_utils_["moment"].toTime(startMoment),
-              tempEndTimeInput: external_tribe_common_utils_["moment"].toTime(endMoment)
-            }));
-            dispatch(actions["setRSVPIsLoading"](false));
-          } else if (page < totalPages) {
-            /* If there are more pages */
-            dispatch(getRSVP(postId, page + 1));
-          } else {
-            /* Did not find RSVP */
-            dispatch(actions["setRSVPIsLoading"](false));
-          }
-        },
-        error: () => dispatch(actions["setRSVPIsLoading"](false))
-      }
-    };
-    dispatch(wpRequestActions.wpRequest(options));
+      error: () => dispatch(actions["setRSVPIsLoading"](false))
+    }
   };
+  dispatch(wpRequestActions.wpRequest(options));
 };
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/defineProperty.js
 var defineProperty = __webpack_require__("lSNA");
@@ -7317,8 +7248,8 @@ var external_moment_default = /*#__PURE__*/__webpack_require__.n(external_moment
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducers/details.js
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * External dependencies
  */
@@ -7352,9 +7283,7 @@ const DEFAULT_STATE = {
   startTimeInput: external_tribe_common_utils_["moment"].toTime(currentMoment),
   endTimeInput: external_tribe_common_utils_["moment"].toTime(details_endMoment)
 };
-/* harmony default export */ var details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.SET_RSVP_TITLE:
       return _objectSpread(_objectSpread({}, state), {}, {
@@ -7418,16 +7347,14 @@ const DEFAULT_STATE = {
 });
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducers/temp-details.js
 
-function temp_details_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function temp_details_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? temp_details_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : temp_details_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function temp_details_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function temp_details_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? temp_details_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : temp_details_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
 
 
-/* harmony default export */ var temp_details = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var temp_details = ((state = DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.SET_RSVP_TEMP_TITLE:
       return temp_details_objectSpread(temp_details_objectSpread({}, state), {}, {
@@ -7494,8 +7421,8 @@ var header_image = __webpack_require__("56gU");
 
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/reducer.js
 
-function reducer_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function reducer_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? reducer_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : reducer_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function reducer_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function reducer_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? reducer_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : reducer_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 /**
  * Internal dependencies
  */
@@ -7519,9 +7446,7 @@ const reducer_DEFAULT_STATE = {
   tempDetails: DEFAULT_STATE,
   headerImage: header_image["a" /* DEFAULT_STATE */]
 };
-/* harmony default export */ var reducer = (function () {
-  let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : reducer_DEFAULT_STATE;
-  let action = arguments.length > 1 ? arguments[1] : undefined;
+/* harmony default export */ var reducer = ((state = reducer_DEFAULT_STATE, action) => {
   switch (action.type) {
     case types_namespaceObject.CREATE_RSVP:
       return reducer_objectSpread(reducer_objectSpread({}, state), {}, {
@@ -7925,7 +7850,7 @@ function* handleRSVPStartDate(action) {
   const startDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const startDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, startDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDate"](startDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateInput"](dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateInput"](dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempStartDateMoment"](startDateMoment));
 }
 function* handleRSVPEndDate(action) {
@@ -7936,7 +7861,7 @@ function* handleRSVPEndDate(action) {
   const endDateMoment = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, date) : undefined;
   const endDate = yield date ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endDateMoment) : '';
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDate"](endDate));
-  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateInput"](dayPickerInput.state.value));
+  yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateInput"](dayPickerInput));
   yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setRSVPTempEndDateMoment"](endDateMoment));
 }
 function* handleRSVPStartTime(action) {
@@ -7972,7 +7897,7 @@ function* handleRSVPMove() {
   if (rsvpId === modalTicketId) {
     const clientId = yield Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["a" /* getModalClientId */]);
     yield Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["deleteRSVP"]());
-    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/editor'), 'removeBlocks'], [clientId]);
+    yield Object(external_tribe_modules_reduxSaga_effects_["call"])([Object(external_wp_data_["dispatch"])('core/block-editor'), 'removeBlocks'], [clientId]);
   }
 }
 
@@ -8706,10 +8631,7 @@ function dispatchToCommonStore(action) {
  *
  * @return {*} The result of the common store selector.
  */
-function selectFromCommonStore(selector) {
-  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
+function selectFromCommonStore(selector, ...args) {
   return selector(window.__tribe_common_store__.getState(), ...args);
 }
 
@@ -8889,9 +8811,8 @@ const selectors_selectors = {
       value: layout.id
     }));
   },
-  getSeatTypesForLayout(state, layoutId) {
+  getSeatTypesForLayout(state, layoutId, onlyValue = false) {
     var _state$seatTypesByLay;
-    let onlyValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
     const layoutSeatTypes = ((_state$seatTypesByLay = state.seatTypesByLayoutId) === null || _state$seatTypesByLay === void 0 ? void 0 : _state$seatTypesByLay[layoutId]) || null;
     if (!layoutSeatTypes) {
       return [];
@@ -8913,11 +8834,11 @@ const selectors_selectors = {
     return (state === null || state === void 0 ? void 0 : state.currentLayoutId) || null;
   },
   getSeatTypeSeats(state, seatTypeId) {
-    var _state$seatTypesByLay2, _state$seatTypesByLay3, _state$seatTypesByLay4;
+    var _state$seatTypesByLay2;
     if (!state.isUsingAssignedSeating) {
       return null;
     }
-    return (state === null || state === void 0 ? void 0 : (_state$seatTypesByLay2 = state.seatTypesByLayoutId) === null || _state$seatTypesByLay2 === void 0 ? void 0 : (_state$seatTypesByLay3 = _state$seatTypesByLay2[state.currentLayoutId]) === null || _state$seatTypesByLay3 === void 0 ? void 0 : (_state$seatTypesByLay4 = _state$seatTypesByLay3[seatTypeId]) === null || _state$seatTypesByLay4 === void 0 ? void 0 : _state$seatTypesByLay4.seats) || 0;
+    return (state === null || state === void 0 || (_state$seatTypesByLay2 = state.seatTypesByLayoutId) === null || _state$seatTypesByLay2 === void 0 || (_state$seatTypesByLay2 = _state$seatTypesByLay2[state.currentLayoutId]) === null || _state$seatTypesByLay2 === void 0 || (_state$seatTypesByLay2 = _state$seatTypesByLay2[seatTypeId]) === null || _state$seatTypesByLay2 === void 0 ? void 0 : _state$seatTypesByLay2.seats) || 0;
   },
   getTicketSeatType(state, clientId) {
     var _state$seatTypesByPos, _state$seatTypesByCli;
@@ -8925,7 +8846,7 @@ const selectors_selectors = {
       return null;
     }
     const ticketPostId = getTicketIdFromCommonStore(clientId);
-    return (state === null || state === void 0 ? void 0 : (_state$seatTypesByPos = state.seatTypesByPostId) === null || _state$seatTypesByPos === void 0 ? void 0 : _state$seatTypesByPos[ticketPostId]) || (state === null || state === void 0 ? void 0 : (_state$seatTypesByCli = state.seatTypesByClientId) === null || _state$seatTypesByCli === void 0 ? void 0 : _state$seatTypesByCli[clientId]) || null;
+    return (state === null || state === void 0 || (_state$seatTypesByPos = state.seatTypesByPostId) === null || _state$seatTypesByPos === void 0 ? void 0 : _state$seatTypesByPos[ticketPostId]) || (state === null || state === void 0 || (_state$seatTypesByCli = state.seatTypesByClientId) === null || _state$seatTypesByCli === void 0 ? void 0 : _state$seatTypesByCli[clientId]) || null;
   },
   isLayoutLocked(state) {
     return (state === null || state === void 0 ? void 0 : state.isLayoutLocked) || false;
@@ -8950,15 +8871,15 @@ const selectors_selectors = {
   },
   isServiceStatusOk(state) {
     var _state$serviceStatus;
-    return (state === null || state === void 0 ? void 0 : (_state$serviceStatus = state.serviceStatus) === null || _state$serviceStatus === void 0 ? void 0 : _state$serviceStatus.ok) === true;
+    return (state === null || state === void 0 || (_state$serviceStatus = state.serviceStatus) === null || _state$serviceStatus === void 0 ? void 0 : _state$serviceStatus.ok) === true;
   },
   getServiceStatus(state) {
     var _state$serviceStatus2;
-    return state === null || state === void 0 ? void 0 : (_state$serviceStatus2 = state.serviceStatus) === null || _state$serviceStatus2 === void 0 ? void 0 : _state$serviceStatus2.status;
+    return state === null || state === void 0 || (_state$serviceStatus2 = state.serviceStatus) === null || _state$serviceStatus2 === void 0 ? void 0 : _state$serviceStatus2.status;
   },
   getServiceConnectUrl(state) {
     var _state$serviceStatus3;
-    return state === null || state === void 0 ? void 0 : (_state$serviceStatus3 = state.serviceStatus) === null || _state$serviceStatus3 === void 0 ? void 0 : _state$serviceStatus3.connectUrl;
+    return state === null || state === void 0 || (_state$serviceStatus3 = state.serviceStatus) === null || _state$serviceStatus3 === void 0 ? void 0 : _state$serviceStatus3.connectUrl;
   }
 };
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/store/actions.js
@@ -9015,7 +8936,7 @@ const actions_actions = {
   }
 };
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/store/localized-data.js
-var localized_data_window, _window$tec, _window$tec$tickets, _window$tec$tickets$s;
+var localized_data_window;
 /**
  * @typedef {'down'|'not-connected'|'invalid-license'} StatusString
  */
@@ -9042,11 +8963,11 @@ var localized_data_window, _window$tec, _window$tec$tickets, _window$tec$tickets
 /**
  * @type {StoreLocalizedData}
  */
-const localizedData = (localized_data_window = window) === null || localized_data_window === void 0 ? void 0 : (_window$tec = localized_data_window.tec) === null || _window$tec === void 0 ? void 0 : (_window$tec$tickets = _window$tec.tickets) === null || _window$tec$tickets === void 0 ? void 0 : (_window$tec$tickets$s = _window$tec$tickets.seating) === null || _window$tec$tickets$s === void 0 ? void 0 : _window$tec$tickets$s.blockEditor;
+const localizedData = (localized_data_window = window) === null || localized_data_window === void 0 || (localized_data_window = localized_data_window.tec) === null || localized_data_window === void 0 || (localized_data_window = localized_data_window.tickets) === null || localized_data_window === void 0 || (localized_data_window = localized_data_window.seating) === null || localized_data_window === void 0 ? void 0 : localized_data_window.blockEditor;
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/store/index.js
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 
 
 
@@ -9062,9 +8983,7 @@ const DEFAULT_STATE = _objectSpread(_objectSpread({}, localizedData), {}, {
   ticketPostIdByClientId: {}
 });
 const store_store = Object(external_wp_data_["createReduxStore"])(storeName, {
-  reducer() {
-    let state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_STATE;
-    let action = arguments.length > 1 ? arguments[1] : undefined;
+  reducer(state = DEFAULT_STATE, action) {
     switch (action.type) {
       case 'SET_USING_ASSIGNED_SEATING':
         return _objectSpread(_objectSpread({}, state), {}, {
@@ -9225,16 +9144,15 @@ function LayoutsInfo(props) {
     rel: "noreferrer"
   }, getString('view-layouts-link-label')));
 }
-const EventLayoutSelect = _ref => {
-  let {
-    layoutLocked,
-    layouts,
-    onLayoutChange,
-    currentLayout,
-    seatTypes,
-    onSeatTypeChange,
-    currentSeatType
-  } = _ref;
+const EventLayoutSelect = ({
+  layoutLocked,
+  layouts,
+  onLayoutChange,
+  currentLayout,
+  seatTypes,
+  onSeatTypeChange,
+  currentSeatType
+}) => {
   return wp.element.createElement(external_React_["Fragment"], null, wp.element.createElement(EmptyLayouts, {
     layouts: layouts
   }), wp.element.createElement(LockedLayout, {
@@ -9342,11 +9260,10 @@ const getMessage = (serviceStatus, serviceConnectUrl) => {
       return '';
   }
 };
-const ServiceError = _ref => {
-  let {
-    status,
-    serviceConnectUrl
-  } = _ref;
+const ServiceError = ({
+  status,
+  serviceConnectUrl
+}) => {
   const message = getMessage(status, serviceConnectUrl);
   const wrapperStyle = {
     display: 'flex',
@@ -9365,7 +9282,7 @@ const ServiceError = _ref => {
   }), message);
 };
 ServiceError.propTypes = {
-  serviceStatus: external_tribe_modules_propTypes_default.a.oneOf(['down', 'not-connected', 'invalid-license']).isRequired
+  status: external_tribe_modules_propTypes_default.a.oneOf(['down', 'not-connected', 'invalid-license'])
 };
 /* harmony default export */ var service_error = (ServiceError);
 // EXTERNAL MODULE: ./src/modules/elements/index.js + 26 modules
@@ -9383,8 +9300,8 @@ const SeriesNotice = () => {
 /* harmony default export */ var series_notice = (SeriesNotice);
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/capacity-form/index.js
 
-function capacity_form_ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function capacity_form_objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? capacity_form_ownKeys(Object(source), !0).forEach(function (key) { defineProperty_default()(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : capacity_form_ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function capacity_form_ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function capacity_form_objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? capacity_form_ownKeys(Object(t), !0).forEach(function (r) { defineProperty_default()(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : capacity_form_ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 
 
 
@@ -9407,11 +9324,10 @@ function getCurrentSeatTypeOption(seatTypeId, seatTypes) {
 }
 const MemoizedEventLayoutSelect = React.memo(event_layout_select);
 const MemoizedServiceError = React.memo(service_error);
-function CapacityForm(_ref) {
-  let {
-    renderDefaultForm,
-    clientId
-  } = _ref;
+function CapacityForm({
+  renderDefaultForm,
+  clientId
+}) {
   const {
     setUsingAssignedSeating,
     setLayout,
@@ -9500,8 +9416,8 @@ function CapacityForm(_ref) {
     setCappedTicketCapacityInCommonStore(clientId, seatTypeSeats);
   }, [getSeatTypeSeats, setTicketSeatType, clientId]);
   const renderLayoutSelect = () => {
-    var _window, _window$TECFtEditorDa, _window$TECFtEditorDa2;
-    const inSeries = ((_window = window) === null || _window === void 0 ? void 0 : (_window$TECFtEditorDa = _window.TECFtEditorData) === null || _window$TECFtEditorDa === void 0 ? void 0 : (_window$TECFtEditorDa2 = _window$TECFtEditorDa.event) === null || _window$TECFtEditorDa2 === void 0 ? void 0 : _window$TECFtEditorDa2.isInSeries) || false;
+    var _window;
+    const inSeries = ((_window = window) === null || _window === void 0 || (_window = _window.TECFtEditorData) === null || _window === void 0 || (_window = _window.event) === null || _window === void 0 ? void 0 : _window.isInSeries) || false;
     if (inSeries) {
       return wp.element.createElement(series_notice, null);
     }
@@ -9537,7 +9453,7 @@ function CapacityForm(_ref) {
 }
 CapacityForm.propTypes = {
   renderDefaultForm: external_tribe_modules_propTypes_default.a.func.isRequired,
-  ticketPostId: external_tribe_modules_propTypes_default.a.number.isRequired
+  ticketPostId: external_tribe_modules_propTypes_default.a.number
 };
 // EXTERNAL MODULE: ./src/modules/icons/index.js + 19 modules
 var icons = __webpack_require__("NxMS");
@@ -9610,10 +9526,9 @@ var header_style = __webpack_require__("Q0RY");
 
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/header/seat-type.js
 
-const SeatType = _ref => {
-  let {
-    name
-  } = _ref;
+const SeatType = ({
+  name
+}) => {
   return wp.element.createElement("span", {
     className: "tec-tickets-block__container_header-seat-type"
   }, name);
@@ -9638,10 +9553,9 @@ var settings_style = __webpack_require__("s4cZ");
  *
  * @since 5.18.0
  */
-const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(_ref => {
-  let {
-    postId
-  } = _ref;
+const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(({
+  postId
+}) => {
   const [isChecked, setChecked] = Object(external_React_["useState"])(false);
   const [isOpen, setIsOpen] = Object(external_React_["useState"])(false);
   const [isLoading, setIsLoading] = Object(external_React_["useState"])(false);
@@ -9671,7 +9585,7 @@ const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(_ref => {
    * @return {Promise<void>}
    */
   const handleRemoveLayout = /*#__PURE__*/function () {
-    var _ref2 = asyncToGenerator_default()(function* () {
+    var _ref = asyncToGenerator_default()(function* () {
       setIsLoading(true);
       if (yield removeLayout()) {
         setIsLoading(false);
@@ -9680,7 +9594,7 @@ const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(_ref => {
       }
     });
     return function handleRemoveLayout() {
-      return _ref2.apply(this, arguments);
+      return _ref.apply(this, arguments);
     };
   }();
 
@@ -9781,11 +9695,10 @@ const RemoveLayout = /*#__PURE__*/external_React_default.a.memo(_ref => {
  *
  * @param {Object} props The component props.
  */
-const LayoutSelect = _ref => {
-  let {
-    layouts,
-    currentLayout
-  } = _ref;
+const LayoutSelect = ({
+  layouts,
+  currentLayout
+}) => {
   /**
    * Gets the current layout option.
    *
@@ -9847,7 +9760,7 @@ const LayoutSelect = _ref => {
    * @since 5.16.0
    */
   const handleModalConfirm = /*#__PURE__*/function () {
-    var _ref2 = asyncToGenerator_default()(function* () {
+    var _ref = asyncToGenerator_default()(function* () {
       setActiveLayout(newLayout);
       setIsLoading(true);
       if (yield saveNewLayout()) {
@@ -9857,7 +9770,7 @@ const LayoutSelect = _ref => {
       }
     });
     return function handleModalConfirm() {
-      return _ref2.apply(this, arguments);
+      return _ref.apply(this, arguments);
     };
   }();
 
@@ -10145,12 +10058,9 @@ const filterSeatedTicketsAvailabilityMappedProps = mappedProps => {
   const activeSeatTypes = activeSeatsByPost.length > activeSeatsByClient.length ? activeSeatsByPost : activeSeatsByClient;
   const activeSeatTypesFiltered = activeSeatTypes.filter((value, index, array) => array.indexOf(value) === index);
   const activeSeatTypeTotalCapacity = activeSeatTypesFiltered.reduce((sum, type) => sum + parseInt(seatTypes[type] ? seatTypes[type].seats : 0), 0);
-  const seatTypeTotalCapacity = Object.values(seatTypes).reduce((sum, _ref) => {
-    let {
-      seats
-    } = _ref;
-    return sum + parseInt(seats);
-  }, 0);
+  const seatTypeTotalCapacity = Object.values(seatTypes).reduce((sum, {
+    seats
+  }) => sum + parseInt(seats), 0);
   const soldAndPending = Math.abs(parseInt((mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.total) || 0) - parseInt((mappedProps === null || mappedProps === void 0 ? void 0 : mappedProps.available) || 0));
   return {
     total: seatTypeTotalCapacity,
@@ -10320,11 +10230,10 @@ const shouldRenderAssignedSeatingForm = true;
  *
  * @return {Function} The render function of the Capacity form with the seating options.
  */
-function filterRenderCapacityForm(renderDefaultForm, _ref) {
-  let {
-    clientId,
-    ticketProvider
-  } = _ref;
+function filterRenderCapacityForm(renderDefaultForm, {
+  clientId,
+  ticketProvider
+}) {
   if (!shouldRenderAssignedSeatingForm) {
     return renderDefaultForm;
   }
@@ -10354,10 +10263,9 @@ Object(external_wp_hooks_["addFilter"])('tec.tickets.blocks.setBodyDetails', 'te
  *
  * @return {Array} The action items.
  */
-function filterDashboardActions(actions, _ref2) {
-  let {
-    clientId
-  } = _ref2;
+function filterDashboardActions(actions, {
+  clientId
+}) {
   const hasSeats = Object(external_wp_data_["select"])(storeName).isUsingAssignedSeating(clientId);
   const layoutLocked = Object(external_wp_data_["select"])(storeName).isLayoutLocked();
 

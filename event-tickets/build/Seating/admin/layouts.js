@@ -438,7 +438,7 @@ Object(external_tec_tickets_seating_utils_["onReady"])(() => registerDeleteActio
 Object(external_tec_tickets_seating_utils_["onReady"])(() => registerDestructiveEditAction(document));
 Object(external_tec_tickets_seating_utils_["onReady"])(() => registerDuplicateLayoutAction(document));
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/admin/layouts/localized-data.js
-var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s;
+var _window;
 /**
  * @typedef {Object} LayoutsLocalizedData
  * @property {string} addLayoutModal The add layout modal identifier.
@@ -447,7 +447,7 @@ var _window, _window$tec, _window$tec$tickets, _window$tec$tickets$s;
 /**
  * @type {LayoutsLocalizedData}
  */
-const localizedData = (_window = window) === null || _window === void 0 ? void 0 : (_window$tec = _window.tec) === null || _window$tec === void 0 ? void 0 : (_window$tec$tickets = _window$tec.tickets) === null || _window$tec$tickets === void 0 ? void 0 : (_window$tec$tickets$s = _window$tec$tickets.seating) === null || _window$tec$tickets$s === void 0 ? void 0 : _window$tec$tickets$s.layouts;
+const localizedData = (_window = window) === null || _window === void 0 || (_window = _window.tec) === null || _window === void 0 || (_window = _window.tickets) === null || _window === void 0 || (_window = _window.seating) === null || _window === void 0 ? void 0 : _window.layouts;
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/admin/layouts/add-new-modal.js
 
 
@@ -496,11 +496,11 @@ function _waitForModalElement() {
 }
 function modalActionListener() {
   const mapSelect = document.getElementById('tec-tickets-seating__select-map');
-  mapSelect === null || mapSelect === void 0 ? void 0 : mapSelect.addEventListener('change', handleSelectUpdates);
+  mapSelect === null || mapSelect === void 0 || mapSelect.addEventListener('change', handleSelectUpdates);
   const cancelButton = document.querySelector('.tec-tickets-seating__new-layout-button-cancel');
-  cancelButton === null || cancelButton === void 0 ? void 0 : cancelButton.addEventListener('click', closeModal);
+  cancelButton === null || cancelButton === void 0 || cancelButton.addEventListener('click', closeModal);
   const addButton = document.querySelector('.tec-tickets-seating__new-layout-button-add');
-  addButton === null || addButton === void 0 ? void 0 : addButton.addEventListener('click', addNewLayout);
+  addButton === null || addButton === void 0 || addButton.addEventListener('click', addNewLayout);
 }
 
 /**
@@ -622,7 +622,7 @@ function _init() {
   });
   return _init.apply(this, arguments);
 }
-Object(external_tec_tickets_seating_utils_["onReady"])( /*#__PURE__*/asyncToGenerator_default()(function* () {
+Object(external_tec_tickets_seating_utils_["onReady"])(/*#__PURE__*/asyncToGenerator_default()(function* () {
   yield init();
 }));
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/admin/layouts/index.js
