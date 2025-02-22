@@ -478,7 +478,8 @@ const confirmSelector = '.tec-tickets-seating__modal .tec-tickets-seating__sideb
  * @typedef {Object} SeatMapTicketEntry
  * @property {string} ticketId    The ticket ID.
  * @property {string} name        The ticket name.
- * @property {number} price       The ticket price.
+ * @property {string} price       The ticket price localized and including the currency symbol.
+ * @property {number} priceValue       The ticket price as a float value.
  * @property {string} description The ticket description.
  * @property {number} maxLimit    The maximum number of tickets that can be selected.
  */
@@ -615,21 +616,22 @@ function updateTotals(parentElement) {
  * @return {void} The ticket row is added to the DOM.
  */
 function addTicketToSelection(parentElement, props) {
-  var _tickets$props$ticket;
+  var _tickets$props$ticket, _tickets$props$ticket2;
   parentElement = parentElement || document;
-  const ticketPrice = (tickets === null || tickets === void 0 || (_tickets$props$ticket = tickets[props.ticketId]) === null || _tickets$props$ticket === void 0 ? void 0 : _tickets$props$ticket.price) || null;
+  const priceValue = (tickets === null || tickets === void 0 || (_tickets$props$ticket = tickets[props.ticketId]) === null || _tickets$props$ticket === void 0 ? void 0 : _tickets$props$ticket.priceValue) || null;
+  const formattedPrice = (tickets === null || tickets === void 0 || (_tickets$props$ticket2 = tickets[props.ticketId]) === null || _tickets$props$ticket2 === void 0 ? void 0 : _tickets$props$ticket2.price) || null;
   const ticketName = (tickets === null || tickets === void 0 ? void 0 : tickets[props.ticketId].name) || null;
-  if (!(ticketPrice && ticketName)) {
+  if (!(priceValue && ticketName)) {
     return;
   }
   const ticketRowProps = {
     seatTypeId: props.seatTypeId,
     ticketId: props.ticketId,
-    price: ticketPrice,
+    price: priceValue,
     color: props.seatColor,
     ticketName,
     seatLabel: props.seatLabel,
-    formattedPrice: Object(external_tec_tickets_seating_currency_["formatWithCurrency"])(ticketPrice)
+    formattedPrice
   };
   parentElement.querySelector('.tec-tickets-seating__ticket-rows').appendChild(TicketRow(ticketRowProps));
 }

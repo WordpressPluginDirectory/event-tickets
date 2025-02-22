@@ -80,6 +80,7 @@ return array(
     'TEC\\Common\\Telemetry\\Provider' => $baseDir . '/src/Common/Telemetry/Provider.php',
     'TEC\\Common\\Telemetry\\Telemetry' => $baseDir . '/src/Common/Telemetry/Telemetry.php',
     'TEC\\Common\\Translations_Loader' => $baseDir . '/src/Common/Translations_Loader.php',
+    'TEC\\Common\\Updater' => $baseDir . '/src/Common/Updater.php',
     'TEC\\Event_Automator\\Admin\\Tabs\\Integrations' => $baseDir . '/src/Common/Event_Automator/Admin/Tabs/Integrations.php',
     'TEC\\Event_Automator\\Admin\\Tabs\\Tabs_Provider' => $baseDir . '/src/Common/Event_Automator/Admin/Tabs/Tabs_Provider.php',
     'TEC\\Event_Automator\\Hooks' => $baseDir . '/src/Common/Event_Automator/Hooks.php',
