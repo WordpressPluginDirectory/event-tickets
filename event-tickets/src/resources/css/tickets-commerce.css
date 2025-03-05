@@ -731,6 +731,10 @@
 		width: 100%;
 	}
 
+.tribe-common .tribe-tickets__commerce-checkout-notice.tribe-tickets__commerce-checkout-notice--visible, .event-tickets .tribe-tickets__commerce-checkout-notice.tribe-tickets__commerce-checkout-notice--visible {
+			display: block;
+		}
+
 .tribe-common .tribe-tickets__commerce-checkout-header, .event-tickets .tribe-tickets__commerce-checkout-header {
 		align-items: baseline;
 		display: flex;
