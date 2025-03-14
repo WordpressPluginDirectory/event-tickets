@@ -616,12 +616,12 @@ function updateTotals(parentElement) {
  * @return {void} The ticket row is added to the DOM.
  */
 function addTicketToSelection(parentElement, props) {
-  var _tickets$props$ticket, _tickets$props$ticket2;
+  var _tickets$props$ticket, _tickets$props$ticket2, _tickets$props$ticket3, _tickets$props$ticket4, _tickets$props$ticket5, _tickets$props$ticket6;
   parentElement = parentElement || document;
-  const priceValue = (tickets === null || tickets === void 0 || (_tickets$props$ticket = tickets[props.ticketId]) === null || _tickets$props$ticket === void 0 ? void 0 : _tickets$props$ticket.priceValue) || null;
-  const formattedPrice = (tickets === null || tickets === void 0 || (_tickets$props$ticket2 = tickets[props.ticketId]) === null || _tickets$props$ticket2 === void 0 ? void 0 : _tickets$props$ticket2.price) || null;
-  const ticketName = (tickets === null || tickets === void 0 ? void 0 : tickets[props.ticketId].name) || null;
-  if (!(priceValue && ticketName)) {
+  const priceValue = (_tickets$props$ticket = tickets === null || tickets === void 0 || (_tickets$props$ticket2 = tickets[props.ticketId]) === null || _tickets$props$ticket2 === void 0 ? void 0 : _tickets$props$ticket2.priceValue) !== null && _tickets$props$ticket !== void 0 ? _tickets$props$ticket : null;
+  const formattedPrice = (_tickets$props$ticket3 = tickets === null || tickets === void 0 || (_tickets$props$ticket4 = tickets[props.ticketId]) === null || _tickets$props$ticket4 === void 0 ? void 0 : _tickets$props$ticket4.price) !== null && _tickets$props$ticket3 !== void 0 ? _tickets$props$ticket3 : null;
+  const ticketName = (_tickets$props$ticket5 = tickets === null || tickets === void 0 || (_tickets$props$ticket6 = tickets[props.ticketId]) === null || _tickets$props$ticket6 === void 0 ? void 0 : _tickets$props$ticket6.name) !== null && _tickets$props$ticket5 !== void 0 ? _tickets$props$ticket5 : null;
+  if (priceValue === null || ticketName === null) {
     return;
   }
   const ticketRowProps = {

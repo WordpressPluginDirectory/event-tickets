@@ -36,7 +36,7 @@
 		.tickets_page_tec-tickets-admin-tickets table.wp-list-table .column-sales,
 		.tickets_page_tec-tickets-admin-tickets table.wp-list-table .column-end,
 		.tickets_page_tec-tickets-admin-tickets table.wp-list-table .column-start {
-			text-align: right;
+			text-align: center;
 			white-space: nowrap;
 			width: 1%;
 		}

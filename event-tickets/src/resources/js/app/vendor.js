@@ -12467,7 +12467,7 @@ module.exports = function(module) {
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("cDcd");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /**
- * react-number-format - 5.4.2
+ * react-number-format - 5.4.3
  * Author : Sudhanshu Yadav
  * Copyright (c) 2016, 2024 to Sudhanshu Yadav, released under the MIT license.
  * https://github.com/s-yadav/react-number-format
@@ -28562,7 +28562,6 @@ function useListener(target, type, listener) {
     var handler = function handler(ev) {
       return latestListener.current(ev);
     };
-
     // might happen if document.fonts is not defined, for instance
     if (!target) {
       return;
@@ -28573,6 +28572,13 @@ function useListener(target, type, listener) {
     };
   }, []);
 }
+var useFormResetListener = function useFormResetListener(libRef, listener) {
+  useListener(document.body, 'reset', function (ev) {
+    if (libRef.current.form === ev.target) {
+      listener(ev);
+    }
+  });
+};
 var useWindowResizeListener = function useWindowResizeListener(listener) {
   useListener(window, 'resize', listener);
 };
@@ -28621,6 +28627,17 @@ var react_textarea_autosize_browser_esm_TextareaAutosize = function TextareaAuto
   };
   {
     external_React_["useLayoutEffect"](resizeTextarea);
+    useFormResetListener(libRef, function () {
+      if (!isControlled) {
+        var node = libRef.current;
+        var currentValue = node.value;
+        requestAnimationFrame(function () {
+          if (currentValue !== node.value) {
+            resizeTextarea();
+          }
+        });
+      }
+    });
     useWindowResizeListener(resizeTextarea);
     useFontsLoadedListener(resizeTextarea);
     return /*#__PURE__*/external_React_["createElement"]("textarea", Object(esm_extends["a" /* default */])({}, props, {

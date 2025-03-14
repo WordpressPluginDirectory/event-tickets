@@ -249,7 +249,7 @@ function InterruptDialogComponent(props) {
 		<div class="tribe-tickets-seating__interrupt-dialog" role="dialog">
 			<div class="tribe-tickets-seating__interrupt-header">
 				<div class="dashicons dashicons-clock"></div>
-				<p class="tribe-tickets-seating__interrupt-title">{title}</p>
+				<div class="tribe-tickets-seating__interrupt-title">{title}</div>
 			</div>
 			<div class="tribe-dialog__content tribe-modal__content tribe-tickets-seating__interrupt-content">{content}</div>
 			<div class="tribe-tickets-seating__interrupt-footer">
@@ -393,9 +393,9 @@ let watchedCheckoutControls = [];
  *
  * @since 5.16.0
  *
- * @type {string}
+ * @type {string[]}
  */
-const checkoutControlsSelectors = '.tribe-tickets__commerce-checkout-form-submit-button, .tribe-tickets__commerce-checkout-paypal-buttons button';
+const checkoutControlsSelectors = ['.tribe-tickets__commerce-checkout-form-submit-button', '.tribe-tickets__commerce-checkout-paypal-buttons button'];
 
 /**
  * Sets the interruptable flag.
@@ -680,7 +680,7 @@ function interrupt() {
 function _interrupt() {
   _interrupt = asyncToGenerator_default()(function* () {
     if (!isInterruptable()) {
-      return;
+      return true;
     }
     setIsInterruptable(true);
     getTimerElements().forEach(timerElement => {
@@ -734,9 +734,6 @@ function beaconInterrupt() {
  * @return {void}
  */
 function startCountdownLoop(secondsLeft) {
-  if (!isInterruptable()) {
-    return;
-  }
   if (secondsLeft <= 0) {
     interrupt();
     return;
@@ -761,7 +758,7 @@ function startCountdownLoop(secondsLeft) {
  * @return {void}
  */
 function startHealthCheckLoop() {
-  if (isExpired() || !isInterruptable()) {
+  if (isExpired()) {
     return;
   }
   healthCheckTimeoutId = setTimeout(/*#__PURE__*/asyncToGenerator_default()(function* () {
@@ -795,7 +792,7 @@ function syncWithBackend() {
  */
 function _syncWithBackend() {
   _syncWithBackend = asyncToGenerator_default()(function* () {
-    if (isExpired() || getTimerElements().length === 0 || !isInterruptable()) {
+    if (isExpired() || getTimerElements().length === 0) {
       return;
     }
     const secondsLeft = yield requestToBackend(ACTION_SYNC);
@@ -1056,10 +1053,10 @@ function watchCheckoutControls() {
    *
    * @since 5.16.0
    *
-   * @type {string} The `querySeelctorAll` selectors used to find the checkout controls on the page.
+   * @type {string[]} The `querySelectorAll` selectors used to find the checkout controls on the page.
    */
   const filteredCheckoutControls = Object(external_wp_hooks_["applyFilters"])('tec.tickets.seating.frontend.session.checkoutControls', checkoutControlsSelectors);
-  const checkoutControlElements = targetDom.querySelectorAll(filteredCheckoutControls);
+  const checkoutControlElements = targetDom.querySelectorAll(filteredCheckoutControls.join(', '));
   checkoutControlElements.forEach(checkoutControlElement => {
     watchedCheckoutControls.push(checkoutControlElement);
     checkoutControlElement.addEventListener('click', pauseToCheckout);

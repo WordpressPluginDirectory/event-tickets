@@ -3400,7 +3400,7 @@ function* createNewTicket(action) {
       const salePriceChecked = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.enabled) || false;
       const salePrice = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.sale_price) || '';
       const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity, saleStartDate, saleStartDateInput, saleStartDateMoment, saleEndDate, saleEndDateInput, saleEndDateMoment] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempTitle"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempDescription"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempPrice"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSaleEndDateMoment"], props)]);
-      yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, {
+      const ticketDetails = {
         title,
         description,
         price,
@@ -3426,15 +3426,19 @@ function* createNewTicket(action) {
         saleEndDate,
         saleEndDateInput,
         saleEndDateMoment
-      })), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketId"](clientId, ticket.id)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, PROVIDER_CLASS_TO_PROVIDER_MAPPING[ticket.provider_class])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false))]);
+      };
+      yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, ticketDetails)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketId"](clientId, ticket.id)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasBeenCreated"](clientId, true)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketProvider"](clientId, PROVIDER_CLASS_TO_PROVIDER_MAPPING[ticket.provider_class])), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false))]);
 
       /**
        * Fires after the ticket has been created.
        *
        * @since 5.16.0
+       * @since 5.20.0 The `ticketId` and `ticketDetails` parameters were added.
        * @param {string} clientId The ticket's client ID.
+       * @param {number} ticketId The ticket's ID.
+       * @param {Object} ticketDetails The ticket details.
        */
-      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketCreated', clientId);
+      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketCreated', clientId, ticket.id, ticketDetails);
       yield Object(external_tribe_modules_reduxSaga_effects_["fork"])(saveTicketWithPostSave, clientId);
     }
   } catch (e) {
@@ -3498,7 +3502,7 @@ function* updateTicket(action) {
       const saleEndDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, saleEndDateMoment);
       const saleEndDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment);
       const [title, description, price, sku, iac, startDate, startDateInput, startDateMoment, endDate, endDateInput, endDateMoment, startTime, endTime, startTimeInput, endTimeInput, capacityType, capacity] = yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempTitle"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempDescription"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempPrice"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempSku"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempIACSetting"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDate"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndDateMoment"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTime"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempStartTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempEndTimeInput"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacityType"], props), Object(external_tribe_modules_reduxSaga_effects_["select"])(selectors["getTicketTempCapacity"], props)]);
-      yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, {
+      const ticketDetails = {
         title,
         description,
         price,
@@ -3525,15 +3529,19 @@ function* updateTicket(action) {
         saleEndDate,
         saleEndDateInput,
         saleEndDateMoment
-      })), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, capacity_details.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDate"](clientId, saleStartDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, saleStartDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateMoment"](clientId, saleStartDateMoment)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDate"](clientId, saleEndDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, saleEndDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateMoment"](clientId, saleEndDateMoment))]);
+      };
+      yield Object(external_tribe_modules_reduxSaga_effects_["all"])([Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketDetails"](clientId, ticketDetails)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketSold"](clientId, capacity_details.sold)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketAvailable"](clientId, available)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketHasChanges"](clientId, false)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePrice"](clientId, salePrice)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTempSalePriceChecked"](clientId, salePriceChecked)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDate"](clientId, saleStartDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateInput"](clientId, saleStartDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleStartDateMoment"](clientId, saleStartDateMoment)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDate"](clientId, saleEndDate)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateInput"](clientId, saleEndDateInput)), Object(external_tribe_modules_reduxSaga_effects_["put"])(actions["setTicketTempSaleEndDateMoment"](clientId, saleEndDateMoment))]);
 
       /**
        * Fires after the ticket has been updated.
        *
        * @since 5.16.0
+       * @since 5.20.0 The `ticketId and `ticketDetails` parameters were added
        * @param {string} clientId The ticket's client ID.
+       * @param {number} ticketId The ticket's ID.
+       * @param {Object} ticketDetails The ticket details.
        */
-      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketUpdated', clientId);
+      Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketUpdated', clientId, ticketId, ticketDetails);
     }
   } catch (e) {
     console.error(e);
@@ -3589,6 +3597,15 @@ function* deleteTicket(action) {
             body: body.join('&')
           }
         });
+
+        /**
+         * Fires after the ticket has been deleted.
+         *
+         * @since 5.20.0
+         * @param {string} clientId The ticket's client ID.
+         * @param {number} ticketId The ticket's ID.
+         */
+        Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.ticketDeleted', clientId, ticketId);
       } catch (e) {
         /**
          * @todo handle error on removal
@@ -7363,10 +7380,14 @@ var external_tribe_common_store_ = __webpack_require__("g8L8");
 // EXTERNAL MODULE: external "tribe.common.utils"
 var external_tribe_common_utils_ = __webpack_require__("B8vQ");
 
+// EXTERNAL MODULE: external "wp.hooks"
+var external_wp_hooks_ = __webpack_require__("g56x");
+
 // CONCATENATED MODULE: ./src/modules/data/blocks/rsvp/thunks.js
 /**
  * Internal dependencies
  */
+
 
 
 
@@ -7443,6 +7464,15 @@ const createOrUpdateRSVP = method => payload => dispatch => {
     }
   };
   dispatch(wpRequestActions.wpRequest(options));
+
+  /**
+   * Fires after an RSVP is created or updated.
+   *
+   * @since 5.20.0
+   * @param {Object} payload The RSVP payload.
+   * @param {boolean} isCreate Whether the RSVP was created or not.
+   */
+  Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.rsvp.createdOrUpdated', payload, method === METHODS.POST);
 };
 const createRSVP = createOrUpdateRSVP(METHODS.POST);
 const updateRSVP = createOrUpdateRSVP(METHODS.PUT);
@@ -7455,6 +7485,14 @@ const deleteRSVP = id => dispatch => {
     }
   };
   dispatch(wpRequestActions.wpRequest(options));
+
+  /**
+   * Fires after an RSVP is deleted.
+   *
+   * @since 5.20.0
+   * @param {number} id The RSVP ID.
+   */
+  Object(external_wp_hooks_["doAction"])('tec.tickets.blocks.rsvp.deleted', id);
 };
 const getRSVP = (postId, page = 1) => dispatch => {
   const path = `${utils["o" /* RSVP_POST_TYPE */]}?per_page=100&page=${page}&context=edit`;
@@ -9077,7 +9115,11 @@ const controls = {
     return fetchSeatTypesByLayoutId(action.layoutId);
   }
 };
+// EXTERNAL MODULE: external "wp.hooks"
+var external_wp_hooks_ = __webpack_require__("g56x");
+
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/store/compatibility.js
+
 
 
 /**
@@ -9093,7 +9135,16 @@ const controls = {
  */
 function currentProviderSupportsSeating() {
   const provider = getTicketProviderFromCommonStore();
-  return 'TEC\\Tickets\\Commerce\\Module' === provider;
+
+  /**
+   * Filter the allowed ticket providers for seating.
+   *
+   * @since 5.20.1
+   *
+   * @param {string[]} allowedProviders The allowed ticket providers for seating.
+   */
+  let allowedProviders = Object(external_wp_hooks_["applyFilters"])('tec.tickets.seating.allowedProviders', ['TEC\\Tickets\\Commerce\\Module']);
+  return allowedProviders.includes(provider);
 }
 // CONCATENATED MODULE: ./src/Tickets/Seating/app/blockEditor/store/selectors.js
 
@@ -9278,6 +9329,7 @@ function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t =
 
 
 
+
 const storeName = 'tec-tickets-seating';
 
 // Initialize from the localized object.
@@ -9290,6 +9342,14 @@ const store_store = Object(external_wp_data_["createReduxStore"])(storeName, {
   reducer(state = DEFAULT_STATE, action) {
     switch (action.type) {
       case 'SET_USING_ASSIGNED_SEATING':
+        /**
+         * Fires every time the isUsingAssignedSeating state property is changed.
+         *
+         * @since 5.20.0
+         *
+         * @param {boolean} isUsingAssignedSeating Whether the event is using assigned seating
+         */
+        Object(external_wp_hooks_["doAction"])('tec.tickets.seating.setUsingAssignedSeating', action.isUsingAssignedSeating);
         return _objectSpread(_objectSpread({}, state), {}, {
           isUsingAssignedSeating: action.isUsingAssignedSeating
         });
@@ -9371,9 +9431,6 @@ const store_store = Object(external_wp_data_["createReduxStore"])(storeName, {
   }
 });
 Object(external_wp_data_["register"])(store_store);
-
-// EXTERNAL MODULE: external "wp.hooks"
-var external_wp_hooks_ = __webpack_require__("g56x");
 
 // EXTERNAL MODULE: external "wp.element"
 var external_wp_element_ = __webpack_require__("GRId");
@@ -10523,6 +10580,7 @@ function replaceSharedCapacityInput(sharedCapacityInput) {
 
 
 
+
 const shouldRenderAssignedSeatingForm = true;
 
 /**
@@ -10541,7 +10599,9 @@ function filterRenderCapacityForm(renderDefaultForm, {
   if (!shouldRenderAssignedSeatingForm) {
     return renderDefaultForm;
   }
-  if (ticketProvider !== "TEC\\Tickets\\Commerce\\Module" && ticketProvider !== 'tc') {
+
+  // When the provider does not support seating, we render the default form.
+  if (!currentProviderSupportsSeating()) {
     return renderDefaultForm;
   }
 
