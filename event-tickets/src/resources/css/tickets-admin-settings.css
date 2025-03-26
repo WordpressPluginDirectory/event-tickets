@@ -1612,6 +1612,21 @@ body.tickets_page_tec-tickets-settings .event-tickets div.tribe-dialog, body.tic
 
 /* Phone view (less than 768px) */
 
+.tickets_page_tec-tickets-order-modifiers .event-tickets__order-modifiers-admin-form .tec-tickets__modifier-page-title {
+			font-weight: var(--tec-font-weight-regular);
+		}
+
+.tickets_page_tec-tickets-order-modifiers .event-tickets__order-modifiers-admin-form .tec-tickets__modifier-page-title > a {
+				margin-left: var(--tec-spacer-1);
+				vertical-align: middle;
+			}
+
+.tickets_page_tec-tickets-order-modifiers .event-tickets__order-modifiers-admin-form .tec-tickets__modifier-explain-text {
+			float: left;
+			font-size: var(--tec-font-size-2);
+			padding: var(--tec-spacer-3) 0;
+		}
+
 .tec-tickets__admin-settings-back-link-wrapper {
 	padding: var(--tec-spacer-4) 0;
 }

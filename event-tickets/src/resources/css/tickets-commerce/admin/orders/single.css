@@ -181,6 +181,10 @@ body.wp-admin.post-type-tec_tc_order .tribe-tickets-commerce-extend-order-row .t
 					padding: var(--tec-spacer-5);
 				}
 
+td.tec-tickets-commerce-single-order--items--table--row--price-column {
+					padding-left: 0;
+				}
+
 .tec-tickets-commerce-single-order--items--table--row--info-column {
 					max-width: 80px;
 					padding-right: 0 !important;
