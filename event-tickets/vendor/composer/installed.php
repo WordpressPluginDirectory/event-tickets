@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'the-events-calendar/event-tickets',
-        'pretty_version' => 'dev-release/T25.colossus',
-        'version' => 'dev-release/T25.colossus',
-        'reference' => 'f4d3f1f637564b3bddf9bcf2003d0eb93dcc5e41',
+        'pretty_version' => 'dev-release/T25.darkhawk',
+        'version' => 'dev-release/T25.darkhawk',
+        'reference' => '91ae00927bca5a4eea9a6c8564392d1d9a1431ae',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'the-events-calendar/event-tickets' => array(
-            'pretty_version' => 'dev-release/T25.colossus',
-            'version' => 'dev-release/T25.colossus',
-            'reference' => 'f4d3f1f637564b3bddf9bcf2003d0eb93dcc5e41',
+            'pretty_version' => 'dev-release/T25.darkhawk',
+            'version' => 'dev-release/T25.darkhawk',
+            'reference' => '91ae00927bca5a4eea9a6c8564392d1d9a1431ae',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
