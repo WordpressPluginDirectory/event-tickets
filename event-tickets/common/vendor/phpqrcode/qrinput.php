@@ -1,5 +1,5 @@
 <?php
-namespace TEC\Tickets\phpqrcode;
+namespace TEC\Common\phpqrcode;
 
 /*
  * PHP QR Code encoder
@@ -27,8 +27,8 @@ namespace TEC\Tickets\phpqrcode;
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-    define('TEC_TICKETS_STRUCTURE_HEADER_BITS',  20);
-    define('TEC_TICKETS_MAX_STRUCTURED_SYMBOLS', 16);
+    define('TEC_COMMON_STRUCTURE_HEADER_BITS',  20);
+    define('TEC_COMMON_MAX_STRUCTURED_SYMBOLS', 16);
 
     class QRinputItem {
 
@@ -66,7 +66,7 @@ namespace TEC\Tickets\phpqrcode;
 
                 $val = 0x1;
                 $bs->appendNum(4, $val);
-                $bs->appendNum(QRspec::lengthIndicator(TEC_TICKETS_QR_MODE_NUM, $version), $this->size);
+                $bs->appendNum(QRspec::lengthIndicator(TEC_QR_MODE_NUM, $version), $this->size);
 
                 for($i=0; $i<$words; $i++) {
                     $val  = (ord($this->data[$i*3  ]) - ord('0')) * 100;
@@ -100,7 +100,7 @@ namespace TEC\Tickets\phpqrcode;
                 $bs = new QRbitstream();
 
                 $bs->appendNum(4, 0x02);
-                $bs->appendNum(QRspec::lengthIndicator(TEC_TICKETS_QR_MODE_AN, $version), $this->size);
+                $bs->appendNum(QRspec::lengthIndicator(TEC_QR_MODE_AN, $version), $this->size);
 
                 for($i=0; $i<$words; $i++) {
                     $val  = (int)QRinput::lookAnTable(ord($this->data[$i*2  ])) * 45;
@@ -129,7 +129,7 @@ namespace TEC\Tickets\phpqrcode;
                 $bs = new QRbitstream();
 
                 $bs->appendNum(4, 0x4);
-                $bs->appendNum(QRspec::lengthIndicator(TEC_TICKETS_QR_MODE_8, $version), $this->size);
+                $bs->appendNum(QRspec::lengthIndicator(TEC_QR_MODE_8, $version), $this->size);
 
                 for($i=0; $i<$this->size; $i++) {
                     $bs->appendNum(8, ord($this->data[$i]));
@@ -151,7 +151,7 @@ namespace TEC\Tickets\phpqrcode;
                 $bs = new QRbitrtream();
 
                 $bs->appendNum(4, 0x8);
-                $bs->appendNum(QRspec::lengthIndicator(TEC_TICKETS_QR_MODE_KANJI, $version), (int)($this->size / 2));
+                $bs->appendNum(QRspec::lengthIndicator(TEC_QR_MODE_KANJI, $version), (int)($this->size / 2));
 
                 for($i=0; $i<$this->size; $i+=2) {
                     $val = (ord($this->data[$i]) << 8) | ord($this->data[$i+1]);
@@ -203,11 +203,11 @@ namespace TEC\Tickets\phpqrcode;
                 $version = 1;
 
             switch($this->mode) {
-                case TEC_TICKETS_QR_MODE_NUM:        $bits = QRinput::estimateBitsModeNum($this->size);    break;
-                case TEC_TICKETS_QR_MODE_AN:        $bits = QRinput::estimateBitsModeAn($this->size);    break;
-                case TEC_TICKETS_QR_MODE_8:            $bits = QRinput::estimateBitsMode8($this->size);    break;
-                case TEC_TICKETS_QR_MODE_KANJI:        $bits = QRinput::estimateBitsModeKanji($this->size);break;
-                case TEC_TICKETS_QR_MODE_STRUCTURE:    return TEC_TICKETS_STRUCTURE_HEADER_BITS;
+                case TEC_QR_MODE_NUM:        $bits = QRinput::estimateBitsModeNum($this->size);    break;
+                case TEC_QR_MODE_AN:        $bits = QRinput::estimateBitsModeAn($this->size);    break;
+                case TEC_QR_MODE_8:            $bits = QRinput::estimateBitsMode8($this->size);    break;
+                case TEC_QR_MODE_KANJI:        $bits = QRinput::estimateBitsModeKanji($this->size);break;
+                case TEC_QR_MODE_STRUCTURE:    return TEC_COMMON_STRUCTURE_HEADER_BITS;
                 default:
                     return 0;
             }
@@ -249,11 +249,11 @@ namespace TEC\Tickets\phpqrcode;
                     $ret = 0;
 
                     switch($this->mode) {
-                        case TEC_TICKETS_QR_MODE_NUM:        $ret = $this->encodeModeNum($version);    break;
-                        case TEC_TICKETS_QR_MODE_AN:        $ret = $this->encodeModeAn($version);    break;
-                        case TEC_TICKETS_QR_MODE_8:            $ret = $this->encodeMode8($version);    break;
-                        case TEC_TICKETS_QR_MODE_KANJI:        $ret = $this->encodeModeKanji($version);break;
-                        case TEC_TICKETS_QR_MODE_STRUCTURE:    $ret = $this->encodeModeStructure();    break;
+                        case TEC_QR_MODE_NUM:        $ret = $this->encodeModeNum($version);    break;
+                        case TEC_QR_MODE_AN:        $ret = $this->encodeModeAn($version);    break;
+                        case TEC_QR_MODE_8:            $ret = $this->encodeMode8($version);    break;
+                        case TEC_QR_MODE_KANJI:        $ret = $this->encodeModeKanji($version);break;
+                        case TEC_QR_MODE_STRUCTURE:    $ret = $this->encodeModeStructure();    break;
 
                         default:
                             break;
@@ -281,9 +281,9 @@ namespace TEC\Tickets\phpqrcode;
         private $level;
 
         //----------------------------------------------------------------------
-        public function __construct($version = 0, $level = TEC_TICKETS_QR_ECLEVEL_L)
+        public function __construct($version = 0, $level = TEC_QR_ECLEVEL_L)
         {
-            if ($version < 0 || $version > TEC_TICKETS_QRSPEC_VERSION_MAX || $level > TEC_TICKETS_QR_ECLEVEL_H) {
+            if ($version < 0 || $version > TEC_COMMON_QRSPEC_VERSION_MAX || $level > TEC_QR_ECLEVEL_H) {
                 throw new Exception('Invalid version no');
                 return NULL;
             }
@@ -301,7 +301,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public function setVersion($version)
         {
-            if($version < 0 || $version > TEC_TICKETS_QRSPEC_VERSION_MAX) {
+            if($version < 0 || $version > TEC_COMMON_QRSPEC_VERSION_MAX) {
                 throw new Exception('Invalid version no');
                 return -1;
             }
@@ -320,7 +320,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public function setErrorCorrectionLevel($level)
         {
-            if($level > TEC_TICKETS_QR_ECLEVEL_H) {
+            if($level > TEC_QR_ECLEVEL_H) {
                 throw new Exception('Invalid ECLEVEL');
                 return -1;
             }
@@ -352,18 +352,18 @@ namespace TEC\Tickets\phpqrcode;
 
         public function insertStructuredAppendHeader($size, $index, $parity)
         {
-            if( $size > TEC_TICKETS_MAX_STRUCTURED_SYMBOLS ) {
+            if( $size > TEC_COMMON_MAX_STRUCTURED_SYMBOLS ) {
                 throw new Exception('insertStructuredAppendHeader wrong size');
             }
 
-            if( $index <= 0 || $index > TEC_TICKETS_MAX_STRUCTURED_SYMBOLS ) {
+            if( $index <= 0 || $index > TEC_COMMON_MAX_STRUCTURED_SYMBOLS ) {
                 throw new Exception('insertStructuredAppendHeader wrong index');
             }
 
             $buf = array($size, $index, $parity);
 
             try {
-                $entry = new QRinputItem(TEC_TICKETS_QR_MODE_STRUCTURE, 3, buf);
+                $entry = new QRinputItem(TEC_QR_MODE_STRUCTURE, 3, buf);
                 array_unshift($this->items, $entry);
                 return 0;
             } catch (Exception $e) {
@@ -377,7 +377,7 @@ namespace TEC\Tickets\phpqrcode;
             $parity = 0;
 
             foreach($this->items as $item) {
-                if($item->mode != TEC_TICKETS_QR_MODE_STRUCTURE) {
+                if($item->mode != TEC_QR_MODE_STRUCTURE) {
                     for($i=$item->size-1; $i>=0; $i--) {
                         $parity ^= $item->data[$i];
                     }
@@ -502,11 +502,11 @@ namespace TEC\Tickets\phpqrcode;
                 return false;
 
             switch($mode) {
-                case TEC_TICKETS_QR_MODE_NUM:       return self::checkModeNum($size, $data);   break;
-                case TEC_TICKETS_QR_MODE_AN:        return self::checkModeAn($size, $data);    break;
-                case TEC_TICKETS_QR_MODE_KANJI:     return self::checkModeKanji($size, $data); break;
-                case TEC_TICKETS_QR_MODE_8:         return true; break;
-                case TEC_TICKETS_QR_MODE_STRUCTURE: return true; break;
+                case TEC_QR_MODE_NUM:       return self::checkModeNum($size, $data);   break;
+                case TEC_QR_MODE_AN:        return self::checkModeAn($size, $data);    break;
+                case TEC_QR_MODE_KANJI:     return self::checkModeKanji($size, $data); break;
+                case TEC_QR_MODE_8:         return true; break;
+                case TEC_QR_MODE_STRUCTURE: return true; break;
 
                 default:
                     break;
@@ -550,7 +550,7 @@ namespace TEC\Tickets\phpqrcode;
         {
             $payload = $bits - 4 - QRspec::lengthIndicator($mode, $version);
             switch($mode) {
-                case TEC_TICKETS_QR_MODE_NUM:
+                case TEC_QR_MODE_NUM:
                     $chunks = (int)($payload / 10);
                     $remain = $payload - $chunks * 10;
                     $size = $chunks * 3;
@@ -560,20 +560,20 @@ namespace TEC\Tickets\phpqrcode;
                         $size += 1;
                     }
                     break;
-                case TEC_TICKETS_QR_MODE_AN:
+                case TEC_QR_MODE_AN:
                     $chunks = (int)($payload / 11);
                     $remain = $payload - $chunks * 11;
                     $size = $chunks * 2;
                     if($remain >= 6)
                         $size++;
                     break;
-                case TEC_TICKETS_QR_MODE_8:
+                case TEC_QR_MODE_8:
                     $size = (int)($payload / 8);
                     break;
-                case TEC_TICKETS_QR_MODE_KANJI:
+                case TEC_QR_MODE_KANJI:
                     $size = (int)(($payload / 13) * 2);
                     break;
-                case TEC_TICKETS_QR_MODE_STRUCTURE:
+                case TEC_QR_MODE_STRUCTURE:
                     $size = (int)($payload / 8);
                     break;
                 default:
@@ -726,5 +726,3 @@ namespace TEC\Tickets\phpqrcode;
             return $bstream->toByte();
         }
     }
-
-

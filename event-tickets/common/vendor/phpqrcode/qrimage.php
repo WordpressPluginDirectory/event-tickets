@@ -1,5 +1,5 @@
 <?php
-namespace TEC\Tickets\phpqrcode;
+namespace TEC\Common\phpqrcode;
 
 /*
  * PHP QR Code encoder
@@ -24,7 +24,7 @@ namespace TEC\Tickets\phpqrcode;
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-    define('TEC_TICKETS_QR_IMAGE', true);
+    define('TEC_QR_IMAGE', true);
 
     class QRimage {
 

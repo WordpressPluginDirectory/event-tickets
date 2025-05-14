@@ -1,5 +1,5 @@
 <?php
-namespace TEC\Tickets\phpqrcode;
+namespace TEC\Common\phpqrcode;
 
 /*
  * PHP QR Code encoder
@@ -33,13 +33,13 @@ namespace TEC\Tickets\phpqrcode;
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-    define('TEC_TICKETS_QRSPEC_VERSION_MAX', 40);
-    define('TEC_TICKETS_QRSPEC_WIDTH_MAX',   177);
+    define('TEC_COMMON_QRSPEC_VERSION_MAX', 40);
+    define('TEC_COMMON_QRSPEC_WIDTH_MAX',   177);
 
-    define('TEC_TICKETS_QRCAP_WIDTH',        0);
-    define('TEC_TICKETS_QRCAP_WORDS',        1);
-    define('TEC_TICKETS_QRCAP_REMINDER',     2);
-    define('TEC_TICKETS_QRCAP_EC',           3);
+    define('TEC_COMMON_QRCAP_WIDTH',        0);
+    define('TEC_COMMON_QRCAP_WORDS',        1);
+    define('TEC_COMMON_QRCAP_REMINDER',     2);
+    define('TEC_COMMON_QRCAP_EC',           3);
 
     class QRspec {
 
@@ -90,33 +90,33 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function getDataLength($version, $level)
         {
-            return self::$capacity[$version][TEC_TICKETS_QRCAP_WORDS] - self::$capacity[$version][TEC_TICKETS_QRCAP_EC][$level];
+            return self::$capacity[$version][TEC_COMMON_QRCAP_WORDS] - self::$capacity[$version][TEC_COMMON_QRCAP_EC][$level];
         }
 
         //----------------------------------------------------------------------
         public static function getECCLength($version, $level)
         {
-            return self::$capacity[$version][TEC_TICKETS_QRCAP_EC][$level];
+            return self::$capacity[$version][TEC_COMMON_QRCAP_EC][$level];
         }
 
         //----------------------------------------------------------------------
         public static function getWidth($version)
         {
-            return self::$capacity[$version][TEC_TICKETS_QRCAP_WIDTH];
+            return self::$capacity[$version][TEC_COMMON_QRCAP_WIDTH];
         }
 
         //----------------------------------------------------------------------
         public static function getRemainder($version)
         {
-            return self::$capacity[$version][TEC_TICKETS_QRCAP_REMINDER];
+            return self::$capacity[$version][TEC_COMMON_QRCAP_REMINDER];
         }
 
         //----------------------------------------------------------------------
         public static function getMinimumVersion($size, $level)
         {
 
-            for($i=1; $i<= TEC_TICKETS_QRSPEC_VERSION_MAX; $i++) {
-                $words  = self::$capacity[$i][TEC_TICKETS_QRCAP_WORDS] - self::$capacity[$i][TEC_TICKETS_QRCAP_EC][$level];
+            for($i=1; $i<= TEC_COMMON_QRSPEC_VERSION_MAX; $i++) {
+                $words  = self::$capacity[$i][TEC_COMMON_QRCAP_WORDS] - self::$capacity[$i][TEC_COMMON_QRCAP_EC][$level];
                 if($words >= $size)
                     return $i;
             }
@@ -136,7 +136,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function lengthIndicator($mode, $version)
         {
-            if ($mode == TEC_TICKETS_QR_MODE_STRUCTURE)
+            if ($mode == TEC_QR_MODE_STRUCTURE)
                 return 0;
 
             if ($version <= 9) {
@@ -153,7 +153,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function maximumWords($mode, $version)
         {
-            if($mode == TEC_TICKETS_QR_MODE_STRUCTURE)
+            if($mode == TEC_QR_MODE_STRUCTURE)
                 return 3;
 
             if($version <= 9) {
@@ -167,7 +167,7 @@ namespace TEC\Tickets\phpqrcode;
             $bits = self::$lengthTableBits[$mode][$l];
             $words = (1 << $bits) - 1;
 
-            if($mode == TEC_TICKETS_QR_MODE_KANJI) {
+            if($mode == TEC_QR_MODE_KANJI) {
                 $words *= 2; // the number of bytes is required
             }
 
@@ -340,7 +340,7 @@ namespace TEC\Tickets\phpqrcode;
 		// Version information pattern (BCH coded).
         // See Table 1 in Appendix D (pp.68) of JIS X0510:2004.
 
-		// size: [TEC_TICKETS_QRSPEC_VERSION_MAX - 6]
+		// size: [TEC_COMMON_QRSPEC_VERSION_MAX - 6]
 
         public static $versionPattern = array(
             0x07c94, 0x085bc, 0x09a99, 0x0a4d3, 0x0bbf6, 0x0c762, 0x0d847, 0x0e60d,
@@ -353,7 +353,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function getVersionPattern($version)
         {
-            if($version < 7 || $version > TEC_TICKETS_QRSPEC_VERSION_MAX)
+            if($version < 7 || $version > TEC_COMMON_QRSPEC_VERSION_MAX)
                 return 0;
 
             return self::$versionPattern[$version -7];
@@ -411,7 +411,7 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function createFrame($version)
         {
-            $width = self::$capacity[$version][TEC_TICKETS_QRCAP_WIDTH];
+            $width = self::$capacity[$version][TEC_COMMON_QRCAP_WIDTH];
             $frameLine = str_repeat ("\0", $width);
             $frame = array_fill(0, $width, $frameLine);
 
@@ -555,14 +555,14 @@ namespace TEC\Tickets\phpqrcode;
         //----------------------------------------------------------------------
         public static function newFrame($version)
         {
-            if($version < 1 || $version > TEC_TICKETS_QRSPEC_VERSION_MAX)
+            if($version < 1 || $version > TEC_COMMON_QRSPEC_VERSION_MAX)
                 return null;
 
             if(!isset(self::$frames[$version])) {
 
-                $fileName = TEC_TICKETS_QR_CACHE_DIR.'frame_'.$version.'.dat';
+                $fileName = TEC_QR_CACHE_DIR.'frame_'.$version.'.dat';
 
-                if (TEC_TICKETS_QR_CACHEABLE) {
+                if (TEC_QR_CACHEABLE) {
                     if (file_exists($fileName)) {
                         self::$frames[$version] = self::unserial(file_get_contents($fileName));
                     } else {

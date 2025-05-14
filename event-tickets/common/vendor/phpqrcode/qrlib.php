@@ -1,5 +1,5 @@
 <?php
-namespace TEC\Tickets\phpqrcode;
+namespace TEC\Common\phpqrcode;
 
 /*
  * PHP QR Code encoder
@@ -42,4 +42,3 @@ namespace TEC\Tickets\phpqrcode;
 	include $QR_BASEDIR."qrrscode.php";
 	include $QR_BASEDIR."qrmask.php";
 	include $QR_BASEDIR."qrencode.php";
-

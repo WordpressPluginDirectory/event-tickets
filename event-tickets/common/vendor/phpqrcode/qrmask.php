@@ -1,5 +1,5 @@
 <?php
-namespace TEC\Tickets\phpqrcode;
+namespace TEC\Common\phpqrcode;
 
 /*
  * PHP QR Code encoder
@@ -27,10 +27,10 @@ namespace TEC\Tickets\phpqrcode;
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-	define('TEC_TICKETS_N1', 3);
-	define('TEC_TICKETS_N2', 3);
-	define('TEC_TICKETS_N3', 40);
-	define('TEC_TICKETS_N4', 10);
+	define('TEC_COMMON_N1', 3);
+	define('TEC_COMMON_N2', 3);
+	define('TEC_COMMON_N3', 40);
+	define('TEC_COMMON_N4', 10);
 
 	class QRmask {
 
@@ -39,7 +39,7 @@ namespace TEC\Tickets\phpqrcode;
 		//----------------------------------------------------------------------
 		public function __construct()
         {
-            $this->runLength = array_fill(0, TEC_TICKETS_QRSPEC_WIDTH_MAX + 1, 0);
+            $this->runLength = array_fill(0, TEC_COMMON_QRSPEC_WIDTH_MAX + 1, 0);
         }
 
         //----------------------------------------------------------------------
@@ -145,15 +145,15 @@ namespace TEC\Tickets\phpqrcode;
             $b = 0;
             $bitMask = array();
 
-            $fileName = TEC_TICKETS_QR_CACHE_DIR.'mask_'.$maskNo.DIRECTORY_SEPARATOR.'mask_'.$width.'_'.$maskNo.'.dat';
+            $fileName = TEC_QR_CACHE_DIR.'mask_'.$maskNo.DIRECTORY_SEPARATOR.'mask_'.$width.'_'.$maskNo.'.dat';
 
-            if (TEC_TICKETS_QR_CACHEABLE) {
+            if (TEC_QR_CACHEABLE) {
                 if (file_exists($fileName)) {
                     $bitMask = self::unserial(file_get_contents($fileName));
                 } else {
                     $bitMask = $this->generateMaskNo($maskNo, $width, $s, $d);
-                    if (!file_exists(TEC_TICKETS_QR_CACHE_DIR.'mask_'.$maskNo))
-                        mkdir(TEC_TICKETS_QR_CACHE_DIR.'mask_'.$maskNo);
+                    if (!file_exists(TEC_QR_CACHE_DIR.'mask_'.$maskNo))
+                        mkdir(TEC_QR_CACHE_DIR.'mask_'.$maskNo);
                     file_put_contents($fileName, self::serial($bitMask));
                 }
             } else {
@@ -195,7 +195,7 @@ namespace TEC\Tickets\phpqrcode;
             for($i=0; $i<$length; $i++) {
 
                 if($this->runLength[$i] >= 5) {
-                    $demerit += (TEC_TICKETS_N1 + ($this->runLength[$i] - 5));
+                    $demerit += (TEC_COMMON_N1 + ($this->runLength[$i] - 5));
                 }
                 if($i & 1) {
                     if(($i >= 3) && ($i < ($length-2)) && ($this->runLength[$i] % 3 == 0)) {
@@ -205,9 +205,9 @@ namespace TEC\Tickets\phpqrcode;
                            ($this->runLength[$i+1] == $fact) &&
                            ($this->runLength[$i+2] == $fact)) {
                             if(($this->runLength[$i-3] < 0) || ($this->runLength[$i-3] >= (4 * $fact))) {
-                                $demerit += TEC_TICKETS_N3;
+                                $demerit += TEC_COMMON_N3;
                             } else if((($i+3) >= $length) || ($this->runLength[$i+3] >= (4 * $fact))) {
-                                $demerit += TEC_TICKETS_N3;
+                                $demerit += TEC_COMMON_N3;
                             }
                         }
                     }
@@ -237,7 +237,7 @@ namespace TEC\Tickets\phpqrcode;
                         $w22 = ord($frameY[$x]) | ord($frameY[$x-1]) | ord($frameYM[$x]) | ord($frameYM[$x-1]);
 
                         if(($b22 | ($w22 ^ 1))&1) {
-                            $demerit += TEC_TICKETS_N2;
+                            $demerit += TEC_COMMON_N2;
                         }
                     }
                     if(($x == 0) && (ord($frameY[$x]) & 1)) {
@@ -292,9 +292,9 @@ namespace TEC\Tickets\phpqrcode;
 
             $checked_masks = array(0,1,2,3,4,5,6,7);
 
-            if (TEC_TICKETS_QR_FIND_FROM_RANDOM !== false) {
+            if (TEC_QR_FIND_FROM_RANDOM !== false) {
 
-                $howManuOut = 8-(TEC_TICKETS_QR_FIND_FROM_RANDOM % 9);
+                $howManuOut = 8-(TEC_QR_FIND_FROM_RANDOM % 9);
                 for ($i = 0; $i <  $howManuOut; $i++) {
                     $remPos = rand (0, count($checked_masks)-1);
                     unset($checked_masks[$remPos]);
@@ -313,7 +313,7 @@ namespace TEC\Tickets\phpqrcode;
                 $blacks  = $this->makeMaskNo($i, $width, $frame, $mask);
                 $blacks += $this->writeFormatInformation($width, $mask, $i, $level);
                 $blacks  = (int)(100 * $blacks / ($width * $width));
-                $demerit = (int)((int)(abs($blacks - 50) / 5) * TEC_TICKETS_N4);
+                $demerit = (int)((int)(abs($blacks - 50) / 5) * TEC_COMMON_N4);
                 $demerit += $this->evaluateSymbol($width, $mask);
 
                 if($demerit < $minDemerit) {

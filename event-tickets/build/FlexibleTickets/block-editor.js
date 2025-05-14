@@ -3476,29 +3476,26 @@ function* fetchTicket(action) {
       const startDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, startMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, startMoment);
       const startTime = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseTime, startMoment);
       const startTimeInput = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toTime, startMoment);
-      let endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, '');
-      let endDate = '';
-      let endDateInput = '';
-      let endTime = '';
-      let endTimeInput = '';
-      if (available_until) {
-        // eslint-disable-line camelcase
-        endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, available_until);
-        endDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endMoment);
-        endDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, endMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, endMoment);
-        endTime = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseTime, endMoment);
-        endTimeInput = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toTime, endMoment);
+      let endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, available_until);
+      let endDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, endMoment);
+      let endDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, endMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, endMoment);
+      let endTime = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseTime, endMoment);
+      let endTimeInput = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toTime, endMoment);
+      if (!available_until) {
+        endMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, '');
+        endDate = '';
+        endDateInput = '';
+        endTime = '';
+        endTimeInput = '';
       }
       const salePriceChecked = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.enabled) || false;
       const salePrice = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.sale_price) || '';
-      const sale_start_date = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.start_date) || ''; // eslint-disable-line camelcase
-      const saleStartDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, sale_start_date);
+      const saleStartDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.start_date) || '');
       const saleStartDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, saleStartDateMoment);
-      const saleStartDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleStartDateMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleStartDateMoment);
-      const sale_end_date = (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.end_date) || ''; // eslint-disable-line camelcase
-      const saleEndDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, sale_end_date);
+      const saleStartDateInput = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleStartDateMoment);
+      const saleEndDateMoment = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toMoment, (sale_price_data === null || sale_price_data === void 0 ? void 0 : sale_price_data.end_date) || '');
       const saleEndDate = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDatabaseDate, saleEndDateMoment);
-      const saleEndDateInput = yield datePickerFormat ? Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment, datePickerFormat) : Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment);
+      const saleEndDateInput = yield Object(external_tribe_modules_reduxSaga_effects_["call"])(external_tribe_common_utils_["moment"].toDate, saleEndDateMoment);
       const details = {
         attendeeInfoFields: attendee_information_fields,
         title,

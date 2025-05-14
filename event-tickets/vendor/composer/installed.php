@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'the-events-calendar/event-tickets',
-        'pretty_version' => 'dev-release/T25.doctorstrange',
-        'version' => 'dev-release/T25.doctorstrange',
-        'reference' => 'e514b420f4337271ddd5a9d605520f506d6e1b89',
+        'pretty_version' => 'dev-release/T25.ego',
+        'version' => 'dev-release/T25.ego',
+        'reference' => '62cd566197c5facdb7eeb2deee477ddc97516527',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'the-events-calendar/event-tickets' => array(
-            'pretty_version' => 'dev-release/T25.doctorstrange',
-            'version' => 'dev-release/T25.doctorstrange',
-            'reference' => 'e514b420f4337271ddd5a9d605520f506d6e1b89',
+            'pretty_version' => 'dev-release/T25.ego',
+            'version' => 'dev-release/T25.ego',
+            'reference' => '62cd566197c5facdb7eeb2deee477ddc97516527',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
