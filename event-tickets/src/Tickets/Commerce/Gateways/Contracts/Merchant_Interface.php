@@ -5,7 +5,7 @@ namespace TEC\Tickets\Commerce\Gateways\Contracts;
 /**
  * Merchant Interface
  *
- * @since   5.3.0
+ * @since 5.3.0
  *
  * @package TEC\Tickets\Commerce\Gateways\Contracts
  */
@@ -76,5 +76,4 @@ interface Merchant_Interface {
 	 * @return boolean
 	 */
 	public function from_array( array $data, $needs_save = true );
-
 }

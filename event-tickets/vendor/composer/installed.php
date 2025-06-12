@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'the-events-calendar/event-tickets',
-        'pretty_version' => 'dev-release/T25.enchantress',
-        'version' => 'dev-release/T25.enchantress',
-        'reference' => '240e8aef5713570e074a280a7e908c59954f76d2',
+        'pretty_version' => 'dev-release/T25.falcon',
+        'version' => 'dev-release/T25.falcon',
+        'reference' => '9c54a813a513f28672124a10d0ab0fe919976e05',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'the-events-calendar/event-tickets' => array(
-            'pretty_version' => 'dev-release/T25.enchantress',
-            'version' => 'dev-release/T25.enchantress',
-            'reference' => '240e8aef5713570e074a280a7e908c59954f76d2',
+            'pretty_version' => 'dev-release/T25.falcon',
+            'version' => 'dev-release/T25.falcon',
+            'reference' => '9c54a813a513f28672124a10d0ab0fe919976e05',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
