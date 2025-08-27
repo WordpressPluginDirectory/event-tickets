@@ -1,5 +1,22 @@
 # Changelog
 
+### [5.26.1] 2025-08-26
+
+* Fix - Correct some logic for loading the RSVP importer. Ensure the class it extends is available.
+* Performance - Cache Views v2 ticket models preferably during updates to speed up frontend. [ETP-1021]
+* Language - 0 new strings added, 24 updated, 0 fuzzied, and 0 obsoleted.
+
+### [5.26.0.1] 2025-08-20
+
+* Fix - Ensures the Actions Scheduler Logs table is present before attempting to use it. [TCMN-190]
+
+### [5.26.0] 2025-08-19
+
+* Version - Event Tickets 5.26.0 is only compatible with The Events Calendar 6.15.0 and higher.
+* Performance - Improving TicketsCommerce Checkout by offloading tasks to Shepherd. [TCMN-185]
+* [EXPERIMENTAL] Feature - Introduced new REST endpoints for managing your Tickets. Note: This API is for experimental use only and requires the X-TEC-EEA header. It may be subject to breaking changes in upcoming releases.
+* Language - 74 new strings added, 4 updated, 3 fuzzied, and 0 obsoleted.
+
 ### [5.25.1.1] 2025-07-30
 
 * Fix - Adds support for SCA (Strong Customer Authentication) for the Square Payment Gateway in TicketsCommerce. [ET-2542]
