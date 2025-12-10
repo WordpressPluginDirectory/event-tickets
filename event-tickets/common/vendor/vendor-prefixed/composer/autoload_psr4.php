@@ -7,6 +7,7 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'TEC\\Common\\lucatume\\DI52\\' => array($vendorDir . '/lucatume/di52/src'),
+    'TEC\\Common\\TrustedLogin\\' => array($vendorDir . '/trustedlogin/client/src'),
     'TEC\\Common\\StellarWP\\Uplink\\Views\\' => array($vendorDir . '/stellarwp/uplink/src/views'),
     'TEC\\Common\\StellarWP\\Uplink\\Assets_Dir\\' => array($vendorDir . '/stellarwp/uplink/src/assets'),
     'TEC\\Common\\StellarWP\\Uplink\\Admin_Views\\' => array($vendorDir . '/stellarwp/uplink/src/admin-views'),
@@ -16,6 +17,7 @@ return array(
     'TEC\\Common\\StellarWP\\Telemetry\\' => array($vendorDir . '/stellarwp/telemetry/src/Telemetry'),
     'TEC\\Common\\StellarWP\\Shepherd\\' => array($vendorDir . '/stellarwp/shepherd/src'),
     'TEC\\Common\\StellarWP\\Schema\\' => array($vendorDir . '/stellarwp/schema/src/Schema'),
+    'TEC\\Common\\StellarWP\\SchemaModels\\' => array($vendorDir . '/stellarwp/schema-models/src'),
     'TEC\\Common\\StellarWP\\Models\\' => array($vendorDir . '/stellarwp/models/src/Models'),
     'TEC\\Common\\StellarWP\\Installer\\Assets_JS\\' => array($vendorDir . '/stellarwp/installer/src/assets/js'),
     'TEC\\Common\\StellarWP\\Installer\\Admin_Views\\' => array($vendorDir . '/stellarwp/installer/src/admin-views'),
